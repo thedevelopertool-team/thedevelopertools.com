@@ -1,0 +1,211 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const jsonLd404 = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "404 Page Not Found — The Developer Tools",
+  "url": "https://thedevelopertools.com/404",
+  "description": "The page you are looking for could not be found."
+};
+---
+
+<Layout
+  title="404: Page Not Found — The Developer Tools"
+  description="The page you are looking for does not exist or has been moved. Explore our free, private browser-based developer tools."
+  jsonLd={jsonLd404}
+>
+  <main id="main-content" class="error-page">
+    <div class="container-site error-container">
+      
+      <!-- Error Card Header -->
+      <div class="error-card">
+        <span class="eyebrow error-eyebrow">404 // PAGE NOT FOUND</span>
+        <h1 class="error-title">Page not found</h1>
+        <p class="error-sub">
+          The page you are looking for doesn't exist, was removed, or had its URL changed.
+        </p>
+
+        <!-- Navigation Action Buttons -->
+        <div class="error-actions">
+          <a href="/" class="btn btn-primary">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            Back to Home
+          </a>
+          <a href="/password-generator" class="btn btn-secondary">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            Password Generator
+          </a>
+        </div>
+
+        <!-- Quick Links Panel -->
+        <div class="error-quick-links">
+          <span class="eyebrow" style="margin-bottom: 12px; display: block;">Quick Navigation</span>
+          <div class="quick-links-grid">
+            <a href="/" class="quick-link-item">
+              <div class="quick-link-text">
+                <strong>Tool Catalog</strong>
+                <span>Search all browser utilities</span>
+              </div>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </a>
+            <a href="/password-generator" class="quick-link-item">
+              <div class="quick-link-text">
+                <strong>Password Generator</strong>
+                <span>100% private CSPRNG passwords</span>
+              </div>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .error-page {
+    padding: 80px 0 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 180px);
+  }
+
+  .error-container {
+    max-width: 600px;
+    margin-inline: auto;
+  }
+
+  .error-card {
+    background-color: var(--c-canvas-elevated);
+    border: 1px solid var(--c-hairline);
+    border-radius: 16px;
+    padding: 40px 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  }
+
+  .error-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--c-mute);
+    margin-bottom: 8px;
+  }
+
+  .error-title {
+    margin: 0 0 12px;
+    font-size: clamp(32px, 5vw, 44px);
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.04em;
+    color: var(--c-ink);
+  }
+
+  .error-sub {
+    margin: 0 0 28px;
+    font-size: 15px;
+    line-height: 24px;
+    color: var(--c-body);
+    max-width: 440px;
+  }
+
+  .error-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 36px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .error-quick-links {
+    width: 100%;
+    border-top: 1px solid var(--c-hairline);
+    padding-top: 24px;
+    text-align: left;
+  }
+
+  .quick-links-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .quick-link-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background-color: var(--c-hairline-soft);
+    border: 1px solid var(--c-hairline);
+    border-radius: 8px;
+    text-decoration: none;
+    transition: border-color 120ms ease, background-color 120ms ease;
+  }
+
+  .quick-link-item:hover {
+    background-color: var(--c-canvas);
+    border-color: var(--c-mute);
+  }
+
+  .quick-link-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .quick-link-text strong {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--c-ink);
+  }
+
+  .quick-link-text span {
+    font-size: 12px;
+    color: var(--c-mute);
+  }
+
+  .quick-link-item svg {
+    color: var(--c-mute);
+    transition: transform 120ms ease;
+  }
+
+  .quick-link-item:hover svg {
+    transform: translateX(2px);
+    color: var(--c-ink);
+  }
+
+  @media (max-width: 640px) {
+    .error-page {
+      padding: 40px 0 64px;
+    }
+
+    .error-card {
+      padding: 28px 20px;
+    }
+
+    .error-actions {
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .error-actions .btn {
+      width: 100%;
+    }
+  }
+</style>

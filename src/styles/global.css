@@ -1,0 +1,395 @@
+@import "tailwindcss";
+
+/* ─── Custom dark variant (class-based) ─────────────────────────────────── */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ─── @theme design tokens (DESIGN.md → Tailwind utilities) ─────────────── */
+@theme {
+  /* Fonts */
+  --font-sans: "Geist", "Inter", Arial, sans-serif;
+  --font-mono: "Geist Mono", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Brand colors (light mode) */
+  --color-ink:              #171717;
+  --color-on-primary:       #ffffff;
+  --color-body-text:        #4d4d4d;
+  --color-mute:             #8f8f8f;
+  --color-faint:            #a1a1a1;
+  --color-hairline:         #ebebeb;
+  --color-hairline-soft:    #f2f2f2;
+  --color-canvas:           #fafafa;
+  --color-canvas-elevated:  #ffffff;
+  --color-link:             #0070f3;
+  --color-link-deep:        #0761d1;
+  --color-link-soft:        #d3e5ff;
+  --color-error:            #ee0000;
+  --color-error-deep:       #c50000;
+  --color-warning:          #f5a623;
+  --color-warning-soft:     #ffefcf;
+  --color-warning-deep:     #ab570a;
+  --color-success:          #0070f3;
+
+  /* Accent colors */
+  --color-violet:           #7928ca;
+  --color-violet-soft:      #d8ccf1;
+  --color-cyan:             #50e3c2;
+  --color-cyan-soft:        #aaffec;
+  --color-pink:             #ff0080;
+  --color-magenta:          #eb367f;
+
+  /* Gradient stops */
+  --color-gradient-develop-start:  #007cf0;
+  --color-gradient-develop-end:    #00dfd8;
+  --color-gradient-preview-start:  #7928ca;
+  --color-gradient-preview-end:    #ff0080;
+  --color-gradient-ship-start:     #ff4d4d;
+  --color-gradient-ship-end:       #f9cb28;
+
+  /* Border radius */
+  --radius-sm:           6px;
+  --radius-md:           12px;
+  --radius-lg:           16px;
+  --radius-pill-cat:     64px;
+  --radius-pill:         100px;
+  --radius-full:         9999px;
+
+  /* Spacing */
+  --spacing-xxs: 4px;
+  --spacing-xs:  8px;
+  --spacing-sm:  12px;
+  --spacing-md:  16px;
+  --spacing-lg:  24px;
+  --spacing-xl:  32px;
+  --spacing-2xl: 40px;
+  --spacing-3xl: 64px;
+  --spacing-4xl: 96px;
+  --spacing-section: 128px;
+
+  /* Container */
+  --container-site: 1200px;
+
+  /* Breakpoints */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1200px;
+}
+
+/* ─── CSS custom properties for runtime theming ─────────────────────────── */
+:root {
+  --c-ink:             #171717;
+  --c-body:            #4d4d4d;
+  --c-mute:            #8f8f8f;
+  --c-faint:           #a1a1a1;
+  --c-hairline:        #ebebeb;
+  --c-hairline-soft:   #f2f2f2;
+  --c-canvas:          #fafafa;
+  --c-canvas-elevated: #ffffff;
+  --c-link:            #0070f3;
+  --c-error:           #ee0000;
+  --c-warning:         #f5a623;
+  --c-success:         #0070f3;
+  --transition-base:   150ms ease;
+}
+
+/* Dark mode overrides */
+.dark {
+  --c-ink:             #ededed;
+  --c-body:            #a1a1a1;
+  --c-mute:            #6b6b6b;
+  --c-faint:           #525252;
+  --c-hairline:        #262626;
+  --c-hairline-soft:   #1a1a1a;
+  --c-canvas:          #0a0a0a;
+  --c-canvas-elevated: #111111;
+  --c-link:            #3b9bff;
+  --c-error:           #ff4444;
+  --c-warning:         #f5a623;
+  --c-success:         #3b9bff;
+}
+
+/* ─── Base styles ────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--c-body);
+  background-color: var(--c-canvas);
+  transition: background-color var(--transition-base), color var(--transition-base);
+  min-height: 100vh;
+}
+
+/* ─── Custom utilities ───────────────────────────────────────────────────── */
+@utility container-site {
+  width: 100%;
+  max-width: var(--container-site);
+  margin-inline: auto;
+  padding-inline: var(--spacing-lg);
+}
+
+@utility focus-ring {
+  outline: 2px solid var(--c-link);
+  outline-offset: 2px;
+}
+
+/* ─── Component classes ──────────────────────────────────────────────────── */
+
+/* Buttons */
+@layer components {
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    transition: opacity 120ms ease, background-color 120ms ease, color 120ms ease, border-color 120ms ease;
+    white-space: nowrap;
+  }
+
+  .btn:focus-visible {
+    outline: 2px solid var(--c-link);
+    outline-offset: 2px;
+  }
+
+  .btn-primary {
+    background-color: var(--c-ink);
+    color: var(--c-canvas);
+    font-size: 16px;
+    line-height: 20px;
+    border-radius: 100px;
+    padding: 10px 14px;
+    border: 1px solid transparent;
+  }
+
+  .btn-primary:hover {
+    opacity: 0.85;
+  }
+
+  .btn-secondary {
+    background-color: var(--c-canvas-elevated);
+    color: var(--c-ink);
+    font-size: 16px;
+    line-height: 20px;
+    border-radius: 100px;
+    padding: 10px 14px;
+    border: 1px solid var(--c-hairline);
+  }
+
+  .btn-secondary:hover {
+    background-color: var(--c-hairline-soft);
+  }
+
+  .btn-sm {
+    background-color: var(--c-ink);
+    color: var(--c-canvas);
+    font-size: 14px;
+    line-height: 20px;
+    border-radius: 6px;
+    padding: 6px 10px;
+    border: 1px solid transparent;
+  }
+
+  .btn-sm:hover {
+    opacity: 0.85;
+  }
+
+  .btn-ghost-sm {
+    background-color: var(--c-canvas-elevated);
+    color: var(--c-ink);
+    font-size: 14px;
+    line-height: 20px;
+    border-radius: 6px;
+    padding: 6px 10px;
+    border: 1px solid var(--c-hairline);
+  }
+
+  .btn-ghost-sm:hover {
+    background-color: var(--c-hairline-soft);
+  }
+
+  .btn-pill-cat {
+    background-color: var(--c-canvas-elevated);
+    color: var(--c-ink);
+    font-size: 14px;
+    line-height: 20px;
+    border-radius: 64px;
+    padding: 6px 16px;
+    border: 1px solid var(--c-hairline);
+  }
+
+  .btn-pill-cat:hover,
+  .btn-pill-cat.active {
+    background-color: var(--c-ink);
+    color: var(--c-canvas);
+    border-color: var(--c-ink);
+  }
+
+  .btn-icon {
+    background-color: var(--c-canvas-elevated);
+    color: var(--c-ink);
+    border-radius: 9999px;
+    border: 1px solid var(--c-hairline);
+    padding: 8px;
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .btn-icon:hover {
+    background-color: var(--c-hairline-soft);
+  }
+
+  /* Cards */
+  .card {
+    background-color: var(--c-canvas-elevated);
+    border: 1px solid var(--c-hairline);
+    border-radius: 12px;
+    padding: var(--spacing-lg);
+    transition: border-color 120ms ease, box-shadow 120ms ease;
+  }
+
+  .card:hover {
+    border-color: var(--c-mute);
+    box-shadow: 0px 2px 4px rgba(0,0,0,0.04);
+  }
+
+  /* Text input */
+  .field-input {
+    background-color: var(--c-canvas-elevated);
+    color: var(--c-ink);
+    border: 1px solid var(--c-hairline);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 20px;
+    width: 100%;
+    transition: border-color 120ms ease;
+  }
+
+  .field-input:focus {
+    outline: none;
+    border-color: var(--c-ink);
+  }
+
+  .field-input::placeholder {
+    color: var(--c-faint);
+  }
+
+  /* Mono eyebrow */
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 16px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--c-mute);
+  }
+
+  /* Section heading */
+  .heading-lg {
+    font-family: var(--font-sans);
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 40px;
+    letter-spacing: -0.04em;
+    color: var(--c-ink);
+  }
+
+  .heading-md {
+    font-family: var(--font-sans);
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 28px;
+    letter-spacing: -0.02em;
+    color: var(--c-ink);
+  }
+
+  /* Accordion */
+  .accordion-item {
+    border-bottom: 1px solid var(--c-hairline);
+  }
+
+  .accordion-trigger {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-md) 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--c-ink);
+    text-align: left;
+    gap: var(--spacing-md);
+  }
+
+  .accordion-trigger:focus-visible {
+    outline: 2px solid var(--c-link);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  .accordion-content {
+    overflow: hidden;
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--c-body);
+  }
+
+  /* Strength meter */
+  .strength-segment {
+    height: 4px;
+    border-radius: 9999px;
+    flex: 1;
+    background-color: var(--c-hairline);
+    transition: background-color 200ms ease;
+  }
+
+  /* Badge */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border-radius: 9999px;
+    padding: 2px 8px;
+    border: 1px solid;
+  }
+
+  .badge-coming-soon {
+    color: var(--c-mute);
+    border-color: var(--c-hairline);
+    background-color: var(--c-hairline-soft);
+  }
+
+  .badge-available {
+    color: var(--c-success);
+    border-color: var(--c-link-soft, #d3e5ff);
+    background-color: var(--c-link-soft, #d3e5ff);
+  }
+}

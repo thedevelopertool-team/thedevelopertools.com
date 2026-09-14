@@ -1,0 +1,152 @@
+---
+// ToolCard.astro
+interface Props {
+  name: string;
+  description: string;
+  href: string;
+  icon: string; // SVG string
+  status: 'available' | 'coming-soon';
+  category: string;
+}
+
+const { name, description, href, icon, status, category } = Astro.props;
+const isAvailable = status === 'available';
+---
+
+{isAvailable ? (
+  <a href={href} class="tool-card tool-card--available" aria-label={`Open ${name}`}>
+    <div class="tool-card-header">
+      <span class="tool-card-icon" aria-hidden="true" set:html={icon} />
+      <span class="badge badge-available">Live</span>
+    </div>
+    <div class="tool-card-body">
+      <span class="eyebrow" style="font-size:11px">{category}</span>
+      <h3 class="tool-card-name">{name}</h3>
+      <p class="tool-card-desc">{description}</p>
+    </div>
+    <div class="tool-card-footer">
+      <span class="tool-card-cta">
+        Open tool
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </span>
+    </div>
+  </a>
+) : (
+  <div class="tool-card tool-card--soon" aria-label={`${name} (coming soon)`}>
+    <div class="tool-card-header">
+      <span class="tool-card-icon tool-card-icon--muted" aria-hidden="true" set:html={icon} />
+      <span class="badge badge-coming-soon">Soon</span>
+    </div>
+    <div class="tool-card-body">
+      <span class="eyebrow" style="font-size:11px">{category}</span>
+      <h3 class="tool-card-name tool-card-name--muted">{name}</h3>
+      <p class="tool-card-desc">{description}</p>
+    </div>
+    <div class="tool-card-footer">
+      <span class="tool-card-cta tool-card-cta--muted">Coming soon</span>
+    </div>
+  </div>
+)}
+
+<style>
+  .tool-card {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--c-canvas-elevated);
+    border: 1px solid var(--c-hairline);
+    border-radius: 12px;
+    padding: 20px;
+    gap: 12px;
+    text-decoration: none;
+    transition: border-color 150ms ease, box-shadow 150ms ease, transform 150ms ease;
+  }
+
+  .tool-card--available {
+    cursor: pointer;
+    color: inherit;
+  }
+
+  .tool-card--available:hover {
+    border-color: var(--c-mute);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    transform: translateY(-1px);
+  }
+
+  .tool-card--available:focus-visible {
+    outline: 2px solid var(--c-link);
+    outline-offset: 2px;
+  }
+
+  .tool-card--soon {
+    opacity: 0.6;
+    cursor: default;
+  }
+
+  .tool-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .tool-card-icon {
+    color: var(--c-ink);
+    display: flex;
+    align-items: center;
+  }
+
+  .tool-card-icon--muted {
+    color: var(--c-mute);
+  }
+
+  .tool-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+  }
+
+  .tool-card-name {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 22px;
+    letter-spacing: -0.02em;
+    color: var(--c-ink);
+  }
+
+  .tool-card-name--muted {
+    color: var(--c-mute);
+  }
+
+  .tool-card-desc {
+    margin: 0;
+    font-size: 13px;
+    line-height: 18px;
+    color: var(--c-body);
+  }
+
+  .tool-card-footer {
+    margin-top: auto;
+    padding-top: 8px;
+    border-top: 1px solid var(--c-hairline);
+  }
+
+  .tool-card-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--c-link);
+    font-family: var(--font-mono);
+  }
+
+  .tool-card-cta--muted {
+    color: var(--c-mute);
+  }
+
+  /* Badge styles are in global.css */
+</style>

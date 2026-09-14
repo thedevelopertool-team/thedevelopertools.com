@@ -1,8 +1,4 @@
 ---
-import "../styles/global.css";
-import NavBar from "../components/NavBar.astro";
-import Footer from "../components/Footer.astro";
-
 interface Props {
   title: string;
   description: string;
@@ -21,16 +17,12 @@ const {
   jsonLd,
 } = Astro.props;
 
-const siteUrl = "https://thedevelopertools.com";
-const canonical = canonicalUrl ?? `${siteUrl}${Astro.url.pathname}`;
+const siteUrl = 'https://thedevelopertools.com';
+const canonical = canonicalUrl ? canonicalUrl : `${siteUrl}${Astro.url.pathname}`;
 const ogImg = `${siteUrl}/og-image.png`;
 const resolvedOgTitle = ogTitle || title;
 const resolvedOgDesc = ogDescription || description;
-const jsonLdArr = jsonLd
-  ? Array.isArray(jsonLd)
-    ? jsonLd
-    : [jsonLd]
-  : [];
+const jsonLdString = jsonLd ? JSON.stringify(Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : null;
 ---
 
 <!doctype html>
@@ -74,38 +66,29 @@ const jsonLdArr = jsonLd
       rel="stylesheet"
     />
 
-    <!-- JSON-LD Structured Data -->
-    {jsonLdArr.map((schema) => (
-      <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
-    ))}
+    <!-- Tailwind CSS -->
+    <link rel="stylesheet" href="/src/styles/global.css" />
 
-    <!-- Theme init: stored preference → OS prefers-color-scheme → dark fallback -->
+    <!-- JSON-LD Structured Data -->
+    {jsonLdString && (
+      <script is:inline type="application/ld+json" set:html={jsonLdString} />
+    )}
+
+    <!-- Dark mode init: runs before paint to avoid flash -->
     <script is:inline>
       (function () {
         try {
-          var stored = localStorage.getItem("theme");
-          if (stored === "dark") {
-            document.documentElement.classList.add("dark");
-          } else if (stored === "light") {
-            document.documentElement.classList.remove("dark");
-          } else {
-            // No stored preference — honour the OS setting, default dark if neutral
-            var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-            if (prefersDark) {
-              document.documentElement.classList.add("dark");
-            } else {
-              document.documentElement.classList.remove("dark");
-            }
+          var stored = localStorage.getItem('theme');
+          if (stored === 'dark' || (!stored && true)) {
+            document.documentElement.classList.add('dark');
           }
-        } catch (e) {
-          document.documentElement.classList.add("dark");
-        }
+        } catch (e) {}
       })();
     </script>
   </head>
   <body>
-    <NavBar />
+    <slot name="nav" />
     <slot />
-    <Footer />
+    <slot name="footer" />
   </body>
 </html>

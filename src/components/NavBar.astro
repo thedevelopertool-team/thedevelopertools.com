@@ -1,0 +1,305 @@
+---
+// NavBar.astro
+---
+
+<header class="navbar" role="banner">
+  <div class="container-site navbar-inner">
+
+    <!-- Logo -->
+    <a href="/" class="navbar-logo" aria-label="The Developer Tools — Home">
+      <!-- Rounded-square icon container -->
+      <span class="navbar-logo-icon-wrap" aria-hidden="true">
+        <svg class="navbar-logo-svg" width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 7L2 10L6 13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M14 7L18 10L14 13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M11.5 5L8.5 15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span class="navbar-logo-text">The Developer Tools</span>
+    </a>
+
+    <!-- Desktop nav links -->
+    <nav class="navbar-links" aria-label="Primary navigation">
+      <a href="/" class="navbar-link">Home</a>
+      <a href="/password-generator" class="navbar-link">Password Generator</a>
+    </nav>
+
+    <!-- Right side controls -->
+    <div class="navbar-actions">
+      <!-- Theme toggle -->
+      <button
+        id="theme-toggle"
+        class="btn btn-icon"
+        aria-label="Toggle dark/light mode"
+        title="Toggle theme"
+        type="button"
+      >
+        <!-- Sun icon: visible in dark mode (click → go light) -->
+        <svg id="icon-sun" class="theme-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1" x2="12" y2="3"/>
+          <line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/>
+          <line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+        <!-- Moon icon: visible in light mode (click → go dark) -->
+        <svg id="icon-moon" class="theme-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+      </button>
+
+      <!-- Mobile menu trigger -->
+      <button
+        id="mobile-menu-trigger"
+        class="btn btn-icon mobile-only"
+        aria-label="Open navigation menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        type="button"
+      >
+        <svg id="icon-menu" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+        <svg id="icon-close" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:none">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="mobile-menu" role="navigation" aria-label="Mobile navigation" hidden>
+    <div class="container-site mobile-menu-inner">
+      <a href="/" class="mobile-menu-link">Home</a>
+      <a href="/password-generator" class="mobile-menu-link">Password Generator</a>
+    </div>
+  </div>
+</header>
+
+<style>
+  .navbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: var(--c-canvas);
+    border-bottom: 1px solid var(--c-hairline);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: background-color 150ms ease, border-color 150ms ease;
+  }
+
+  .navbar-inner {
+    display: flex;
+    align-items: center;
+    height: 56px;
+    gap: 20px;
+  }
+
+  /* ── Logo ── */
+  .navbar-logo {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    text-decoration: none;
+    color: var(--c-ink);
+    flex-shrink: 0;
+    transition: opacity 120ms ease;
+  }
+
+  .navbar-logo:hover {
+    opacity: 0.75;
+  }
+
+  /* Rounded-square icon container */
+  .navbar-logo-icon-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 7px;
+    background-color: var(--c-ink);
+    color: var(--c-canvas);
+    flex-shrink: 0;
+    transition: background-color 150ms ease, color 150ms ease;
+  }
+
+  .navbar-logo-svg {
+    display: block;
+  }
+
+  .navbar-logo-text {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--c-ink);
+    transition: color 150ms ease;
+  }
+
+  /* ── Nav links ── */
+  .navbar-links {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex: 1;
+  }
+
+  .navbar-link {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 9999px;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--c-body);
+    text-decoration: none;
+    transition: color 120ms ease, background-color 120ms ease;
+  }
+
+  .navbar-link:hover {
+    color: var(--c-ink);
+    background-color: var(--c-hairline-soft);
+  }
+
+  .navbar-link[aria-current="page"] {
+    color: var(--c-ink);
+    font-weight: 500;
+  }
+
+  /* ── Actions ── */
+  .navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+  }
+
+  /* ── Theme icon switching via CSS ── */
+  /* Default (Light mode): show Moon icon (click → go dark) */
+  #icon-sun {
+    display: none;
+  }
+  #icon-moon {
+    display: block;
+  }
+
+  /* Dark mode active: show Sun icon (click → go light) */
+  :global(html.dark) #icon-sun {
+    display: block;
+  }
+  :global(html.dark) #icon-moon {
+    display: none;
+  }
+
+  /* ── Mobile ── */
+  .mobile-only {
+    display: none;
+  }
+
+  .mobile-menu {
+    border-top: 1px solid var(--c-hairline);
+    background-color: var(--c-canvas);
+  }
+
+  .mobile-menu-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  .mobile-menu-link {
+    display: block;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--c-body);
+    text-decoration: none;
+    transition: color 120ms ease, background-color 120ms ease;
+  }
+
+  .mobile-menu-link:hover {
+    color: var(--c-ink);
+    background-color: var(--c-hairline-soft);
+  }
+
+  @media (max-width: 768px) {
+    .navbar-links {
+      display: none;
+    }
+
+    .mobile-only {
+      display: inline-flex;
+    }
+
+    /* Shorten brand name on small screens */
+    .navbar-logo-text {
+      font-size: 13px;
+    }
+  }
+
+  @media (max-width: 400px) {
+    /* Very small screens: hide full text, show icon only */
+    .navbar-logo-text {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  // ── Theme toggle ──
+  const themeToggle = document.getElementById('theme-toggle');
+  themeToggle?.addEventListener('click', () => {
+    const isDark = document.documentElement.classList.toggle('dark');
+    try {
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    } catch (e) {}
+    // Update aria-label for accessibility
+    themeToggle.setAttribute(
+      'aria-label',
+      isDark ? 'Switch to light mode' : 'Switch to dark mode'
+    );
+  });
+
+  // Set initial aria-label
+  const initDark = document.documentElement.classList.contains('dark');
+  themeToggle?.setAttribute(
+    'aria-label',
+    initDark ? 'Switch to light mode' : 'Switch to dark mode'
+  );
+
+  // ── Mobile menu ──
+  const trigger = document.getElementById('mobile-menu-trigger');
+  const menu = document.getElementById('mobile-menu');
+  const iconMenu = document.getElementById('icon-menu');
+  const iconClose = document.getElementById('icon-close');
+
+  trigger?.addEventListener('click', () => {
+    const isOpen = !menu?.hidden;
+    if (menu) menu.hidden = isOpen;
+    trigger.setAttribute('aria-expanded', String(!isOpen));
+    if (iconMenu) iconMenu.style.display = isOpen ? 'block' : 'none';
+    if (iconClose) iconClose.style.display = isOpen ? 'none' : 'block';
+  });
+
+  // ── Active nav link ──
+  const navLinks = document.querySelectorAll<HTMLAnchorElement>('.navbar-link, .mobile-menu-link');
+  navLinks.forEach((link) => {
+    if (
+      link.href === window.location.href ||
+      (link.pathname !== '/' && window.location.pathname.startsWith(link.pathname))
+    ) {
+      link.setAttribute('aria-current', 'page');
+    }
+  });
+</script>
