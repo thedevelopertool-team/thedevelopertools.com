@@ -1,0 +1,383 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const emailAddress = "thedevelopertools-team@gmail.com";
+const mailtoLink = `mailto:${emailAddress}`;
+
+const pageJsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "name": "Contact Us",
+    "url": "https://thedevelopertools.com/contact-us",
+    "description": "Contact The Developer Tools team directly via email for bug reports, tool suggestions, or general feedback.",
+    "mainEntity": {
+      "@type": "Organization",
+      "name": "The Developer Tools",
+      "email": emailAddress,
+      "url": "https://thedevelopertools.com"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://thedevelopertools.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Contact Us",
+        "item": "https://thedevelopertools.com/contact-us"
+      }
+    ]
+  }
+];
+
+const topics = [
+  "Bug reports or technical issues",
+  "Suggestions for new tools",
+  "Feedback about existing tools",
+  "Incorrect or outdated information",
+  "General questions about The Developer Tools"
+];
+---
+
+<Layout
+  title="Contact Us — The Developer Tools"
+  description="Have a question, bug report, or tool suggestion? Contact The Developer Tools team directly by email."
+  canonicalUrl="https://thedevelopertools.com/contact-us"
+  ogTitle="Contact Us — The Developer Tools"
+  ogDescription="Reach out to The Developer Tools team directly via email for bug reports, technical feedback, or new tool suggestions."
+  jsonLd={pageJsonLd}
+>
+  <main id="main-content" class="content-page">
+    <!-- Header Section -->
+    <header class="page-header">
+      <div class="container-site">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="/">Home</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">Contact Us</span>
+        </nav>
+        <span class="eyebrow">Get In Touch</span>
+        <h1 class="page-title">We'd like to hear from you</h1>
+        <p class="page-lead">
+          Have a question, found a problem, or have an idea for a new tool? You can reach us directly by email.
+        </p>
+      </div>
+    </header>
+
+    <!-- Body Section -->
+    <section class="page-body">
+      <div class="container-site page-layout">
+        <article class="prose-content">
+
+          <!-- Email Contact Card -->
+          <div class="info-card card email-card">
+            <h2 class="section-title">Direct Email</h2>
+            <p>You can reach us directly by email:</p>
+
+            <div class="email-box">
+              <span class="email-label">Email:</span>
+              <a href={mailtoLink} class="email-address">{emailAddress}</a>
+            </div>
+
+            <div class="action-wrap">
+              <a href={mailtoLink} class="btn btn-primary btn-email">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                  <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+                <span>Email Us</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- What can you contact us about? -->
+          <div class="info-card card">
+            <h2 class="section-title">What can you contact us about?</h2>
+            <p>You can contact us about:</p>
+            <ul class="checklist">
+              {topics.map((topic) => (
+                <li>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="check-icon">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                  <span>{topic}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <!-- Reporting an issue -->
+          <div class="info-card card">
+            <h2 class="section-title">Reporting an issue</h2>
+            <p>
+              When reporting a technical issue, please include the name of the tool you were using and a short description of the problem.
+            </p>
+            <p>
+              Screenshots can also be helpful when explaining an issue.
+            </p>
+            <p class="conclusion-text">
+              We read every message and use feedback to improve the website and its tools.
+            </p>
+          </div>
+
+        </article>
+
+        <!-- Sidebar -->
+        <aside class="page-sidebar">
+          <div class="sidebar-card card">
+            <h3 class="sidebar-heading">Quick Summary</h3>
+            <p class="sidebar-text">No forms or registration required. Click below to compose an email directly in your default app.</p>
+            <a href={mailtoLink} class="btn btn-primary w-full">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+              <span>Compose Email</span>
+            </a>
+            <div class="sidebar-divider"></div>
+            <a href="/privacy-policy" class="btn btn-secondary w-full">Read Privacy Policy</a>
+          </div>
+        </aside>
+
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .content-page {
+    padding-bottom: var(--spacing-4xl);
+  }
+
+  /* Header */
+  .page-header {
+    padding: var(--spacing-3xl) 0 var(--spacing-2xl);
+    border-bottom: 1px solid var(--c-hairline);
+    background-color: var(--c-canvas);
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-family: var(--font-mono);
+    color: var(--c-mute);
+    margin-bottom: var(--spacing-md);
+  }
+
+  .breadcrumb a {
+    color: var(--c-mute);
+    text-decoration: none;
+    transition: color 120ms ease;
+  }
+
+  .breadcrumb a:hover {
+    color: var(--c-ink);
+  }
+
+  .page-title {
+    font-size: clamp(32px, 4vw, 44px);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.035em;
+    color: var(--c-ink);
+    margin: 8px 0 12px;
+  }
+
+  .page-lead {
+    font-size: 16px;
+    line-height: 26px;
+    color: var(--c-body);
+    max-width: 680px;
+    margin: 0;
+  }
+
+  /* Body */
+  .page-body {
+    padding-top: var(--spacing-2xl);
+  }
+
+  .page-layout {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: var(--spacing-2xl);
+    align-items: start;
+  }
+
+  .prose-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+  }
+
+  .info-card {
+    padding: var(--spacing-xl);
+    background-color: var(--c-canvas-elevated);
+    border: 1px solid var(--c-hairline);
+    border-radius: var(--radius-md);
+  }
+
+  .section-title {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--c-ink);
+    margin: 0 0 var(--spacing-md);
+  }
+
+  .info-card p {
+    font-size: 15px;
+    line-height: 24px;
+    color: var(--c-body);
+    margin: 0 0 var(--spacing-md);
+  }
+
+  .info-card p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Email Box */
+  .email-card {
+    background: linear-gradient(135deg, var(--c-canvas-elevated) 0%, var(--c-hairline-soft) 100%);
+  }
+
+  .email-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding: 14px 18px;
+    background-color: var(--c-canvas-elevated);
+    border: 1px solid var(--c-hairline);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--spacing-md);
+  }
+
+  .email-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--c-ink);
+  }
+
+  .email-address {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--c-link);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    word-break: break-all;
+    transition: color 120ms ease;
+  }
+
+  .email-address:hover {
+    color: var(--c-ink);
+  }
+
+  .action-wrap {
+    display: flex;
+    gap: 12px;
+  }
+
+  .btn-email {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    font-size: 15px;
+  }
+
+  /* Checklist */
+  .checklist {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .checklist li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--c-ink);
+    line-height: 20px;
+  }
+
+  .check-icon {
+    color: var(--c-link);
+    flex-shrink: 0;
+  }
+
+  .conclusion-text {
+    font-weight: 500;
+    color: var(--c-ink);
+  }
+
+  /* Sidebar */
+  .page-sidebar {
+    position: sticky;
+    top: 80px;
+  }
+
+  .sidebar-card {
+    padding: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  .sidebar-heading {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--c-ink);
+    margin: 0;
+  }
+
+  .sidebar-text {
+    font-size: 13px;
+    line-height: 20px;
+    color: var(--c-body);
+    margin: 0;
+  }
+
+  .sidebar-divider {
+    height: 1px;
+    background-color: var(--c-hairline);
+    margin: var(--spacing-xs) 0;
+  }
+
+  .w-full {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .page-layout {
+      grid-template-columns: 1fr;
+    }
+    .page-sidebar {
+      position: static;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .page-header {
+      padding: var(--spacing-2xl) 0 var(--spacing-lg);
+    }
+    .info-card {
+      padding: var(--spacing-lg);
+    }
+  }
+</style>

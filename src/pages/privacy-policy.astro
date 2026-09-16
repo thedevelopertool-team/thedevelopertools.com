@@ -1,0 +1,411 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const lastUpdated = "September 17, 2026";
+const contactEmail = "thedevelopertools-team@gmail.com";
+const mailtoLink = `mailto:${contactEmail}`;
+
+const pageJsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Privacy Policy",
+    "url": "https://thedevelopertools.com/privacy-policy",
+    "description": "Privacy Policy for The Developer Tools. Explains how information is handled, client-side processing, cookies, and privacy practices.",
+    "dateModified": "2026-09-17"
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://thedevelopertools.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Privacy Policy",
+        "item": "https://thedevelopertools.com/privacy-policy"
+      }
+    ]
+  }
+];
+
+const emailDataItems = [
+  "Your name",
+  "Email address",
+  "Message or enquiry details",
+  "Any information you choose to include in your message"
+];
+---
+
+<Layout
+  title="Privacy Policy — The Developer Tools"
+  description="Read the Privacy Policy for The Developer Tools. Learn how browser-based local execution and privacy practices protect your information."
+  canonicalUrl="https://thedevelopertools.com/privacy-policy"
+  ogTitle="Privacy Policy — The Developer Tools"
+  ogDescription="Straightforward explanation of how information and browser data are handled across The Developer Tools."
+  jsonLd={pageJsonLd}
+>
+  <main id="main-content" class="content-page">
+    <!-- Header Section -->
+    <header class="page-header">
+      <div class="container-site">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="/">Home</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">Privacy Policy</span>
+        </nav>
+        <span class="eyebrow">Legal &amp; Governance</span>
+        <h1 class="page-title">Privacy Policy</h1>
+        <p class="page-lead">
+          The Developer Tools provides browser-based tools designed to help you complete common development, technical, and utility tasks.
+        </p>
+        <div class="header-meta">
+          <span class="meta-date">Last updated: {lastUpdated}</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Body Section -->
+    <section class="page-body">
+      <div class="container-site page-layout">
+        <article class="prose-content">
+
+          <div class="info-card card">
+            <p>
+              We believe privacy should be straightforward, so this policy explains what information may be handled when you use our website.
+            </p>
+          </div>
+
+          <!-- Section: Information you provide -->
+          <div class="info-card card">
+            <h2 class="section-title">Information you provide</h2>
+            <p>
+              Most of the tools on The Developer Tools do not require an account.
+            </p>
+            <p>
+              If you contact us by email, we may receive information such as:
+            </p>
+            <ul class="checklist">
+              {emailDataItems.map((item) => (
+                <li>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="check-icon">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+            <p>
+              This information is used to respond to your enquiry and handle website-related requests.
+            </p>
+          </div>
+
+          <!-- Section: Information processed by our tools -->
+          <div class="info-card card">
+            <h2 class="section-title">Information processed by our tools</h2>
+            <p>
+              Some tools are designed to process information directly in your browser.
+            </p>
+            <p>
+              When a tool performs its operation locally, the data you enter is processed on your device rather than being sent to our application server.
+            </p>
+            <p>
+              However, you should always check the individual tool's page for information about how that particular tool works.
+            </p>
+          </div>
+
+          <!-- Section: Password Generator -->
+          <div class="info-card card">
+            <h2 class="section-title">Password Generator</h2>
+            <p>
+              The Password Generator is designed to generate passwords locally in your browser using the browser's cryptographic random number functionality.
+            </p>
+            <p>
+              Passwords generated by the tool are not intentionally sent to or stored on our server as part of the password-generation process.
+            </p>
+            <p>
+              You should still follow normal security practices and avoid entering sensitive information into any online tool unless you understand how that tool handles the information.
+            </p>
+          </div>
+
+          <!-- Section: Cookies and similar technologies -->
+          <div class="info-card card">
+            <h2 class="section-title">Cookies and similar technologies</h2>
+            <p>
+              We do not use cookies for tracking, advertising, or user profiling.
+            </p>
+            <p>
+              We use local browser storage (such as <code>localStorage</code>) exclusively on your device to remember your visual theme preference (dark or light mode).
+            </p>
+          </div>
+
+          <!-- Section: Third-party services -->
+          <div class="info-card card">
+            <h2 class="section-title">Third-party services</h2>
+            <p>
+              Our website uses Google Tag (gtag.js) for basic, aggregate site traffic analysis to understand page popularity, and Google Fonts to deliver clean web typography.
+            </p>
+            <p>
+              No data entered into tools or generated by tools is shared with third-party providers.
+            </p>
+          </div>
+
+          <!-- Section: Changes to this policy -->
+          <div class="info-card card">
+            <h2 class="section-title">Changes to this policy</h2>
+            <p>
+              We may update this Privacy Policy when the website, tools, or services change.
+            </p>
+            <p>
+              The latest version will always be published on this page.
+            </p>
+          </div>
+
+          <!-- Section: Contact -->
+          <div class="info-card card">
+            <h2 class="section-title">Contact</h2>
+            <p>
+              If you have questions about this Privacy Policy, you can contact us using the email address provided on the <a href="/contact-us">Contact Us</a> page (<a href={mailtoLink}>{contactEmail}</a>).
+            </p>
+          </div>
+
+        </article>
+
+        <!-- Sidebar -->
+        <aside class="page-sidebar">
+          <div class="sidebar-card card">
+            <h3 class="sidebar-heading">Privacy Summary</h3>
+            <ul class="summary-list">
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="check-icon"><polyline points="20 6 9 17 4 12"/></svg>
+                No user accounts needed
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="check-icon"><polyline points="20 6 9 17 4 12"/></svg>
+                Local WebCrypto password generation
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="check-icon"><polyline points="20 6 9 17 4 12"/></svg>
+                No tracking cookies
+              </li>
+            </ul>
+            <div class="sidebar-divider"></div>
+            <a href="/contact-us" class="btn btn-secondary w-full">Questions? Contact Us</a>
+          </div>
+        </aside>
+
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .content-page {
+    padding-bottom: var(--spacing-4xl);
+  }
+
+  /* Header */
+  .page-header {
+    padding: var(--spacing-3xl) 0 var(--spacing-2xl);
+    border-bottom: 1px solid var(--c-hairline);
+    background-color: var(--c-canvas);
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-family: var(--font-mono);
+    color: var(--c-mute);
+    margin-bottom: var(--spacing-md);
+  }
+
+  .breadcrumb a {
+    color: var(--c-mute);
+    text-decoration: none;
+    transition: color 120ms ease;
+  }
+
+  .breadcrumb a:hover {
+    color: var(--c-ink);
+  }
+
+  .page-title {
+    font-size: clamp(32px, 4vw, 44px);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.035em;
+    color: var(--c-ink);
+    margin: 8px 0 12px;
+  }
+
+  .page-lead {
+    font-size: 16px;
+    line-height: 26px;
+    color: var(--c-body);
+    max-width: 680px;
+    margin: 0 0 16px;
+  }
+
+  .header-meta {
+    font-size: 13px;
+    font-family: var(--font-mono);
+    color: var(--c-mute);
+  }
+
+  /* Body */
+  .page-body {
+    padding-top: var(--spacing-2xl);
+  }
+
+  .page-layout {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: var(--spacing-2xl);
+    align-items: start;
+  }
+
+  .prose-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+  }
+
+  .info-card {
+    padding: var(--spacing-xl);
+    background-color: var(--c-canvas-elevated);
+    border: 1px solid var(--c-hairline);
+    border-radius: var(--radius-md);
+  }
+
+  .section-title {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--c-ink);
+    margin: 0 0 var(--spacing-md);
+  }
+
+  .info-card p {
+    font-size: 15px;
+    line-height: 24px;
+    color: var(--c-body);
+    margin: 0 0 var(--spacing-md);
+  }
+
+  .info-card p:last-child {
+    margin-bottom: 0;
+  }
+
+  .info-card code {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    background-color: var(--c-hairline-soft);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--c-ink);
+  }
+
+  .info-card a {
+    color: var(--c-link);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* Checklist */
+  .checklist {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .checklist li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--c-ink);
+    line-height: 20px;
+  }
+
+  .check-icon {
+    color: var(--c-link);
+    flex-shrink: 0;
+  }
+
+  /* Sidebar */
+  .page-sidebar {
+    position: sticky;
+    top: 80px;
+  }
+
+  .sidebar-card {
+    padding: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  .sidebar-heading {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--c-ink);
+    margin: 0;
+  }
+
+  .summary-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .summary-list li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--c-body);
+  }
+
+  .sidebar-divider {
+    height: 1px;
+    background-color: var(--c-hairline);
+    margin: var(--spacing-xs) 0;
+  }
+
+  .w-full {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .page-layout {
+      grid-template-columns: 1fr;
+    }
+    .page-sidebar {
+      position: static;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .page-header {
+      padding: var(--spacing-2xl) 0 var(--spacing-lg);
+    }
+    .info-card {
+      padding: var(--spacing-lg);
+    }
+  }
+</style>

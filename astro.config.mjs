@@ -6,6 +6,12 @@ import sitemap from '@astrojs/sitemap';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://thedevelopertools.com',
+  redirects: {
+    '/privacy': '/privacy-policy',
+    '/terms': '/terms-and-conditions',
+    '/about': '/about-us',
+    '/contact': '/contact-us',
+  },
   integrations: [
     sitemap({
       filter: (page) =>

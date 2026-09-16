@@ -1,0 +1,363 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const pageJsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    "name": "About The Developer Tools",
+    "url": "https://thedevelopertools.com/about-us",
+    "description": "Learn about The Developer Tools: a collection of simple, fast, and privacy-minded browser-based tools for developers and creators.",
+    "mainEntity": {
+      "@type": "Organization",
+      "name": "The Developer Tools",
+      "url": "https://thedevelopertools.com"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://thedevelopertools.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "About Us",
+        "item": "https://thedevelopertools.com/about-us"
+      }
+    ]
+  }
+];
+
+const principles = [
+  "Easy to understand",
+  "Fast to use",
+  "Mobile-friendly",
+  "Focused on one job",
+  "Lightweight",
+  "Clear about how it handles your data"
+];
+---
+
+<Layout
+  title="About Us — The Developer Tools"
+  description="Learn about The Developer Tools: a collection of simple, fast, and privacy-minded browser-based tools for developers, creators, and everyday technical tasks."
+  canonicalUrl="https://thedevelopertools.com/about-us"
+  ogTitle="About The Developer Tools"
+  ogDescription="A collection of simple, useful browser-based tools for developers, creators, and everyday technical tasks. Built for speed, clarity, and privacy."
+  jsonLd={pageJsonLd}
+>
+  <main id="main-content" class="content-page">
+    <!-- Hero / Header Section -->
+    <header class="page-header">
+      <div class="container-site">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="/">Home</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">About Us</span>
+        </nav>
+        <span class="eyebrow">About Project</span>
+        <h1 class="page-title">About The Developer Tools</h1>
+        <p class="page-lead">
+          The Developer Tools is a collection of simple, useful browser-based tools for developers, creators, and everyday technical tasks.
+        </p>
+      </div>
+    </header>
+
+    <!-- Main Content Section -->
+    <section class="page-body">
+      <div class="container-site page-layout">
+        <article class="prose-content">
+          <!-- Overview Card -->
+          <div class="info-card card">
+            <p>
+              We started this project with a simple idea: many small developer tasks should not require installing software, creating an account, or navigating through a complicated interface.
+            </p>
+            <p>
+              Whether you need to format JSON, generate a secure password, inspect data, or perform another quick task, the goal is to make that job faster and easier.
+            </p>
+          </div>
+
+          <!-- Section: Why we built it -->
+          <div class="info-card card">
+            <h2 class="section-title">Why we built it</h2>
+            <p>
+              There are already many developer tools available online. However, a lot of them can feel cluttered, difficult to use, or filled with unnecessary features.
+            </p>
+            <p>
+              We wanted to take a different approach.
+            </p>
+            <div class="highlight-callout">
+              <span class="highlight-pill">Simple tools</span>
+              <span class="highlight-pill">Clear interfaces</span>
+              <span class="highlight-pill">No unnecessary steps</span>
+            </div>
+            <p>
+              Each tool is designed around a specific problem and focuses on getting the job done without adding unnecessary complexity.
+            </p>
+          </div>
+
+          <!-- Section: Built with privacy in mind -->
+          <div class="info-card card">
+            <h2 class="section-title">Built with privacy in mind</h2>
+            <p>
+              Whenever a tool can work entirely in your browser, we prefer that approach.
+            </p>
+            <p>
+              For example, tools that process information locally can perform their work without sending the data to our servers. This can be useful when working with sensitive or temporary information.
+            </p>
+            <p>
+              The exact data handling of each tool is explained on its respective page.
+            </p>
+          </div>
+
+          <!-- Section: What we're building -->
+          <div class="info-card card">
+            <h2 class="section-title">What we're building</h2>
+            <p>
+              The Developer Tools is an evolving collection. We're gradually adding more tools based on practical use cases and areas where existing tools can provide a better user experience.
+            </p>
+            <p>
+              We care more about making a smaller number of tools genuinely useful than filling the website with tools that nobody needs.
+            </p>
+          </div>
+
+          <!-- Section: Our approach -->
+          <div class="info-card card">
+            <h2 class="section-title">Our approach</h2>
+            <p>We try to keep every tool:</p>
+            <ul class="checklist">
+              {principles.map((item) => (
+                <li>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="check-icon">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+            <p class="conclusion-text">
+              The goal is simple: open a tool, do the work, and move on.
+            </p>
+          </div>
+        </article>
+
+        <!-- Sidebar Navigation / Fast Links -->
+        <aside class="page-sidebar">
+          <div class="sidebar-card card">
+            <h3 class="sidebar-heading">Explore Tools</h3>
+            <p class="sidebar-text">Discover browser-based utilities built for speed and simplicity.</p>
+            <a href="/" class="btn btn-primary w-full">Browse All Tools</a>
+            <div class="sidebar-divider"></div>
+            <a href="/contact-us" class="btn btn-secondary w-full">Have Feedback? Contact Us</a>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .content-page {
+    padding-bottom: var(--spacing-4xl);
+  }
+
+  /* Header */
+  .page-header {
+    padding: var(--spacing-3xl) 0 var(--spacing-2xl);
+    border-bottom: 1px solid var(--c-hairline);
+    background-color: var(--c-canvas);
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-family: var(--font-mono);
+    color: var(--c-mute);
+    margin-bottom: var(--spacing-md);
+  }
+
+  .breadcrumb a {
+    color: var(--c-mute);
+    text-decoration: none;
+    transition: color 120ms ease;
+  }
+
+  .breadcrumb a:hover {
+    color: var(--c-ink);
+  }
+
+  .page-title {
+    font-size: clamp(32px, 4vw, 44px);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.035em;
+    color: var(--c-ink);
+    margin: 8px 0 12px;
+  }
+
+  .page-lead {
+    font-size: 16px;
+    line-height: 26px;
+    color: var(--c-body);
+    max-width: 680px;
+    margin: 0;
+  }
+
+  /* Body */
+  .page-body {
+    padding-top: var(--spacing-2xl);
+  }
+
+  .page-layout {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: var(--spacing-2xl);
+    align-items: start;
+  }
+
+  .prose-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+  }
+
+  .info-card {
+    padding: var(--spacing-xl);
+    background-color: var(--c-canvas-elevated);
+    border: 1px solid var(--c-hairline);
+    border-radius: var(--radius-md);
+  }
+
+  .section-title {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--c-ink);
+    margin: 0 0 var(--spacing-md);
+  }
+
+  .info-card p {
+    font-size: 15px;
+    line-height: 24px;
+    color: var(--c-body);
+    margin: 0 0 var(--spacing-md);
+  }
+
+  .info-card p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Highlight callout */
+  .highlight-callout {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: var(--spacing-md) 0;
+  }
+
+  .highlight-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 14px;
+    border-radius: 100px;
+    background-color: var(--c-hairline-soft);
+    border: 1px solid var(--c-hairline);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--c-ink);
+  }
+
+  /* Checklist */
+  .checklist {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .checklist li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--c-ink);
+    line-height: 20px;
+  }
+
+  .check-icon {
+    color: var(--c-link);
+    flex-shrink: 0;
+  }
+
+  .conclusion-text {
+    font-weight: 500;
+    color: var(--c-ink);
+  }
+
+  /* Sidebar */
+  .page-sidebar {
+    position: sticky;
+    top: 80px;
+  }
+
+  .sidebar-card {
+    padding: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  .sidebar-heading {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--c-ink);
+    margin: 0;
+  }
+
+  .sidebar-text {
+    font-size: 13px;
+    line-height: 20px;
+    color: var(--c-body);
+    margin: 0;
+  }
+
+  .sidebar-divider {
+    height: 1px;
+    background-color: var(--c-hairline);
+    margin: var(--spacing-xs) 0;
+  }
+
+  .w-full {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .page-layout {
+      grid-template-columns: 1fr;
+    }
+    .page-sidebar {
+      position: static;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .page-header {
+      padding: var(--spacing-2xl) 0 var(--spacing-lg);
+    }
+    .info-card {
+      padding: var(--spacing-lg);
+    }
+  }
+</style>

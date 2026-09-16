@@ -1,0 +1,421 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+const lastUpdated = "September 17, 2026";
+const contactEmail = "thedevelopertools-team@gmail.com";
+const mailtoLink = `mailto:${contactEmail}`;
+
+const pageJsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Terms & Conditions",
+    "url": "https://thedevelopertools.com/terms-and-conditions",
+    "description": "Terms & Conditions of service for using browser-based utilities on The Developer Tools.",
+    "dateModified": "2026-09-17"
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://thedevelopertools.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Terms & Conditions",
+        "item": "https://thedevelopertools.com/terms-and-conditions"
+      }
+    ]
+  }
+];
+
+const prohibitedActions = [
+  "Disrupt the website",
+  "Circumvent security measures",
+  "Abuse automated systems",
+  "Introduce malicious code",
+  "Use the website for unlawful activities",
+  "Interfere with the normal operation of the tools"
+];
+---
+
+<Layout
+  title="Terms & Conditions — The Developer Tools"
+  description="Read the Terms & Conditions for using The Developer Tools. Explains terms for using browser utilities, tool output accuracy, and service availability."
+  canonicalUrl="https://thedevelopertools.com/terms-and-conditions"
+  ogTitle="Terms & Conditions — The Developer Tools"
+  ogDescription="Clear, straightforward Terms & Conditions for using online utilities on The Developer Tools."
+  jsonLd={pageJsonLd}
+>
+  <main id="main-content" class="content-page">
+    <!-- Header Section -->
+    <header class="page-header">
+      <div class="container-site">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="/">Home</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">Terms &amp; Conditions</span>
+        </nav>
+        <span class="eyebrow">Legal &amp; Governance</span>
+        <h1 class="page-title">Terms &amp; Conditions</h1>
+        <p class="page-lead">
+          Welcome to The Developer Tools. By using this website and its tools, you agree to these Terms &amp; Conditions.
+        </p>
+        <div class="header-meta">
+          <span class="meta-date">Last updated: {lastUpdated}</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Body Section -->
+    <section class="page-body">
+      <div class="container-site page-layout">
+        <article class="prose-content">
+
+          <div class="info-card card">
+            <p>
+              If you do not agree with these terms, please do not use the website.
+            </p>
+          </div>
+
+          <!-- Section: Using the website -->
+          <div class="info-card card">
+            <h2 class="section-title">Using the website</h2>
+            <p>
+              The Developer Tools provides online tools for development, technical, and general utility purposes.
+            </p>
+            <p>
+              You may use the website for lawful purposes and in a way that does not interfere with the website, its infrastructure, or other users.
+            </p>
+            <p>
+              You must not intentionally attempt to:
+            </p>
+            <ul class="checklist">
+              {prohibitedActions.map((action) => (
+                <li>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="prohibit-icon">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+                  </svg>
+                  <span>{action}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <!-- Section: Tool results -->
+          <div class="info-card card">
+            <h2 class="section-title">Tool results</h2>
+            <p>
+              The tools are provided to help with common technical tasks.
+            </p>
+            <p>
+              While we aim to make them accurate and reliable, results should be reviewed before being used in production systems, security-sensitive situations, or other important applications.
+            </p>
+            <p>
+              You are responsible for checking the output produced by a tool before relying on it.
+            </p>
+          </div>
+
+          <!-- Section: Availability -->
+          <div class="info-card card">
+            <h2 class="section-title">Availability</h2>
+            <p>
+              We may add, change, improve, temporarily disable, or remove tools and website features from time to time.
+            </p>
+            <p>
+              We do not guarantee that every tool or feature will always be available.
+            </p>
+          </div>
+
+          <!-- Section: Intellectual property -->
+          <div class="info-card card">
+            <h2 class="section-title">Intellectual property</h2>
+            <p>
+              The website's design, original content, branding, and software are protected by applicable intellectual property laws.
+            </p>
+            <p>
+              You may use the tools for their intended purpose, but you may not copy, reproduce, or redistribute the website or its original content as your own without permission.
+            </p>
+          </div>
+
+          <!-- Section: External services and links -->
+          <div class="info-card card">
+            <h2 class="section-title">External services and links</h2>
+            <p>
+              The website may contain links to third-party websites or use third-party services.
+            </p>
+            <p>
+              Those websites and services are operated independently and may have their own terms and privacy policies.
+            </p>
+            <p>
+              We are not responsible for the content, availability, or policies of third-party websites.
+            </p>
+          </div>
+
+          <!-- Section: No warranty -->
+          <div class="info-card card">
+            <h2 class="section-title">No warranty</h2>
+            <p>
+              The Developer Tools is provided on an "as is" and "as available" basis.
+            </p>
+            <p>
+              We make reasonable efforts to keep the tools working and the information accurate, but we cannot guarantee that the website will always be error-free, uninterrupted, or suitable for every particular purpose.
+            </p>
+          </div>
+
+          <!-- Section: Changes to these terms -->
+          <div class="info-card card">
+            <h2 class="section-title">Changes to these terms</h2>
+            <p>
+              We may update these Terms &amp; Conditions as the website evolves.
+            </p>
+            <p>
+              Changes will be published on this page with an updated date.
+            </p>
+          </div>
+
+          <!-- Section: Contact -->
+          <div class="info-card card">
+            <h2 class="section-title">Contact</h2>
+            <p>
+              If you have questions about these Terms &amp; Conditions, you can contact us using the email address provided on the <a href="/contact-us">Contact Us</a> page (<a href={mailtoLink}>{contactEmail}</a>).
+            </p>
+          </div>
+
+        </article>
+
+        <!-- Sidebar -->
+        <aside class="page-sidebar">
+          <div class="sidebar-card card">
+            <h3 class="sidebar-heading">Terms Overview</h3>
+            <ul class="summary-list">
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="check-icon"><polyline points="20 6 9 17 4 12"/></svg>
+                Lawful use required
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="check-icon"><polyline points="20 6 9 17 4 12"/></svg>
+                Review outputs before production use
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="check-icon"><polyline points="20 6 9 17 4 12"/></svg>
+                Provided on an "as-is" basis
+              </li>
+            </ul>
+            <div class="sidebar-divider"></div>
+            <a href="/privacy-policy" class="btn btn-secondary w-full">Read Privacy Policy</a>
+          </div>
+        </aside>
+
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .content-page {
+    padding-bottom: var(--spacing-4xl);
+  }
+
+  /* Header */
+  .page-header {
+    padding: var(--spacing-3xl) 0 var(--spacing-2xl);
+    border-bottom: 1px solid var(--c-hairline);
+    background-color: var(--c-canvas);
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-family: var(--font-mono);
+    color: var(--c-mute);
+    margin-bottom: var(--spacing-md);
+  }
+
+  .breadcrumb a {
+    color: var(--c-mute);
+    text-decoration: none;
+    transition: color 120ms ease;
+  }
+
+  .breadcrumb a:hover {
+    color: var(--c-ink);
+  }
+
+  .page-title {
+    font-size: clamp(32px, 4vw, 44px);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.035em;
+    color: var(--c-ink);
+    margin: 8px 0 12px;
+  }
+
+  .page-lead {
+    font-size: 16px;
+    line-height: 26px;
+    color: var(--c-body);
+    max-width: 680px;
+    margin: 0 0 16px;
+  }
+
+  .header-meta {
+    font-size: 13px;
+    font-family: var(--font-mono);
+    color: var(--c-mute);
+  }
+
+  /* Body */
+  .page-body {
+    padding-top: var(--spacing-2xl);
+  }
+
+  .page-layout {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: var(--spacing-2xl);
+    align-items: start;
+  }
+
+  .prose-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+  }
+
+  .info-card {
+    padding: var(--spacing-xl);
+    background-color: var(--c-canvas-elevated);
+    border: 1px solid var(--c-hairline);
+    border-radius: var(--radius-md);
+  }
+
+  .section-title {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--c-ink);
+    margin: 0 0 var(--spacing-md);
+  }
+
+  .info-card p {
+    font-size: 15px;
+    line-height: 24px;
+    color: var(--c-body);
+    margin: 0 0 var(--spacing-md);
+  }
+
+  .info-card p:last-child {
+    margin-bottom: 0;
+  }
+
+  .info-card a {
+    color: var(--c-link);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* Checklist */
+  .checklist {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .checklist li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--c-ink);
+    line-height: 20px;
+  }
+
+  .prohibit-icon {
+    color: var(--c-error, #ee0000);
+    flex-shrink: 0;
+  }
+
+  .check-icon {
+    color: var(--c-link);
+    flex-shrink: 0;
+  }
+
+  /* Sidebar */
+  .page-sidebar {
+    position: sticky;
+    top: 80px;
+  }
+
+  .sidebar-card {
+    padding: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  .sidebar-heading {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--c-ink);
+    margin: 0;
+  }
+
+  .summary-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .summary-list li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--c-body);
+  }
+
+  .sidebar-divider {
+    height: 1px;
+    background-color: var(--c-hairline);
+    margin: var(--spacing-xs) 0;
+  }
+
+  .w-full {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .page-layout {
+      grid-template-columns: 1fr;
+    }
+    .page-sidebar {
+      position: static;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .page-header {
+      padding: var(--spacing-2xl) 0 var(--spacing-lg);
+    }
+    .info-card {
+      padding: var(--spacing-lg);
+    }
+  }
+</style>
