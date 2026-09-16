@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# XML Sitemap Index Location
+Sitemap: https://thedevelopertools.com/sitemap-index.xml

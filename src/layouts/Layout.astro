@@ -9,6 +9,7 @@ interface Props {
   canonicalUrl?: string;
   ogTitle?: string;
   ogDescription?: string;
+  ogImageAlt?: string;
   jsonLd?: object | object[];
 }
 
@@ -18,11 +19,16 @@ const {
   canonicalUrl,
   ogTitle,
   ogDescription,
+  ogImageAlt = "The Developer Tools — Free Browser-Based Developer Utilities",
   jsonLd,
 } = Astro.props;
 
 const siteUrl = "https://thedevelopertools.com";
-const canonical = canonicalUrl ?? `${siteUrl}${Astro.url.pathname}`;
+let canonical = canonicalUrl ?? `${siteUrl}${Astro.url.pathname}`;
+if (canonical.length > siteUrl.length && canonical.endsWith("/")) {
+  canonical = canonical.slice(0, -1);
+}
+
 const ogImg = `${siteUrl}/og-image.png`;
 const resolvedOgTitle = ogTitle || title;
 const resolvedOgDesc = ogDescription || description;
@@ -40,33 +46,39 @@ const jsonLdArr = jsonLd
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
 
-    <!-- SEO -->
+    <!-- Primary Meta Tags -->
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
 
-    <!-- Open Graph -->
+    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
     <meta property="og:title" content={resolvedOgTitle} />
     <meta property="og:description" content={resolvedOgDesc} />
     <meta property="og:image" content={ogImg} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={ogImageAlt} />
     <meta property="og:site_name" content="The Developer Tools" />
+    <meta property="og:locale" content="en_US" />
 
-    <!-- Twitter Card -->
+    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonical} />
     <meta name="twitter:title" content={resolvedOgTitle} />
     <meta name="twitter:description" content={resolvedOgDesc} />
     <meta name="twitter:image" content={ogImg} />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
 
-    <!-- Robots -->
+    <!-- Crawling & Indexation -->
     <meta name="robots" content="index, follow" />
 
     <!-- Favicons -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
 
-    <!-- Fonts: Geist Sans + Geist Mono -->
+    <!-- Typography: Geist Sans + Geist Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -89,7 +101,6 @@ const jsonLdArr = jsonLd
           } else if (stored === "light") {
             document.documentElement.classList.remove("dark");
           } else {
-            // No stored preference — honour the OS setting, default dark if neutral
             var prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
             if (prefersDark) {
               document.documentElement.classList.add("dark");
@@ -109,3 +120,4 @@ const jsonLdArr = jsonLd
     <Footer />
   </body>
 </html>
+
