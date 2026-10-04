@@ -51,8 +51,11 @@ const jsonLdString = jsonLd ? JSON.stringify(Array.isArray(jsonLd) ? jsonLd : [j
     <meta name="twitter:description" content={resolvedOgDesc} />
     <meta name="twitter:image" content={ogImg} />
 
-    <!-- Robots -->
-    <meta name="robots" content="index, follow" />
+    <!-- Crawling, Indexation & AI Reference Signals -->
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <meta name="content-signal" content="ai-search=yes, ai-train=no" />
 
     <!-- Favicons -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />

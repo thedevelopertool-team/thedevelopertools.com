@@ -1,4 +1,61 @@
+# Allow all standard web search engines and crawlers
 User-agent: *
+Allow: /
+
+# OpenAI Crawlers (SearchGPT, ChatGPT web browsing, and citation retrieval)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+# Anthropic Claude Crawlers (Claude search and citation retrieval)
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+# Google AI & Extended Crawlers (Gemini, Vertex AI, AI Overviews)
+User-agent: Google-Extended
+Allow: /
+
+User-agent: GoogleOther
+Allow: /
+
+# Perplexity AI Search Crawler
+User-agent: PerplexityBot
+Allow: /
+
+# Apple Intelligence, Siri & Spotlight
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# Amazon AI & Alexa
+User-agent: Amazonbot
+Allow: /
+
+# Meta AI & Llama Web Retrieval
+User-agent: Meta-ExternalAgent
+Allow: /
+
+User-agent: FacebookBot
+Allow: /
+
+# Mistral, Cohere, ByteDance & Web Intelligence Agents
+User-agent: Cohere-ai
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: Diffbot
 Allow: /
 
 # XML Sitemap Index Location
