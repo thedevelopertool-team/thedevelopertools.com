@@ -1,0 +1,3259 @@
+---
+// JsonToolkit.astro
+// Senior UX + Frontend Engineer Implementation — 100% Client-Side, Zero Dependencies.
+// Full feature suite: Format, Hierarchical Tree, Validator, Minifier, Dual-Pane Compare (LCS diff),
+// Real-time Search, Fullscreen mode, and full Convert/Code generation tools.
+---
+
+<div class="jt-root" id="json-toolkit">
+
+  <!-- ═══════════════════════════════════════════════════════
+       STANDARD 2-COLUMN WORKSPACE (For all tools except Compare)
+  ═══════════════════════════════════════════════════════ -->
+  <div class="jt-standard-workspace" id="jt-standard-workspace">
+
+    <!-- LEFT COLUMN — MASTER INPUT -->
+    <div class="jt-input-col" id="jt-input-col">
+      <!-- Input header -->
+      <div class="jt-panel-header">
+        <div class="jt-header-title">
+          <span class="eyebrow">JSON INPUT</span>
+        </div>
+        <div class="jt-input-actions">
+          <button id="btn-sample" class="btn btn-ghost-sm jt-btn" type="button" title="Load sample JSON">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            Sample
+          </button>
+          <button id="btn-load-file" class="btn btn-ghost-sm jt-btn" type="button" title="Import JSON file">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Import
+          </button>
+          <button id="btn-clear" class="btn btn-ghost-sm jt-btn" type="button" title="Clear input">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+            Clear
+          </button>
+          <button id="btn-fullscreen-main" class="btn btn-ghost-sm jt-btn" type="button" title="Toggle fullscreen view" aria-label="Toggle fullscreen">
+            <svg class="icon-expand" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+            <svg class="icon-compress" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:none"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" y1="10" x2="21" y2="3"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Drop zone & scrollable input textarea -->
+      <div class="jt-drop-zone" id="jt-drop-zone">
+        <textarea
+          id="jt-input"
+          class="jt-textarea"
+          placeholder='Paste JSON here, drop a .json file, or click "Sample"…'
+          spellcheck="false"
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="off"
+          aria-label="JSON input"
+          aria-describedby="jt-status"
+        ></textarea>
+
+        <div class="jt-drop-overlay" id="jt-drop-overlay" aria-hidden="true">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <span>Drop .json file to load</span>
+        </div>
+      </div>
+
+      <input type="file" id="jt-file-input" accept=".json,application/json,text/plain" aria-hidden="true" style="display:none" />
+
+      <!-- Status row -->
+      <div class="jt-status-row" id="jt-status" aria-live="polite" aria-atomic="true">
+        <span class="jt-status-idle" id="jt-status-idle">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Ready — paste or import JSON
+        </span>
+        <span class="jt-status-valid" id="jt-status-valid" hidden>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+          <span id="jt-valid-detail">Valid JSON</span>
+        </span>
+        <span class="jt-status-error" id="jt-status-error" hidden>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          <span id="jt-error-summary">Invalid JSON</span>
+        </span>
+      </div>
+    </div><!-- /jt-input-col -->
+
+    <!-- CENTER DIVIDER -->
+    <div class="jt-divider" aria-hidden="true"></div>
+
+    <!-- RIGHT COLUMN — TOOL NAVIGATION + OUTPUT -->
+    <div class="jt-output-col">
+
+      <!-- Navigation Header Bar -->
+      <div class="jt-tabs-header" role="navigation" aria-label="JSON operations">
+        <div class="jt-tabs-group" role="tablist">
+          <button class="jt-tab active" role="tab" aria-selected="true"  data-tab="formatter"  aria-controls="jt-panel-formatter"  id="tab-formatter">
+            Format
+          </button>
+          <button class="jt-tab"        role="tab" aria-selected="false" data-tab="viewer"     aria-controls="jt-panel-viewer"     id="tab-viewer">
+            Tree View
+          </button>
+          <button class="jt-tab"        role="tab" aria-selected="false" data-tab="validator"  aria-controls="jt-panel-validator"  id="tab-validator">
+            Validate
+          </button>
+          <button class="jt-tab"        role="tab" aria-selected="false" data-tab="minifier"   aria-controls="jt-panel-minifier"   id="tab-minifier">
+            Minify
+          </button>
+          <button class="jt-tab"        role="tab" aria-selected="false" data-tab="compare"    aria-controls="jt-compare-workspace" id="tab-compare">
+            Compare
+          </button>
+
+          <span class="jt-tab-sep" aria-hidden="true"></span>
+
+          <!-- Convert Dropdown -->
+          <div class="jt-dropdown" id="dd-convert">
+            <button class="jt-tab jt-dropdown-trigger" id="btn-dd-convert" type="button" aria-expanded="false" aria-haspopup="menu" aria-label="Conversion tools">
+              <span id="label-dd-convert">Convert</span>
+              <svg class="jt-chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div class="jt-dropdown-menu" id="menu-convert" role="menu" hidden>
+              <button class="jt-dropdown-item" role="menuitem" data-tab="csv">
+                <span class="jt-dd-title">JSON to CSV</span>
+                <span class="jt-dd-badge">.csv</span>
+              </button>
+              <button class="jt-dropdown-item" role="menuitem" data-tab="yaml">
+                <span class="jt-dd-title">JSON to YAML</span>
+                <span class="jt-dd-badge">.yaml</span>
+              </button>
+              <button class="jt-dropdown-item" role="menuitem" data-tab="xml">
+                <span class="jt-dd-title">JSON to XML</span>
+                <span class="jt-dd-badge">.xml</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Types & Code Dropdown -->
+          <div class="jt-dropdown" id="dd-types">
+            <button class="jt-tab jt-dropdown-trigger" id="btn-dd-types" type="button" aria-expanded="false" aria-haspopup="menu" aria-label="Code and Schema generation tools">
+              <span id="label-dd-types">Types &amp; Code</span>
+              <svg class="jt-chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div class="jt-dropdown-menu jt-dropdown-menu-wide" id="menu-types" role="menu" hidden>
+              <div class="jt-dd-section-title">Type Systems &amp; Schemas</div>
+              <button class="jt-dropdown-item" role="menuitem" data-tab="typescript">
+                <span class="jt-dd-title">TypeScript Interfaces</span>
+                <span class="jt-dd-badge">.ts</span>
+              </button>
+              <button class="jt-dropdown-item" role="menuitem" data-tab="zod">
+                <span class="jt-dd-title">Zod Schema</span>
+                <span class="jt-dd-badge">.ts</span>
+              </button>
+              <button class="jt-dropdown-item" role="menuitem" data-tab="schema">
+                <span class="jt-dd-title">JSON Schema (draft-07)</span>
+                <span class="jt-dd-badge">.json</span>
+              </button>
+              <button class="jt-dropdown-item" role="menuitem" data-tab="openapi">
+                <span class="jt-dd-title">OpenAPI 3.0 Schema</span>
+                <span class="jt-dd-badge">.yaml</span>
+              </button>
+
+              <div class="jt-dd-section-title">Backend Models &amp; Structs</div>
+              <button class="jt-dropdown-item" role="menuitem" data-tab="go">
+                <span class="jt-dd-title">Go Structs</span>
+                <span class="jt-dd-badge">.go</span>
+              </button>
+              <button class="jt-dropdown-item" role="menuitem" data-tab="pydantic">
+                <span class="jt-dd-title">Python Pydantic v2</span>
+                <span class="jt-dd-badge">.py</span>
+              </button>
+              <button class="jt-dropdown-item" role="menuitem" data-tab="java">
+                <span class="jt-dd-title">Java POJO (Jackson)</span>
+                <span class="jt-dd-badge">.java</span>
+              </button>
+              <button class="jt-dropdown-item" role="menuitem" data-tab="kotlin">
+                <span class="jt-dd-title">Kotlin Data Classes</span>
+                <span class="jt-dd-badge">.kt</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live JSON Search Bar -->
+        <div class="jt-search-wrap" role="search">
+          <div class="jt-search-box">
+            <svg class="jt-search-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input
+              id="jt-search-input"
+              type="text"
+              class="jt-search-input"
+              placeholder="Search keys &amp; values (Ctrl+F)"
+              aria-label="Search JSON keys and values"
+              autocomplete="off"
+              spellcheck="false"
+            />
+            <button id="btn-search-clear" class="jt-search-clear-btn" type="button" title="Clear search" aria-label="Clear search" hidden>
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+            <span id="jt-search-count" class="jt-search-counter" hidden>0 / 0</span>
+            <div class="jt-search-nav-btns" id="jt-search-nav-btns" hidden>
+              <button id="btn-search-prev" class="jt-search-nav-btn" type="button" title="Previous match (Shift+Enter)" aria-label="Previous match">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+              </button>
+              <button id="btn-search-next" class="jt-search-nav-btn" type="button" title="Next match (Enter)" aria-label="Next match">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div><!-- /jt-tabs-header -->
+
+      <!-- Output Panels -->
+      <div class="jt-panels">
+
+        <!-- 1. FORMATTER -->
+        <div class="jt-panel" id="jt-panel-formatter" role="tabpanel" aria-labelledby="tab-formatter">
+          <div class="jt-panel-toolbar">
+            <span class="eyebrow">INDENT</span>
+            <div class="jt-indent-group" role="group" aria-label="Indentation spacing">
+              <button class="jt-indent-btn active" data-indent="2"  type="button">2</button>
+              <button class="jt-indent-btn"        data-indent="4"  type="button">4</button>
+              <button class="jt-indent-btn"        data-indent="tab" type="button">Tab</button>
+            </div>
+            <div class="jt-panel-toolbar-right">
+              <button class="btn btn-ghost-sm jt-btn" id="btn-copy-formatter" type="button">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <span>Copy</span>
+              </button>
+              <button class="btn btn-ghost-sm jt-btn" id="btn-dl-formatter" type="button">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span>Download</span>
+              </button>
+            </div>
+          </div>
+          <textarea id="out-formatter" class="jt-output-textarea" readonly aria-label="Formatted JSON output" spellcheck="false"></textarea>
+        </div>
+
+        <!-- 2. HIERARCHICAL TREE VIEWER -->
+        <div class="jt-panel" id="jt-panel-viewer" role="tabpanel" aria-labelledby="tab-viewer" hidden>
+          <div class="jt-panel-toolbar">
+            <span class="eyebrow">HIERARCHICAL TREE</span>
+            <div class="jt-panel-toolbar-right">
+              <button class="btn btn-ghost-sm jt-btn" id="btn-expand-all" type="button" title="Expand every nested level">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+                Expand All
+              </button>
+              <button class="btn btn-ghost-sm jt-btn" id="btn-collapse-all" type="button" title="Collapse to top-level keys">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
+                Collapse All
+              </button>
+            </div>
+          </div>
+          <div id="out-viewer" class="jt-tree-container" aria-label="Interactive JSON tree viewer">
+            <div class="jt-panel-empty">Paste JSON on the left to explore the interactive tree.</div>
+          </div>
+        </div>
+
+        <!-- 3. VALIDATOR -->
+        <div class="jt-panel" id="jt-panel-validator" role="tabpanel" aria-labelledby="tab-validator" hidden>
+          <div class="jt-panel-toolbar">
+            <span class="eyebrow">SYNTAX VALIDATION</span>
+          </div>
+          <div id="out-validator" class="jt-validator-output">
+            <div class="jt-panel-empty">Paste JSON on the left to validate syntax.</div>
+          </div>
+        </div>
+
+        <!-- 4. MINIFIER -->
+        <div class="jt-panel" id="jt-panel-minifier" role="tabpanel" aria-labelledby="tab-minifier" hidden>
+          <div class="jt-panel-toolbar">
+            <span class="eyebrow">MINIFIED JSON</span>
+            <div class="jt-panel-toolbar-right">
+              <span class="jt-stat" id="stat-minifier"></span>
+              <button class="btn btn-ghost-sm jt-btn" id="btn-copy-minifier" type="button">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <span>Copy</span>
+              </button>
+              <button class="btn btn-ghost-sm jt-btn" id="btn-dl-minifier" type="button">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span>Download</span>
+              </button>
+            </div>
+          </div>
+          <textarea id="out-minifier" class="jt-output-textarea" readonly aria-label="Minified JSON output" spellcheck="false"></textarea>
+        </div>
+
+        <!-- 5. CSV -->
+        <div class="jt-panel" id="jt-panel-csv" role="tabpanel" aria-labelledby="tab-csv" hidden>
+          <div class="jt-panel-toolbar">
+            <span class="eyebrow">CSV OUTPUT</span>
+            <div class="jt-panel-toolbar-right">
+              <button class="btn btn-ghost-sm jt-btn" id="btn-copy-csv" type="button">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <span>Copy</span>
+              </button>
+              <button class="btn btn-ghost-sm jt-btn" id="btn-dl-csv" type="button">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span>Download .csv</span>
+              </button>
+            </div>
+          </div>
+          <textarea id="out-csv" class="jt-output-textarea" readonly aria-label="CSV output" spellcheck="false"></textarea>
+        </div>
+
+        <!-- 6. YAML -->
+        <div class="jt-panel" id="jt-panel-yaml" role="tabpanel" aria-labelledby="tab-yaml" hidden>
+          <div class="jt-panel-toolbar">
+            <span class="eyebrow">YAML OUTPUT</span>
+            <div class="jt-panel-toolbar-right">
+              <button class="btn btn-ghost-sm jt-btn" id="btn-copy-yaml" type="button">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <span>Copy</span>
+              </button>
+              <button class="btn btn-ghost-sm jt-btn" id="btn-dl-yaml" type="button">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span>Download .yaml</span>
+              </button>
+            </div>
+          </div>
+          <textarea id="out-yaml" class="jt-output-textarea" readonly aria-label="YAML output" spellcheck="false"></textarea>
+        </div>
+
+        <!-- 7. XML -->
+        <div class="jt-panel" id="jt-panel-xml" role="tabpanel" aria-labelledby="tab-xml" hidden>
+          <div class="jt-panel-toolbar">
+            <span class="eyebrow">XML OUTPUT</span>
+            <div class="jt-panel-toolbar-right">
+              <button class="btn btn-ghost-sm jt-btn" id="btn-copy-xml" type="button">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <span>Copy</span>
+              </button>
+              <button class="btn btn-ghost-sm jt-btn" id="btn-dl-xml" type="button">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span>Download .xml</span>
+              </button>
+            </div>
+          </div>
+          <textarea id="out-xml" class="jt-output-textarea" readonly aria-label="XML output" spellcheck="false"></textarea>
+        </div>
+
+        <!-- 8. TYPESCRIPT -->
+        <div class="jt-panel" id="jt-panel-typescript" role="tabpanel" aria-labelledby="tab-typescript" hidden>
+          <div class="jt-panel-toolbar">
+            <span class="eyebrow">TYPESCRIPT TYPES</span>
+            <div class="jt-panel-toolbar-right">
+              <button class="btn btn-ghost-sm jt-btn" id="btn-copy-typescript" type="button">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <span>Copy</span>
+              </button>
+              <button class="btn btn-ghost-sm jt-btn" id="btn-dl-typescript" type="button">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span>Download .ts</span>
+              </button>
+            </div>
+          </div>
+          <textarea id="out-typescript" class="jt-output-textarea" readonly aria-label="TypeScript types output" spellcheck="false"></textarea>
+        </div>
+
+        <!-- 9. ZOD -->
+        <div class="jt-panel" id="jt-panel-zod" role="tabpanel" aria-labelledby="tab-zod" hidden>
+          <div class="jt-panel-toolbar">
+            <span class="eyebrow">ZOD SCHEMA</span>
+            <div class="jt-panel-toolbar-right">
+              <button class="btn btn-ghost-sm jt-btn" id="btn-copy-zod" type="button">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <span>Copy</span>
+              </button>
+              <button class="btn btn-ghost-sm jt-btn" id="btn-dl-zod" type="button">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span>Download .ts</span>
+              </button>
+            </div>
+          </div>
+          <textarea id="out-zod" class="jt-output-textarea" readonly aria-label="Zod schema output" spellcheck="false"></textarea>
+        </div>
+
+        <!-- 10. JSON SCHEMA (DRAFT-07) -->
+        <div class="jt-panel" id="jt-panel-schema" role="tabpanel" aria-labelledby="tab-schema" hidden>
+          <div class="jt-panel-toolbar">
+            <span class="eyebrow">JSON SCHEMA (DRAFT-07)</span>
+            <div class="jt-panel-toolbar-right">
+              <button class="btn btn-ghost-sm jt-btn" id="btn-copy-schema" type="button">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <span>Copy</span>
+              </button>
+              <button class="btn btn-ghost-sm jt-btn" id="btn-dl-schema" type="button">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span>Download .json</span>
+              </button>
+            </div>
+          </div>
+          <textarea id="out-schema" class="jt-output-textarea" readonly aria-label="JSON Schema output" spellcheck="false"></textarea>
+        </div>
+
+        <!-- 11. OPENAPI 3.0 SCHEMA -->
+        <div class="jt-panel" id="jt-panel-openapi" role="tabpanel" aria-labelledby="tab-openapi" hidden>
+          <div class="jt-panel-toolbar">
+            <span class="eyebrow">OPENAPI 3.0 SCHEMA</span>
+            <div class="jt-panel-toolbar-right">
+              <button class="btn btn-ghost-sm jt-btn" id="btn-copy-openapi" type="button">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <span>Copy</span>
+              </button>
+              <button class="btn btn-ghost-sm jt-btn" id="btn-dl-openapi" type="button">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span>Download .yaml</span>
+              </button>
+            </div>
+          </div>
+          <textarea id="out-openapi" class="jt-output-textarea" readonly aria-label="OpenAPI 3.0 schema output" spellcheck="false"></textarea>
+        </div>
+
+        <!-- 12. GO STRUCTS -->
+        <div class="jt-panel" id="jt-panel-go" role="tabpanel" aria-labelledby="tab-go" hidden>
+          <div class="jt-panel-toolbar">
+            <span class="eyebrow">GO STRUCTS</span>
+            <div class="jt-panel-toolbar-right">
+              <button class="btn btn-ghost-sm jt-btn" id="btn-copy-go" type="button">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <span>Copy</span>
+              </button>
+              <button class="btn btn-ghost-sm jt-btn" id="btn-dl-go" type="button">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span>Download .go</span>
+              </button>
+            </div>
+          </div>
+          <textarea id="out-go" class="jt-output-textarea" readonly aria-label="Go structs output" spellcheck="false"></textarea>
+        </div>
+
+        <!-- 13. PYTHON PYDANTIC V2 -->
+        <div class="jt-panel" id="jt-panel-pydantic" role="tabpanel" aria-labelledby="tab-pydantic" hidden>
+          <div class="jt-panel-toolbar">
+            <span class="eyebrow">PYTHON PYDANTIC V2</span>
+            <div class="jt-panel-toolbar-right">
+              <button class="btn btn-ghost-sm jt-btn" id="btn-copy-pydantic" type="button">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <span>Copy</span>
+              </button>
+              <button class="btn btn-ghost-sm jt-btn" id="btn-dl-pydantic" type="button">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span>Download .py</span>
+              </button>
+            </div>
+          </div>
+          <textarea id="out-pydantic" class="jt-output-textarea" readonly aria-label="Pydantic models output" spellcheck="false"></textarea>
+        </div>
+
+        <!-- 14. JAVA POJO -->
+        <div class="jt-panel" id="jt-panel-java" role="tabpanel" aria-labelledby="tab-java" hidden>
+          <div class="jt-panel-toolbar">
+            <span class="eyebrow">JAVA POJO (JACKSON)</span>
+            <div class="jt-panel-toolbar-right">
+              <button class="btn btn-ghost-sm jt-btn" id="btn-copy-java" type="button">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <span>Copy</span>
+              </button>
+              <button class="btn btn-ghost-sm jt-btn" id="btn-dl-java" type="button">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span>Download .java</span>
+              </button>
+            </div>
+          </div>
+          <textarea id="out-java" class="jt-output-textarea" readonly aria-label="Java classes output" spellcheck="false"></textarea>
+        </div>
+
+        <!-- 15. KOTLIN DATA CLASS -->
+        <div class="jt-panel" id="jt-panel-kotlin" role="tabpanel" aria-labelledby="tab-kotlin" hidden>
+          <div class="jt-panel-toolbar">
+            <span class="eyebrow">KOTLIN DATA CLASSES</span>
+            <div class="jt-panel-toolbar-right">
+              <button class="btn btn-ghost-sm jt-btn" id="btn-copy-kotlin" type="button">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <span>Copy</span>
+              </button>
+              <button class="btn btn-ghost-sm jt-btn" id="btn-dl-kotlin" type="button">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span>Download .kt</span>
+              </button>
+            </div>
+          </div>
+          <textarea id="out-kotlin" class="jt-output-textarea" readonly aria-label="Kotlin data classes output" spellcheck="false"></textarea>
+        </div>
+
+      </div><!-- /jt-panels -->
+    </div><!-- /jt-output-col -->
+
+  </div><!-- /jt-standard-workspace -->
+
+
+  <!-- ═══════════════════════════════════════════════════════
+       DEDICATED DUAL-PANE COMPARE WORKSPACE
+  ═══════════════════════════════════════════════════════ -->
+  <div class="jt-compare-workspace" id="jt-compare-workspace" hidden>
+
+    <!-- Compare Top Control & Navigation Header -->
+    <div class="jt-compare-top-bar">
+      <div class="jt-compare-top-left">
+        <button id="btn-exit-compare" class="btn btn-ghost-sm jt-btn" type="button" title="Back to main workspace">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+          Back to Tools
+        </button>
+        <span class="jt-tab-sep" aria-hidden="true"></span>
+        <span class="eyebrow" style="font-size:12px;color:var(--c-ink)">JSON COMPARE</span>
+      </div>
+
+      <!-- Diff Stats & Diff Navigation -->
+      <div class="jt-compare-controls">
+        <div id="jt-diff-stats" class="jt-diff-stats-group">
+          <span class="jt-diff-tag added" id="stat-diff-added">+0 added</span>
+          <span class="jt-diff-tag removed" id="stat-diff-removed">-0 removed</span>
+          <span class="jt-diff-tag modified" id="stat-diff-modified">~0 changed</span>
+        </div>
+
+        <div class="jt-diff-nav" id="jt-diff-nav">
+          <button id="btn-diff-prev" class="jt-diff-nav-btn" type="button" title="Previous difference" aria-label="Previous difference">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+          </button>
+          <span id="jt-diff-counter" class="jt-diff-counter">0 diffs</span>
+          <button id="btn-diff-next" class="jt-diff-nav-btn" type="button" title="Next difference" aria-label="Next difference">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+        </div>
+
+        <button id="btn-fullscreen-compare" class="btn btn-ghost-sm jt-btn" type="button" title="Toggle fullscreen comparison">
+          <svg class="icon-expand" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          <svg class="icon-compress" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:none"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" y1="10" x2="21" y2="3"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Dual Split Panes: JSON A | JSON B -->
+    <div class="jt-compare-panes-grid">
+
+      <!-- PANE A (ORIGINAL) -->
+      <div class="jt-compare-pane" id="jt-pane-a">
+        <div class="jt-pane-toolbar">
+          <div class="jt-pane-title">
+            <span class="eyebrow" style="color:var(--c-ink)">JSON A (ORIGINAL)</span>
+          </div>
+          <div class="jt-pane-actions">
+            <button id="btn-import-a" class="btn btn-ghost-sm jt-btn" type="button" title="Import JSON A file">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              Import
+            </button>
+            <button id="btn-format-a" class="btn btn-ghost-sm jt-btn" type="button" title="Format JSON A">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+              Format
+            </button>
+            <button id="btn-clear-a" class="btn btn-ghost-sm jt-btn" type="button" title="Clear JSON A">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+              Clear
+            </button>
+            <button id="btn-mode-a" class="btn btn-ghost-sm jt-btn" type="button" title="Toggle edit / diff view">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              <span>Edit</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Input textarea (shown in edit mode, hidden in diff mode) -->
+        <textarea
+          id="jt-raw-a"
+          class="jt-diff-textarea jt-compare-input"
+          spellcheck="false"
+          placeholder="Paste or type JSON A (Original)..."
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="off"
+          aria-label="JSON A (Original)"
+        ></textarea>
+
+        <!-- Diff view output (shown in diff/view mode, hidden in edit mode) -->
+        <div id="jt-diff-view-a" class="jt-diff-view-output" hidden></div>
+
+        <input type="file" id="jt-file-a" accept=".json,application/json,text/plain" style="display:none" />
+      </div>
+
+      <!-- CENTER DIVIDER -->
+      <div class="jt-divider" aria-hidden="true"></div>
+
+      <!-- PANE B (MODIFIED) -->
+      <div class="jt-compare-pane" id="jt-pane-b">
+        <div class="jt-pane-toolbar">
+          <div class="jt-pane-title">
+            <span class="eyebrow" style="color:var(--c-ink)">JSON B (MODIFIED)</span>
+          </div>
+          <div class="jt-pane-actions">
+            <button id="btn-import-b" class="btn btn-ghost-sm jt-btn" type="button" title="Import JSON B file">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              Import
+            </button>
+            <button id="btn-format-b" class="btn btn-ghost-sm jt-btn" type="button" title="Format JSON B">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+              Format
+            </button>
+            <button id="btn-clear-b" class="btn btn-ghost-sm jt-btn" type="button" title="Clear JSON B">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+              Clear
+            </button>
+            <button id="btn-mode-b" class="btn btn-ghost-sm jt-btn" type="button" title="Toggle edit / diff view">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              <span>Edit</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Input textarea (shown in edit mode, hidden in diff mode) -->
+        <textarea
+          id="jt-raw-b"
+          class="jt-diff-textarea jt-compare-input"
+          spellcheck="false"
+          placeholder="Paste or type JSON B to compare against JSON A..."
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="off"
+          aria-label="JSON B (Modified)"
+        ></textarea>
+
+        <!-- Diff view output (shown in diff/view mode, hidden in edit mode) -->
+        <div id="jt-diff-view-b" class="jt-diff-view-output" hidden></div>
+
+        <input type="file" id="jt-file-b" accept=".json,application/json,text/plain" style="display:none" />
+      </div>
+
+    </div><!-- /jt-compare-panes-grid -->
+
+  </div><!-- /jt-compare-workspace -->
+
+</div><!-- /jt-root -->
+
+
+<style is:global>
+  /* ── Root Container ──────────────────────────────────────── */
+  .jt-root {
+    display: flex;
+    flex-direction: column;
+    height: 650px;
+    min-height: 520px;
+    max-height: 85vh;
+    background-color: var(--c-canvas-elevated);
+    border: 1px solid var(--c-hairline);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    position: relative;
+    transition: all 180ms ease;
+  }
+
+  /* Fullscreen Mode (Works on Desktop and Mobile via 100dvh) */
+  .jt-root.jt-fullscreen {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 100000 !important;
+    width: 100vw !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    border-radius: 0 !important;
+    border: none !important;
+  }
+
+  /* ── Standard 2-Col Workspace ────────────────────────────── */
+  .jt-standard-workspace {
+    display: grid;
+    grid-template-columns: 40% 1px 1fr;
+    grid-template-rows: 1fr;
+    height: 100%;
+    min-height: 0;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* Center Divider */
+  .jt-divider {
+    background-color: var(--c-hairline);
+    width: 1px;
+    align-self: stretch;
+  }
+
+  /* ── Left Column (Input) ─────────────────────────────────── */
+  .jt-input-col {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    background-color: var(--c-canvas);
+  }
+
+  /* ── Right Column (Output) ───────────────────────────────── */
+  .jt-output-col {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    background-color: var(--c-canvas-elevated);
+    position: relative;
+  }
+
+  /* ── Headers & Toolbars ──────────────────────────────────── */
+  .jt-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--c-hairline);
+    gap: 8px;
+    flex-shrink: 0;
+    background-color: var(--c-canvas);
+  }
+
+  .jt-header-title { display: flex; align-items: center; gap: 6px; }
+  .jt-input-actions { display: flex; align-items: center; gap: 5px; }
+
+  .jt-btn {
+    font-size: 12px !important;
+    padding: 4px 8px !important;
+    gap: 4px !important;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    border-radius: 6px;
+    user-select: none;
+  }
+
+  /* ── Drop zone & Independent Scrollable Input ───────────── */
+  .jt-drop-zone {
+    position: relative;
+    flex: 1;
+    display: flex;
+    min-height: 0;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .jt-textarea {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    resize: none;
+    border: none;
+    outline: none;
+    background-color: var(--c-canvas);
+    color: var(--c-ink);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 20px;
+    padding: 14px;
+    overflow-y: auto;
+    overflow-x: auto;
+    white-space: pre;
+  }
+
+  .jt-textarea::placeholder { color: var(--c-faint); }
+
+  /* Drop overlay */
+  .jt-drop-overlay {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background-color: rgba(0,112,243,0.06);
+    border: 2px dashed var(--c-link);
+    border-radius: 4px;
+    color: var(--c-link);
+    font-size: 13px;
+    font-weight: 500;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  .jt-drop-zone.dragging .jt-drop-overlay { display: flex; }
+
+  /* ── Status row ──────────────────────────────────────────── */
+  .jt-status-row {
+    display: flex;
+    align-items: center;
+    padding: 6px 14px;
+    border-top: 1px solid var(--c-hairline);
+    font-size: 12px;
+    font-family: var(--font-mono);
+    flex-shrink: 0;
+    min-height: 32px;
+    background-color: var(--c-canvas);
+  }
+
+  .jt-status-idle { display: flex; align-items: center; gap: 6px; color: var(--c-faint); }
+  .jt-status-valid { display: flex; align-items: center; gap: 6px; color: var(--c-success); }
+  .jt-status-error { display: flex; align-items: center; gap: 6px; color: var(--c-error); }
+
+  /* ── Top Workspace Navigation Bar ────────────────────────── */
+  .jt-tabs-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 10px 0;
+    border-bottom: 1px solid var(--c-hairline);
+    background-color: var(--c-canvas-elevated);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 200;
+    gap: 8px;
+    overflow: visible;
+  }
+
+  .jt-tabs-group {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: visible;
+    scrollbar-width: none;
+    flex-shrink: 1;
+    min-width: 0;
+  }
+
+  .jt-tabs-group::-webkit-scrollbar { display: none; }
+
+  .jt-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 10px;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: var(--font-sans);
+    border: none;
+    border-radius: 6px 6px 0 0;
+    background: transparent;
+    color: var(--c-mute);
+    cursor: pointer;
+    transition: color 120ms ease, background-color 120ms ease, border-color 120ms ease;
+    white-space: nowrap;
+    margin-bottom: -1px;
+    border-bottom: 2px solid transparent;
+    line-height: 18px;
+    user-select: none;
+  }
+
+  .jt-tab:hover { color: var(--c-ink); background-color: var(--c-hairline-soft); }
+  .jt-tab.active {
+    color: var(--c-ink);
+    border-bottom-color: var(--c-ink);
+    font-weight: 600;
+    background-color: transparent;
+  }
+
+  .jt-tab:focus-visible { outline: 2px solid var(--c-link); outline-offset: -2px; border-radius: 4px; }
+  .jt-tab-sep {
+    display: inline-block;
+    width: 1px;
+    height: 16px;
+    background-color: var(--c-hairline);
+    margin: 0 4px;
+    flex-shrink: 0;
+  }
+
+  /* ── Dropdown Menus ──────────────────────────────────────── */
+  .jt-dropdown { position: relative; display: inline-block; }
+  .jt-dropdown-trigger { padding-right: 8px; }
+  .jt-chevron { transition: transform 150ms ease; opacity: 0.65; }
+  .jt-dropdown.open .jt-chevron { transform: rotate(180deg); }
+  .jt-dropdown.open .jt-dropdown-trigger { color: var(--c-ink); background-color: var(--c-hairline-soft); }
+
+  .jt-dropdown-menu {
+    position: fixed;
+    min-width: 220px;
+    background-color: var(--c-canvas-elevated);
+    border: 1px solid var(--c-hairline);
+    border-radius: 8px;
+    padding: 5px;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.09), 0 2px 6px rgba(0,0,0,0.04);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .jt-dropdown-menu-wide { min-width: 240px; }
+  .dark .jt-dropdown-menu { box-shadow: 0 10px 28px rgba(0,0,0,0.4), 0 2px 6px rgba(0,0,0,0.25); }
+
+  .jt-dd-section-title {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--c-faint);
+    padding: 6px 8px 2px;
+  }
+
+  .jt-dropdown-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 6px 10px;
+    border: none;
+    border-radius: 5px;
+    background: transparent;
+    color: var(--c-body);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 100ms ease, color 100ms ease;
+  }
+
+  .jt-dropdown-item:hover { background-color: var(--c-hairline-soft); color: var(--c-ink); }
+  .jt-dropdown-item.active { background-color: var(--c-hairline-soft); color: var(--c-ink); font-weight: 600; }
+  .jt-dd-title { font-size: 13px; }
+  .jt-dd-badge {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--c-mute);
+    background-color: var(--c-hairline-soft);
+    padding: 1px 5px;
+    border-radius: 4px;
+    border: 1px solid var(--c-hairline);
+  }
+
+  /* ── Live Search Bar ─────────────────────────────────────── */
+  .jt-search-wrap { margin-bottom: 5px; display: flex; align-items: center; flex-shrink: 0; }
+  .jt-search-box {
+    display: flex;
+    align-items: center;
+    background-color: var(--c-canvas);
+    border: 1px solid var(--c-hairline);
+    border-radius: 6px;
+    padding: 2px 8px;
+    gap: 6px;
+    height: 28px;
+    transition: border-color 120ms ease;
+    min-width: 120px;
+  }
+  .jt-search-box:focus-within { border-color: var(--c-ink); }
+  .jt-search-icon { color: var(--c-mute); flex-shrink: 0; }
+  .jt-search-input {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    color: var(--c-ink);
+    width: 140px;
+    min-width: 60px;
+  }
+  .jt-search-input::placeholder { color: var(--c-faint); }
+  .jt-search-clear-btn {
+    border: none;
+    background: transparent;
+    color: var(--c-mute);
+    cursor: pointer;
+    padding: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .jt-search-clear-btn:hover { color: var(--c-ink); }
+
+  .jt-search-counter { font-family: var(--font-mono); font-size: 11px; color: var(--c-mute); white-space: nowrap; padding: 0 4px; }
+  .jt-search-nav-btns { display: flex; align-items: center; gap: 2px; }
+  .jt-search-nav-btn {
+    border: none;
+    background: transparent;
+    color: var(--c-mute);
+    cursor: pointer;
+    padding: 2px;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .jt-search-nav-btn:hover { color: var(--c-ink); background-color: var(--c-hairline); }
+
+  /* Highlight markers */
+  mark.jt-search-match { background-color: #fef08a; color: #854d0e; border-radius: 2px; padding: 0 1px; }
+  mark.jt-search-match.active { background-color: #f59e0b; color: #ffffff; }
+  .dark mark.jt-search-match { background-color: #713f12; color: #fef08a; }
+  .dark mark.jt-search-match.active { background-color: #f59e0b; color: #000000; }
+
+  /* ── Panels container ────────────────────────────────────── */
+  .jt-panels {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+  }
+
+  .jt-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .jt-panel-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--c-hairline);
+    background-color: var(--c-canvas-elevated);
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    row-gap: 6px;
+  }
+
+  .jt-panel-toolbar-right { margin-left: auto; display: flex; align-items: center; gap: 6px; }
+  .jt-stat { font-size: 11px; font-family: var(--font-mono); color: var(--c-mute); }
+
+  .jt-indent-group { display: inline-flex; border: 1px solid var(--c-hairline); border-radius: 6px; overflow: hidden; }
+  .jt-indent-btn {
+    padding: 2px 8px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: var(--font-sans);
+    border: none;
+    border-right: 1px solid var(--c-hairline);
+    background: var(--c-canvas-elevated);
+    color: var(--c-mute);
+    cursor: pointer;
+    line-height: 18px;
+  }
+  .jt-indent-btn:last-child { border-right: none; }
+  .jt-indent-btn:hover { background: var(--c-hairline-soft); color: var(--c-body); }
+  .jt-indent-btn.active { background: var(--c-ink); color: var(--c-canvas); }
+
+  .jt-output-textarea {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    resize: none;
+    border: none;
+    outline: none;
+    background-color: var(--c-canvas-elevated);
+    color: var(--c-ink);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 20px;
+    padding: 14px;
+    overflow-y: auto;
+    overflow-x: auto;
+    white-space: pre;
+  }
+
+  .jt-panel-empty {
+    padding: 48px 24px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--c-faint);
+    font-family: var(--font-mono);
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     HIERARCHICAL TREE VIEWER
+  ═══════════════════════════════════════════════════════════ */
+  .jt-tree-container {
+    flex: 1;
+    height: 100%;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: auto;
+    padding: 12px 16px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 22px;
+    background-color: var(--c-canvas-elevated);
+    user-select: text;
+  }
+
+  .jt-tree-node { display: flex; flex-direction: column; position: relative; }
+  .jt-tree-node:not(.jt-tree-root) { margin-left: 20px; border-left: 1px solid var(--c-hairline); padding-left: 8px; }
+  .jt-tree-row { display: inline-flex; align-items: center; gap: 4px; padding: 2px 4px; border-radius: 4px; cursor: default; min-height: 22px; white-space: nowrap; }
+  .jt-tree-row.clickable { cursor: pointer; }
+  .jt-tree-row:hover { background-color: var(--c-hairline-soft); }
+
+  .jt-tree-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    color: var(--c-mute);
+    flex-shrink: 0;
+    user-select: none;
+    border-radius: 3px;
+    transition: transform 140ms ease, color 140ms ease;
+  }
+  .jt-tree-toggle:hover { color: var(--c-ink); }
+  .jt-tree-toggle.open { transform: rotate(90deg); }
+  .jt-tree-spacer { display: inline-block; width: 16px; height: 16px; flex-shrink: 0; }
+  .jt-tree-key { color: var(--c-ink); font-weight: 600; }
+  .jt-tree-index { color: var(--c-mute); font-size: 12px; }
+  .jt-tree-colon { color: var(--c-mute); margin-right: 2px; }
+  .jt-tree-bracket { color: var(--c-mute); font-weight: 500; }
+  .jt-tree-badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 11px;
+    color: var(--c-mute);
+    background-color: var(--c-hairline-soft);
+    padding: 0 6px;
+    border-radius: 4px;
+    border: 1px solid var(--c-hairline);
+    margin: 0 4px;
+    height: 18px;
+    line-height: 18px;
+  }
+  .jt-tree-children { display: flex; flex-direction: column; }
+  .jt-tree-children.collapsed { display: none !important; }
+  .jt-tree-close-row { display: flex; align-items: center; padding: 1px 4px; margin-left: 20px; color: var(--c-mute); }
+  .jt-tree-root > .jt-tree-close-row { margin-left: 0; }
+
+  .jt-val-string  { color: #059669; }
+  .dark .jt-val-string  { color: #34d399; }
+  .jt-val-number  { color: #d97706; }
+  .dark .jt-val-number  { color: #fbbf24; }
+  .jt-val-boolean { color: #7c3aed; }
+  .dark .jt-val-boolean { color: #a78bfa; }
+  .jt-val-null    { color: var(--c-mute); font-style: italic; }
+
+  /* ═══════════════════════════════════════════════════════════
+     DEDICATED DUAL-PANE COMPARE WORKSPACE
+  ═══════════════════════════════════════════════════════ */
+  .jt-compare-workspace {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    flex: 1;
+    overflow: hidden;
+    background-color: var(--c-canvas-elevated);
+  }
+
+  .jt-compare-top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--c-hairline);
+    background-color: var(--c-canvas-elevated);
+    flex-shrink: 0;
+    gap: 12px;
+  }
+
+  .jt-compare-top-left { display: flex; align-items: center; gap: 8px; }
+  .jt-compare-controls { display: flex; align-items: center; gap: 10px; }
+  .jt-diff-stats-group { display: flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 11px; }
+
+  .jt-diff-tag { padding: 2px 7px; border-radius: 4px; font-weight: 500; }
+  .jt-diff-tag.added { background-color: #dcfce7; color: #15803d; }
+  .dark .jt-diff-tag.added { background-color: #052e16; color: #4ade80; }
+  .jt-diff-tag.removed { background-color: #fee2e2; color: #b91c1c; }
+  .dark .jt-diff-tag.removed { background-color: #450a0a; color: #f87171; }
+  .jt-diff-tag.modified { background-color: #fef3c7; color: #b45309; }
+  .dark .jt-diff-tag.modified { background-color: #451a03; color: #fbbf24; }
+
+  .jt-diff-nav {
+    display: flex;
+    align-items: center;
+    background-color: var(--c-canvas);
+    border: 1px solid var(--c-hairline);
+    border-radius: 6px;
+    padding: 2px 4px;
+    gap: 4px;
+  }
+  .jt-diff-counter { font-family: var(--font-mono); font-size: 11px; color: var(--c-mute); padding: 0 4px; white-space: nowrap; }
+  .jt-diff-nav-btn {
+    border: none;
+    background: transparent;
+    color: var(--c-mute);
+    cursor: pointer;
+    padding: 2px;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .jt-diff-nav-btn:hover { color: var(--c-ink); background-color: var(--c-hairline); }
+
+  /* ── Dual Split Panes (JSON A | JSON B) ──────────────────── */
+  .jt-compare-panes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1px 1fr;
+    grid-template-rows: 1fr;
+    flex: 1;
+    min-height: 0;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .jt-compare-pane {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    background-color: var(--c-canvas);
+  }
+
+  .jt-pane-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 12px;
+    border-bottom: 1px solid var(--c-hairline);
+    background-color: var(--c-canvas);
+    flex-shrink: 0;
+  }
+
+  .jt-pane-actions { display: flex; align-items: center; gap: 4px; }
+
+  /* ── Direct Editable Diff Editor Wrap ────────────────────── */
+  .jt-diff-editor-wrap {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    height: 100%;
+    overflow: hidden;
+    background-color: var(--c-canvas);
+  }
+
+  .jt-diff-gutter {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 48px;
+    background-color: var(--c-canvas-elevated);
+    border-right: 1px solid var(--c-hairline);
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+    user-select: none;
+    padding: 10px 0;
+    box-sizing: border-box;
+  }
+
+  .jt-diff-gutter-item {
+    height: 22px;
+    line-height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 6px 0 6px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--c-faint);
+    box-sizing: border-box;
+  }
+
+  .jt-diff-gutter-sym {
+    width: 12px;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .jt-diff-gutter-num {
+    text-align: right;
+    flex: 1;
+  }
+
+  .jt-diff-gutter-item.add { color: #16a34a; background-color: rgba(34, 197, 94, 0.12); }
+  .dark .jt-diff-gutter-item.add { color: #4ade80; background-color: rgba(34, 197, 94, 0.2); }
+  .jt-diff-gutter-item.del { color: #dc2626; background-color: rgba(239, 68, 68, 0.12); }
+  .dark .jt-diff-gutter-item.del { color: #f87171; background-color: rgba(239, 68, 68, 0.2); }
+  .jt-diff-gutter-item.mod { color: #d97706; background-color: rgba(245, 158, 11, 0.12); }
+  .dark .jt-diff-gutter-item.mod { color: #fbbf24; background-color: rgba(245, 158, 11, 0.2); }
+
+  .jt-diff-backdrop {
+    position: absolute;
+    top: 0;
+    left: 48px;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+    padding: 10px 14px;
+    box-sizing: border-box;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 22px;
+    white-space: pre;
+    tab-size: 2;
+  }
+
+  .jt-diff-bg-line {
+    height: 22px;
+    line-height: 22px;
+    margin: 0;
+    padding: 0 4px;
+    box-sizing: border-box;
+    white-space: pre;
+    color: transparent;
+    border-left: 3px solid transparent;
+  }
+
+  .jt-diff-bg-line.diff-add {
+    background-color: rgba(34, 197, 94, 0.14);
+    border-left-color: #16a34a;
+  }
+  .dark .jt-diff-bg-line.diff-add {
+    background-color: rgba(34, 197, 94, 0.22);
+    border-left-color: #22c55e;
+  }
+
+  .jt-diff-bg-line.diff-del {
+    background-color: rgba(239, 68, 68, 0.14);
+    border-left-color: #dc2626;
+  }
+  .dark .jt-diff-bg-line.diff-del {
+    background-color: rgba(239, 68, 68, 0.22);
+    border-left-color: #ef4444;
+  }
+
+  .jt-diff-bg-line.diff-mod {
+    background-color: rgba(245, 158, 11, 0.14);
+    border-left-color: #d97706;
+  }
+  .dark .jt-diff-bg-line.diff-mod {
+    background-color: rgba(245, 158, 11, 0.22);
+    border-left-color: #f59e0b;
+  }
+
+  .jt-diff-bg-line.diff-active-focus {
+    outline: 2px solid var(--c-ink);
+    outline-offset: -2px;
+  }
+
+  /* Inline token diff highlights */
+  mark.diff-token-add {
+    color: transparent;
+    background-color: rgba(34, 197, 94, 0.4);
+    border-radius: 2px;
+    padding: 1px 0;
+  }
+  .dark mark.diff-token-add {
+    background-color: rgba(34, 197, 94, 0.55);
+  }
+
+  mark.diff-token-del {
+    color: transparent;
+    background-color: rgba(239, 68, 68, 0.4);
+    border-radius: 2px;
+    padding: 1px 0;
+  }
+  .dark mark.diff-token-del {
+    background-color: rgba(239, 68, 68, 0.55);
+  }
+
+  mark.diff-token-mod {
+    color: transparent;
+    background-color: rgba(245, 158, 11, 0.4);
+    border-radius: 2px;
+    padding: 1px 0;
+  }
+  .dark mark.diff-token-mod {
+    background-color: rgba(245, 158, 11, 0.55);
+  }
+
+  /* Direct Editable Textarea */
+  .jt-diff-textarea {
+    position: absolute;
+    top: 0;
+    left: 48px;
+    right: 0;
+    bottom: 0;
+    width: calc(100% - 48px);
+    height: 100%;
+    z-index: 3;
+    background: transparent;
+    color: var(--c-ink);
+    caret-color: var(--c-ink);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 22px;
+    padding: 10px 14px;
+    margin: 0;
+    border: none;
+    outline: none;
+    resize: none;
+    overflow-y: auto;
+    overflow-x: auto;
+    white-space: pre;
+    tab-size: 2;
+    box-sizing: border-box;
+  }
+
+  .jt-diff-textarea::placeholder {
+    color: var(--c-faint);
+  }
+
+  /* ── Custom Scrollbars ───────────────────────────────────── */
+  .jt-textarea::-webkit-scrollbar,
+  .jt-output-textarea::-webkit-scrollbar,
+  .jt-tree-container::-webkit-scrollbar,
+  .jt-diff-textarea::-webkit-scrollbar,
+  .jt-validator-output::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .jt-textarea::-webkit-scrollbar-track,
+  .jt-output-textarea::-webkit-scrollbar-track,
+  .jt-tree-container::-webkit-scrollbar-track,
+  .jt-diff-textarea::-webkit-scrollbar-track,
+  .jt-validator-output::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .jt-textarea::-webkit-scrollbar-thumb,
+  .jt-output-textarea::-webkit-scrollbar-thumb,
+  .jt-tree-container::-webkit-scrollbar-thumb,
+  .jt-diff-textarea::-webkit-scrollbar-thumb,
+  .jt-validator-output::-webkit-scrollbar-thumb {
+    background: var(--c-hairline);
+    border-radius: 4px;
+  }
+
+  .jt-textarea::-webkit-scrollbar-thumb:hover,
+  .jt-output-textarea::-webkit-scrollbar-thumb:hover,
+  .jt-tree-container::-webkit-scrollbar-thumb:hover,
+  .jt-diff-textarea::-webkit-scrollbar-thumb:hover,
+  .jt-validator-output::-webkit-scrollbar-thumb:hover {
+    background: var(--c-mute);
+  }
+
+  /* ── Validator Output ────────────────────────────────────── */
+  .jt-validator-output { flex: 1; padding: 16px; overflow-y: auto; height: 100%; }
+  .jt-valid-card { display: flex; align-items: flex-start; gap: 12px; padding: 16px; background-color: #f0faf5; border: 1px solid #b7e8ce; border-radius: 8px; color: #1a7a4a; }
+  .dark .jt-valid-card { background-color: #0d1f16; border-color: #1a6b3c; color: #4ade80; }
+  .jt-valid-card-icon { flex-shrink: 0; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; }
+  .jt-error-card { display: flex; flex-direction: column; gap: 12px; padding: 16px; background-color: #fff5f5; border: 1px solid #fca5a5; border-radius: 8px; }
+  .dark .jt-error-card { background-color: #1f0d0d; border-color: #7f1d1d; }
+  .jt-error-card-header { display: flex; align-items: center; gap: 8px; color: var(--c-error); font-weight: 600; font-size: 13px; }
+  .jt-error-card-msg { font-family: var(--font-mono); font-size: 12px; color: var(--c-body); background-color: var(--c-hairline-soft); padding: 10px 12px; border-radius: 6px; border: 1px solid var(--c-hairline); white-space: pre-wrap; word-break: break-word; }
+  .jt-error-meta { display: flex; gap: 12px; flex-wrap: wrap; }
+  .jt-error-badge { display: inline-flex; align-items: center; gap: 4px; font-family: var(--font-mono); font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 9999px; background-color: var(--c-hairline-soft); border: 1px solid var(--c-hairline); color: var(--c-body); }
+
+  /* ── Mobile Layout ───────────────────────────────────────── */
+  @media (max-width: 768px) {
+    .jt-root {
+      height: auto;
+      max-height: none;
+      min-height: 0;
+      border-radius: 8px;
+    }
+
+    .jt-standard-workspace {
+      grid-template-columns: 1fr;
+      grid-template-rows: 260px 1px 440px;
+    }
+
+    .jt-divider { width: 100%; height: 1px; }
+
+    .jt-tabs-header {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 8px;
+      padding: 8px;
+    }
+
+    .jt-tabs-group {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding-bottom: 2px;
+    }
+
+    .jt-tabs-group::-webkit-scrollbar { display: none; }
+    .jt-search-wrap, .jt-search-box, .jt-search-input { width: 100%; }
+
+    .jt-compare-panes-grid {
+      grid-template-columns: 1fr;
+      grid-template-rows: 250px 1px 250px;
+    }
+
+    .jt-compare-top-bar {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 8px;
+    }
+
+    .jt-compare-controls {
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+  }
+</style>
+
+
+<script>
+  // ═══════════════════════════════════════════════════════════
+  // MASTER CLIENT-SIDE JSON ENGINE — ZERO EXTERNAL DEPENDENCIES
+  // ═══════════════════════════════════════════════════════════
+
+  // ── Workspace State ──────────────────────────────────────────
+  let currentJson: string = '';
+  let parsedData: unknown = null;
+  let isValid: boolean = false;
+  let activeTab: string = 'formatter';
+  let indentSize: number | string = 2;
+
+  // Search State
+  let searchQuery: string = '';
+  let searchMatches: HTMLElement[] = [];
+  let currentMatchIdx: number = -1;
+
+  // Compare Diff State
+  let isEditingA: boolean = false;
+  let isEditingB: boolean = false;
+  let diffItems: { lineA?: HTMLElement; lineB?: HTMLElement }[] = [];
+  let currentDiffIdx: number = -1;
+
+  // ── DOM Elements ─────────────────────────────────────────────
+  const rootContainer = document.getElementById('json-toolkit') as HTMLElement;
+  const standardWorkspace = document.getElementById('jt-standard-workspace') as HTMLElement;
+  const compareWorkspace = document.getElementById('jt-compare-workspace') as HTMLElement;
+
+  const input        = document.getElementById('jt-input') as HTMLTextAreaElement;
+  const fileInput    = document.getElementById('jt-file-input') as HTMLInputElement;
+  const dropZone     = document.getElementById('jt-drop-zone') as HTMLDivElement;
+  const statusIdle   = document.getElementById('jt-status-idle') as HTMLElement;
+  const statusValid  = document.getElementById('jt-status-valid') as HTMLElement;
+  const statusError  = document.getElementById('jt-status-error') as HTMLElement;
+  const validDetail  = document.getElementById('jt-valid-detail') as HTMLElement;
+  const errorSummary = document.getElementById('jt-error-summary') as HTMLElement;
+
+  const primaryTabs  = document.querySelectorAll<HTMLButtonElement>('.jt-tab:not(.jt-dropdown-trigger)');
+  const panels       = document.querySelectorAll<HTMLElement>('.jt-panel');
+  const indentBtns   = document.querySelectorAll<HTMLButtonElement>('.jt-indent-btn');
+
+  // Dropdown DOM refs
+  const ddConvertBtn  = document.getElementById('btn-dd-convert') as HTMLButtonElement;
+  const ddConvertMenu = document.getElementById('menu-convert') as HTMLElement;
+  const ddConvertWrap = document.getElementById('dd-convert') as HTMLElement;
+  const ddConvertLbl  = document.getElementById('label-dd-convert') as HTMLElement;
+
+  const ddTypesBtn    = document.getElementById('btn-dd-types') as HTMLButtonElement;
+  const ddTypesMenu   = document.getElementById('menu-types') as HTMLElement;
+  const ddTypesWrap   = document.getElementById('dd-types') as HTMLElement;
+  const ddTypesLbl    = document.getElementById('label-dd-types') as HTMLElement;
+  const ddItems       = document.querySelectorAll<HTMLButtonElement>('.jt-dropdown-item');
+
+  // Search DOM refs
+  const searchInput   = document.getElementById('jt-search-input') as HTMLInputElement;
+  const searchClear   = document.getElementById('btn-search-clear') as HTMLButtonElement;
+  const searchCounter = document.getElementById('jt-search-count') as HTMLElement;
+  const searchNavBtns = document.getElementById('jt-search-nav-btns') as HTMLElement;
+  const btnSearchPrev = document.getElementById('btn-search-prev') as HTMLButtonElement;
+  const btnSearchNext = document.getElementById('btn-search-next') as HTMLButtonElement;
+
+  // Compare DOM refs
+  const rawA          = document.getElementById('jt-raw-a') as HTMLTextAreaElement;
+  const rawB          = document.getElementById('jt-raw-b') as HTMLTextAreaElement;
+  const diffViewA     = document.getElementById('jt-diff-view-a') as HTMLElement;
+  const diffViewB     = document.getElementById('jt-diff-view-b') as HTMLElement;
+  const btnModeA      = document.getElementById('btn-mode-a') as HTMLButtonElement;
+  const btnModeB      = document.getElementById('btn-mode-b') as HTMLButtonElement;
+
+  const statDiffAdd   = document.getElementById('stat-diff-added') as HTMLElement;
+  const statDiffRem   = document.getElementById('stat-diff-removed') as HTMLElement;
+  const statDiffMod   = document.getElementById('stat-diff-modified') as HTMLElement;
+  const diffCounter   = document.getElementById('jt-diff-counter') as HTMLElement;
+  const btnDiffPrev   = document.getElementById('btn-diff-prev') as HTMLButtonElement;
+  const btnDiffNext   = document.getElementById('btn-diff-next') as HTMLButtonElement;
+
+  const fileInputA    = document.getElementById('jt-file-a') as HTMLInputElement;
+  const fileInputB    = document.getElementById('jt-file-b') as HTMLInputElement;
+
+  // ── Sample JSON ──────────────────────────────────────────────
+  const SAMPLE_JSON = {
+    "toolkit": "The Developer Tools",
+    "version": "1.0.0",
+    "private": true,
+    "users": [
+      {
+        "id": 1,
+        "name": "Alice Chen",
+        "email": "alice@example.com",
+        "role": "admin",
+        "active": true,
+        "address": {
+          "city": "San Francisco",
+          "country": "US",
+          "zip": "94102"
+        },
+        "tags": ["developer", "designer"],
+        "metadata": null
+      },
+      {
+        "id": 2,
+        "name": "Bob Smith",
+        "email": "bob@example.com",
+        "role": "editor",
+        "active": false,
+        "address": {
+          "city": "New York",
+          "country": "US",
+          "zip": "10001"
+        },
+        "tags": ["writer"],
+        "metadata": { "source": "import", "verified": true }
+      }
+    ],
+    "pagination": {
+      "total": 2,
+      "page": 1,
+      "perPage": 10
+    }
+  };
+
+  const SAMPLE_DIFF_B = {
+    "toolkit": "The Developer Tools (Pro Edition)",
+    "version": "1.1.0",
+    "private": true,
+    "users": [
+      {
+        "id": 1,
+        "name": "Alice Chen",
+        "email": "alice.chen@enterprise.com",
+        "role": "superadmin",
+        "active": true,
+        "address": {
+          "city": "San Francisco",
+          "country": "US",
+          "zip": "94102",
+          "state": "CA"
+        },
+        "tags": ["developer", "architect"],
+        "metadata": null
+      },
+      {
+        "id": 3,
+        "name": "Charlie Davis",
+        "email": "charlie@example.com",
+        "role": "analyst",
+        "active": true,
+        "address": {
+          "city": "Austin",
+          "country": "US",
+          "zip": "78701"
+        },
+        "tags": ["data"],
+        "metadata": null
+      }
+    ],
+    "pagination": {
+      "total": 2,
+      "page": 1,
+      "perPage": 20
+    },
+    "features": ["diff", "openapi", "codegen"]
+  };
+
+  // ── Session persistence ──────────────────────────────────────
+  function loadFromSession(): void {
+    try {
+      const saved = sessionStorage.getItem('jt-json');
+      if (saved) {
+        input.value = saved;
+        processInput(saved);
+      }
+      const savedB = sessionStorage.getItem('jt-json-b');
+      if (savedB && rawB) {
+        rawB.value = savedB;
+      }
+    } catch (_) {}
+  }
+
+  function saveToSession(json: string): void {
+    try { sessionStorage.setItem('jt-json', json); } catch (_) {}
+  }
+
+  function saveSessionB(json: string): void {
+    try { sessionStorage.setItem('jt-json-b', json); } catch (_) {}
+  }
+
+  // ── URL hash routing ─────────────────────────────────────────
+  const validTabs = [
+    'formatter', 'viewer', 'validator', 'minifier', 'compare',
+    'csv', 'yaml', 'xml',
+    'typescript', 'zod', 'schema', 'openapi', 'go', 'pydantic', 'java', 'kotlin'
+  ];
+
+  function getHashTab(): string {
+    const h = window.location.hash.replace('#', '');
+    return validTabs.includes(h) ? h : 'formatter';
+  }
+
+  function setHashTab(tab: string): void {
+    history.replaceState(null, '', `#${tab}`);
+  }
+
+  // ── Dropdown Handlers ────────────────────────────────────────
+  function positionDropdown(btn: HTMLButtonElement, menu: HTMLElement): void {
+    const rect = btn.getBoundingClientRect();
+    menu.style.top = `${rect.bottom + 4}px`;
+    menu.style.left = `${rect.left}px`;
+  }
+
+  function closeAllDropdowns(): void {
+    ddConvertMenu.hidden = true;
+    ddConvertBtn.setAttribute('aria-expanded', 'false');
+    ddConvertWrap.classList.remove('open');
+
+    ddTypesMenu.hidden = true;
+    ddTypesBtn.setAttribute('aria-expanded', 'false');
+    ddTypesWrap.classList.remove('open');
+  }
+
+  ddConvertBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isClosed = ddConvertMenu.hidden;
+    closeAllDropdowns();
+    if (isClosed) {
+      ddConvertMenu.hidden = false;
+      positionDropdown(ddConvertBtn, ddConvertMenu);
+      ddConvertBtn.setAttribute('aria-expanded', 'true');
+      ddConvertWrap.classList.add('open');
+    }
+  });
+
+  ddTypesBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isClosed = ddTypesMenu.hidden;
+    closeAllDropdowns();
+    if (isClosed) {
+      ddTypesMenu.hidden = false;
+      positionDropdown(ddTypesBtn, ddTypesMenu);
+      ddTypesBtn.setAttribute('aria-expanded', 'true');
+      ddTypesWrap.classList.add('open');
+    }
+  });
+
+  document.addEventListener('click', () => closeAllDropdowns());
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeAllDropdowns();
+      if (rootContainer.classList.contains('jt-fullscreen')) {
+        toggleFullscreen();
+      }
+      if (searchQuery) {
+        searchInput.value = '';
+        executeSearch('');
+      }
+    }
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') {
+      if (activeTab !== 'compare') {
+        e.preventDefault();
+        searchInput.focus();
+        searchInput.select();
+      }
+    }
+  });
+
+  // ── Fullscreen Toggle ────────────────────────────────────────
+  function toggleFullscreen(): void {
+    const isFull = rootContainer.classList.toggle('jt-fullscreen');
+    document.body.style.overflow = isFull ? 'hidden' : '';
+    document.querySelectorAll('.icon-expand').forEach(el => ((el as HTMLElement).style.display = isFull ? 'none' : 'block'));
+    document.querySelectorAll('.icon-compress').forEach(el => ((el as HTMLElement).style.display = isFull ? 'block' : 'none'));
+  }
+
+  document.getElementById('btn-fullscreen-main')?.addEventListener('click', toggleFullscreen);
+  document.getElementById('btn-fullscreen-compare')?.addEventListener('click', toggleFullscreen);
+
+  // ── Tab Switching ────────────────────────────────────────────
+  const convertTabs = ['csv', 'yaml', 'xml'];
+  const typeTabs    = ['typescript', 'zod', 'schema', 'openapi', 'go', 'pydantic', 'java', 'kotlin'];
+
+  const tabTitles: Record<string, string> = {
+    csv: 'CSV',
+    yaml: 'YAML',
+    xml: 'XML',
+    typescript: 'TypeScript',
+    zod: 'Zod',
+    schema: 'JSON Schema',
+    openapi: 'OpenAPI 3.0',
+    go: 'Go Structs',
+    pydantic: 'Pydantic v2',
+    java: 'Java POJO',
+    kotlin: 'Kotlin'
+  };
+
+  function switchTab(tabName: string): void {
+    activeTab = tabName;
+    setHashTab(tabName);
+    closeAllDropdowns();
+
+    if (tabName === 'compare') {
+      standardWorkspace.hidden = true;
+      compareWorkspace.hidden = false;
+      initCompareWorkspace();
+      return;
+    }
+
+    standardWorkspace.hidden = false;
+    compareWorkspace.hidden = true;
+
+    primaryTabs.forEach(t => {
+      const isActive = t.dataset.tab === tabName;
+      t.classList.toggle('active', isActive);
+      t.setAttribute('aria-selected', String(isActive));
+    });
+
+    if (convertTabs.includes(tabName)) {
+      ddConvertBtn.classList.add('active');
+      ddConvertLbl.textContent = `Convert: ${tabTitles[tabName] || tabName.toUpperCase()}`;
+    } else {
+      ddConvertBtn.classList.remove('active');
+      ddConvertLbl.textContent = 'Convert';
+    }
+
+    if (typeTabs.includes(tabName)) {
+      ddTypesBtn.classList.add('active');
+      ddTypesLbl.textContent = `Types: ${tabTitles[tabName] || tabName}`;
+    } else {
+      ddTypesBtn.classList.remove('active');
+      ddTypesLbl.textContent = 'Types & Code';
+    }
+
+    ddItems.forEach(item => {
+      item.classList.toggle('active', item.dataset.tab === tabName);
+    });
+
+    panels.forEach(p => {
+      p.hidden = !p.id.endsWith(tabName);
+    });
+
+    if (isValid && parsedData !== undefined) {
+      runTool(tabName);
+    }
+
+    if (searchQuery.trim()) {
+      executeSearch(searchQuery);
+    }
+  }
+
+  primaryTabs.forEach(tab => {
+    tab.addEventListener('click', () => switchTab(tab.dataset.tab!));
+  });
+
+  ddItems.forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.stopPropagation();
+      switchTab(item.dataset.tab!);
+    });
+  });
+
+  document.getElementById('btn-exit-compare')?.addEventListener('click', () => {
+    switchTab('formatter');
+  });
+
+  // ── Input Processing ─────────────────────────────────────────
+  let debounceTimer: ReturnType<typeof setTimeout> | null = null;
+
+  function processInput(raw: string): void {
+    currentJson = raw;
+    saveToSession(raw);
+
+    if (!raw.trim()) {
+      showStatus('idle');
+      parsedData = null;
+      isValid = false;
+      clearOutputs();
+      return;
+    }
+
+    try {
+      parsedData = JSON.parse(raw);
+      isValid = true;
+      showStatus('valid', parsedData);
+      if (activeTab !== 'compare') {
+        runTool(activeTab);
+      }
+      if (searchQuery.trim()) executeSearch(searchQuery);
+    } catch (e: unknown) {
+      isValid = false;
+      parsedData = null;
+      const msg = (e instanceof Error) ? e.message : String(e);
+      showStatus('error', msg);
+      clearOutputs();
+      if (activeTab === 'validator') runValidator();
+    }
+  }
+
+  input.addEventListener('input', () => {
+    if (debounceTimer) clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => processInput(input.value), 160);
+  });
+
+  // ── Status Display ───────────────────────────────────────────
+  function showStatus(kind: 'idle' | 'valid' | 'error', data?: unknown): void {
+    statusIdle.hidden  = kind !== 'idle';
+    statusValid.hidden = kind !== 'valid';
+    statusError.hidden = kind !== 'error';
+
+    if (kind === 'valid' && data !== undefined) {
+      const desc = describeJson(data);
+      validDetail.textContent = `Valid JSON · ${desc}`;
+    }
+    if (kind === 'error' && typeof data === 'string') {
+      errorSummary.textContent = 'Syntax error — ' + extractShortError(data);
+    }
+  }
+
+  function describeJson(d: unknown): string {
+    if (Array.isArray(d)) return `array [${d.length}]`;
+    if (d === null) return 'null';
+    if (typeof d === 'object') return `object {${Object.keys(d as object).length} keys}`;
+    return typeof d;
+  }
+
+  function extractShortError(msg: string): string {
+    const m = msg.match(/at position (\d+)/);
+    if (m) return `position ${m[1]}`;
+    const lc = msg.match(/line (\d+) column (\d+)/i);
+    if (lc) return `line ${lc[1]}, col ${lc[2]}`;
+    return msg.slice(0, 50);
+  }
+
+  function clearOutputs(): void {
+    const outIds = [
+      'out-formatter','out-minifier','out-csv','out-yaml','out-xml',
+      'out-typescript','out-zod','out-schema','out-openapi','out-go',
+      'out-pydantic','out-java','out-kotlin'
+    ];
+    outIds.forEach(id => {
+      const el = document.getElementById(id) as HTMLTextAreaElement | null;
+      if (el) el.value = '';
+    });
+    const viewer = document.getElementById('out-viewer');
+    if (viewer) viewer.innerHTML = '<div class="jt-panel-empty">Paste JSON on the left to explore the interactive tree.</div>';
+    const validator = document.getElementById('out-validator');
+    if (validator) validator.innerHTML = '<div class="jt-panel-empty">Paste JSON on the left to validate syntax.</div>';
+  }
+
+  // ── Tool Runner ──────────────────────────────────────────────
+  function runTool(tab: string): void {
+    if (!isValid || parsedData === undefined) return;
+    switch (tab) {
+      case 'formatter':  runFormatter();  break;
+      case 'viewer':     runViewer();     break;
+      case 'validator':  runValidator();  break;
+      case 'minifier':   runMinifier();   break;
+      case 'csv':        runCsv();        break;
+      case 'yaml':       runYaml();       break;
+      case 'xml':        runXml();        break;
+      case 'typescript': runTypeScript(); break;
+      case 'zod':        runZod();        break;
+      case 'schema':     runSchema();     break;
+      case 'openapi':    runOpenApi();    break;
+      case 'go':         runGo();         break;
+      case 'pydantic':   runPydantic();   break;
+      case 'java':       runJava();       break;
+      case 'kotlin':     runKotlin();     break;
+    }
+  }
+
+  // ════════════════════════════════════════════════════════════
+  // 1. FORMATTER
+  // ════════════════════════════════════════════════════════════
+  function runFormatter(): void {
+    const indent = indentSize === 'tab' ? '\t' : Number(indentSize);
+    const out = document.getElementById('out-formatter') as HTMLTextAreaElement;
+    if (out && parsedData !== null) {
+      out.value = JSON.stringify(parsedData, null, indent);
+    }
+  }
+
+  indentBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      indentBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      indentSize = btn.dataset.indent === 'tab' ? 'tab' : Number(btn.dataset.indent);
+      if (isValid) runFormatter();
+    });
+  });
+
+  document.getElementById('btn-format-input')?.addEventListener('click', () => {
+    if (isValid && parsedData !== null) {
+      const indent = indentSize === 'tab' ? '\t' : Number(indentSize);
+      input.value = JSON.stringify(parsedData, null, indent);
+      processInput(input.value);
+    }
+  });
+
+  // ════════════════════════════════════════════════════════════
+  // 2. HIERARCHICAL TREE VIEWER
+  // ════════════════════════════════════════════════════════════
+  function runViewer(): void {
+    const container = document.getElementById('out-viewer');
+    if (!container || parsedData === null) return;
+    container.innerHTML = '';
+    const tree = buildTreeNode(parsedData, null, 0);
+    tree.classList.add('jt-tree-root');
+    container.appendChild(tree);
+  }
+
+  function buildTreeNode(value: unknown, key: string | number | null, depth: number): HTMLElement {
+    const nodeEl = document.createElement('div');
+    nodeEl.className = 'jt-tree-node';
+
+    if (typeof value === 'object' && value !== null) {
+      const isArr = Array.isArray(value);
+      const entries = isArr
+        ? (value as unknown[]).map((v, i) => [i, v] as [number, unknown])
+        : Object.entries(value as Record<string, unknown>);
+
+      const countText = `${entries.length} ${entries.length === 1 ? (isArr ? 'item' : 'key') : (isArr ? 'items' : 'keys')}`;
+      const isCollapsed = depth > 0;
+
+      const row = document.createElement('div');
+      row.className = 'jt-tree-row clickable';
+      row.setAttribute('role', 'button');
+      row.setAttribute('tabindex', '0');
+
+      const toggle = document.createElement('span');
+      toggle.className = 'jt-tree-toggle' + (!isCollapsed ? ' open' : '');
+      toggle.innerHTML = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>`;
+
+      const label = document.createElement('span');
+      let keyHtml = '';
+      if (key !== null) {
+        if (typeof key === 'number') {
+          keyHtml = `<span class="jt-tree-index">${key}</span><span class="jt-tree-colon">:</span> `;
+        } else {
+          keyHtml = `<span class="jt-tree-key" data-search-key="${escHtml(String(key))}">${escHtml(String(key))}</span><span class="jt-tree-colon">:</span> `;
+        }
+      }
+      const openBracket = isArr ? '[' : '{';
+      const closeBracket = isArr ? ']' : '}';
+
+      const previewBadge = `<span class="jt-tree-badge" data-role="badge" style="display:${isCollapsed ? 'inline-flex' : 'none'}">${countText}</span>`;
+      const inlineClose = `<span class="jt-tree-bracket" data-role="inline-close" style="display:${isCollapsed ? 'inline' : 'none'}">${closeBracket}</span>`;
+
+      label.innerHTML = `${keyHtml}<span class="jt-tree-bracket">${openBracket}</span>${previewBadge}${inlineClose}`;
+
+      row.appendChild(toggle);
+      row.appendChild(label);
+      nodeEl.appendChild(row);
+
+      const childrenCont = document.createElement('div');
+      childrenCont.className = 'jt-tree-children' + (isCollapsed ? ' collapsed' : '');
+
+      entries.forEach(([k, v]) => {
+        childrenCont.appendChild(buildTreeNode(v, k, depth + 1));
+      });
+
+      const closeRow = document.createElement('div');
+      closeRow.className = 'jt-tree-close-row';
+      closeRow.innerHTML = `<span class="jt-tree-bracket">${closeBracket}</span>`;
+      childrenCont.appendChild(closeRow);
+
+      nodeEl.appendChild(childrenCont);
+
+      function toggleNode(): void {
+        const nowCollapsed = childrenCont.classList.toggle('collapsed');
+        toggle.classList.toggle('open', !nowCollapsed);
+
+        const badgeEl = label.querySelector('[data-role="badge"]') as HTMLElement | null;
+        const inlineCloseEl = label.querySelector('[data-role="inline-close"]') as HTMLElement | null;
+
+        if (badgeEl) badgeEl.style.display = nowCollapsed ? 'inline-flex' : 'none';
+        if (inlineCloseEl) inlineCloseEl.style.display = nowCollapsed ? 'inline' : 'none';
+      }
+
+      row.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleNode();
+      });
+
+      row.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          toggleNode();
+        }
+      });
+
+    } else {
+      const row = document.createElement('div');
+      row.className = 'jt-tree-row';
+
+      const spacer = document.createElement('span');
+      spacer.className = 'jt-tree-spacer';
+
+      const content = document.createElement('span');
+      let keyHtml = '';
+      if (key !== null) {
+        if (typeof key === 'number') {
+          keyHtml = `<span class="jt-tree-index">${key}</span><span class="jt-tree-colon">:</span> `;
+        } else {
+          keyHtml = `<span class="jt-tree-key" data-search-key="${escHtml(String(key))}">${escHtml(String(key))}</span><span class="jt-tree-colon">:</span> `;
+        }
+      }
+      content.innerHTML = `${keyHtml}${renderPrimitive(value)}`;
+
+      row.appendChild(spacer);
+      row.appendChild(content);
+      nodeEl.appendChild(row);
+    }
+
+    return nodeEl;
+  }
+
+  function renderPrimitive(v: unknown): string {
+    if (v === null)    return `<span class="jt-val-null" data-search-val="null">null</span>`;
+    if (typeof v === 'string')  return `<span class="jt-val-string" data-search-val="${escHtml(v)}">"${escHtml(v)}"</span>`;
+    if (typeof v === 'number')  return `<span class="jt-val-number" data-search-val="${v}">${v}</span>`;
+    if (typeof v === 'boolean') return `<span class="jt-val-boolean" data-search-val="${v}">${v}</span>`;
+    return `<span data-search-val="${escHtml(String(v))}">${escHtml(String(v))}</span>`;
+  }
+
+  document.getElementById('btn-expand-all')?.addEventListener('click', () => {
+    document.querySelectorAll('.jt-tree-children').forEach(el => el.classList.remove('collapsed'));
+    document.querySelectorAll('.jt-tree-toggle').forEach(el => el.classList.add('open'));
+    document.querySelectorAll('[data-role="badge"]').forEach(el => ((el as HTMLElement).style.display = 'none'));
+    document.querySelectorAll('[data-role="inline-close"]').forEach(el => ((el as HTMLElement).style.display = 'none'));
+  });
+
+  document.getElementById('btn-collapse-all')?.addEventListener('click', () => {
+    const allChildren = document.querySelectorAll('.jt-tree-children');
+    const allToggles = document.querySelectorAll('.jt-tree-toggle');
+    const allBadges = document.querySelectorAll('[data-role="badge"]');
+    const allInlineClose = document.querySelectorAll('[data-role="inline-close"]');
+
+    allChildren.forEach((el, idx) => {
+      if (idx === 0) el.classList.remove('collapsed');
+      else el.classList.add('collapsed');
+    });
+
+    allToggles.forEach((el, idx) => {
+      if (idx === 0) el.classList.add('open');
+      else el.classList.remove('open');
+    });
+
+    allBadges.forEach((el, idx) => {
+      (el as HTMLElement).style.display = (idx === 0) ? 'none' : 'inline-flex';
+    });
+
+    allInlineClose.forEach((el, idx) => {
+      (el as HTMLElement).style.display = (idx === 0) ? 'none' : 'inline';
+    });
+  });
+
+  // ════════════════════════════════════════════════════════════
+  // LIVE JSON SEARCH ENGINE
+  // ════════════════════════════════════════════════════════════
+  function executeSearch(query: string): void {
+    searchQuery = query;
+    clearSearchHighlights();
+    searchMatches = [];
+    currentMatchIdx = -1;
+
+    const trimmed = query.trim().toLowerCase();
+    searchClear.hidden = !query;
+
+    if (!trimmed) {
+      searchCounter.hidden = true;
+      searchNavBtns.hidden = true;
+      return;
+    }
+
+    if (activeTab === 'viewer') {
+      searchInTreeView(trimmed);
+    } else {
+      searchInCodeView(trimmed);
+    }
+
+    const total = searchMatches.length;
+    searchCounter.hidden = false;
+    searchNavBtns.hidden = total === 0;
+
+    if (total > 0) {
+      currentMatchIdx = 0;
+      updateSearchMatchFocus();
+    } else {
+      searchCounter.textContent = '0 matches';
+    }
+  }
+
+  function clearSearchHighlights(): void {
+    document.querySelectorAll('mark.jt-search-match').forEach(el => {
+      const parent = el.parentNode;
+      if (parent) {
+        parent.replaceChild(document.createTextNode(el.textContent || ''), el);
+        parent.normalize();
+      }
+    });
+  }
+
+  function searchInTreeView(term: string): void {
+    const treeCont = document.getElementById('out-viewer');
+    if (!treeCont) return;
+
+    const elements = treeCont.querySelectorAll<HTMLElement>('[data-search-key], [data-search-val]');
+    elements.forEach(el => {
+      const rawText = el.textContent || '';
+      const lower = rawText.toLowerCase();
+      if (lower.includes(term)) {
+        let parent = el.parentElement;
+        while (parent && parent !== treeCont) {
+          if (parent.classList.contains('jt-tree-children')) {
+            parent.classList.remove('collapsed');
+            const parentNode = parent.parentElement;
+            if (parentNode) {
+              const toggle = parentNode.querySelector(':scope > .jt-tree-row > .jt-tree-toggle');
+              if (toggle) toggle.classList.add('open');
+              const badge = parentNode.querySelector(':scope > .jt-tree-row [data-role="badge"]') as HTMLElement | null;
+              const inlineClose = parentNode.querySelector(':scope > .jt-tree-row [data-role="inline-close"]') as HTMLElement | null;
+              if (badge) badge.style.display = 'none';
+              if (inlineClose) inlineClose.style.display = 'none';
+            }
+          }
+          parent = parent.parentElement;
+        }
+        highlightTextInNode(el, term);
+      }
+    });
+
+    searchMatches = Array.from(treeCont.querySelectorAll<HTMLElement>('mark.jt-search-match'));
+  }
+
+  function highlightTextInNode(element: HTMLElement, term: string): void {
+    const text = element.textContent || '';
+    const regex = new RegExp(`(${escapeRegex(term)})`, 'gi');
+    const parts = text.split(regex);
+    element.innerHTML = '';
+    parts.forEach(part => {
+      if (part.toLowerCase() === term) {
+        const mark = document.createElement('mark');
+        mark.className = 'jt-search-match';
+        mark.textContent = part;
+        element.appendChild(mark);
+      } else if (part) {
+        element.appendChild(document.createTextNode(part));
+      }
+    });
+  }
+
+  function searchInCodeView(term: string): void {
+    const activePanel = document.querySelector(`.jt-panel:not([hidden])`);
+    const txtArea = activePanel?.querySelector<HTMLTextAreaElement>('textarea');
+    if (!txtArea) return;
+
+    const val = txtArea.value;
+    const lower = val.toLowerCase();
+    let idx = lower.indexOf(term);
+    const indices: number[] = [];
+    while (idx !== -1) {
+      indices.push(idx);
+      idx = lower.indexOf(term, idx + term.length);
+    }
+
+    searchMatches = indices.map((pos) => {
+      const dummy = document.createElement('div');
+      dummy.dataset.pos = String(pos);
+      dummy.dataset.len = String(term.length);
+      return dummy;
+    });
+  }
+
+  function updateSearchMatchFocus(): void {
+    const total = searchMatches.length;
+    if (total === 0) {
+      searchCounter.textContent = '0 matches';
+      return;
+    }
+
+    searchCounter.textContent = `${currentMatchIdx + 1} of ${total}`;
+
+    if (activeTab === 'viewer') {
+      searchMatches.forEach((m, idx) => {
+        m.classList.toggle('active', idx === currentMatchIdx);
+      });
+      const activeMatch = searchMatches[currentMatchIdx];
+      if (activeMatch) {
+        activeMatch.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      }
+    } else {
+      const activePanel = document.querySelector(`.jt-panel:not([hidden])`);
+      const txtArea = activePanel?.querySelector<HTMLTextAreaElement>('textarea');
+      const match = searchMatches[currentMatchIdx];
+      if (txtArea && match) {
+        const pos = Number(match.dataset.pos);
+        const len = Number(match.dataset.len);
+        txtArea.focus();
+        txtArea.setSelectionRange(pos, pos + len);
+      }
+    }
+  }
+
+  function escapeRegex(s: string): string {
+    return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  searchInput.addEventListener('input', () => {
+    executeSearch(searchInput.value);
+  });
+
+  searchClear.addEventListener('click', () => {
+    searchInput.value = '';
+    executeSearch('');
+    searchInput.focus();
+  });
+
+  btnSearchNext.addEventListener('click', () => {
+    if (searchMatches.length === 0) return;
+    currentMatchIdx = (currentMatchIdx + 1) % searchMatches.length;
+    updateSearchMatchFocus();
+  });
+
+  btnSearchPrev.addEventListener('click', () => {
+    if (searchMatches.length === 0) return;
+    currentMatchIdx = (currentMatchIdx - 1 + searchMatches.length) % searchMatches.length;
+    updateSearchMatchFocus();
+  });
+
+  searchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (e.shiftKey) btnSearchPrev.click();
+      else btnSearchNext.click();
+    }
+  });
+
+  // ════════════════════════════════════════════════════════════
+  // 3. VALIDATOR
+  // ════════════════════════════════════════════════════════════
+  function runValidator(): void {
+    const container = document.getElementById('out-validator');
+    if (!container) return;
+
+    if (isValid && parsedData !== null) {
+      const desc = describeJson(parsedData);
+      const keyCount = (typeof parsedData === 'object' && parsedData !== null && !Array.isArray(parsedData))
+        ? Object.keys(parsedData as object).length : null;
+      container.innerHTML = `
+        <div class="jt-valid-card">
+          <div class="jt-valid-card-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+          </div>
+          <div>
+            <div style="font-weight:600;font-size:14px;margin-bottom:8px">Valid JSON Syntax</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <span class="jt-error-badge">Type: ${desc}</span>
+              <span class="jt-error-badge">Size: ${currentJson.length.toLocaleString()} chars</span>
+              ${keyCount !== null ? `<span class="jt-error-badge">Top-level keys: ${keyCount}</span>` : ''}
+            </div>
+          </div>
+        </div>`;
+    } else {
+      let errorMsg = 'Invalid JSON';
+      try { JSON.parse(currentJson); } catch (e: unknown) {
+        errorMsg = (e instanceof Error) ? e.message : String(e);
+      }
+      const { line, col } = parseErrorPosition(errorMsg, currentJson);
+      container.innerHTML = `
+        <div class="jt-error-card">
+          <div class="jt-error-card-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            Syntax Error
+          </div>
+          <div class="jt-error-card-msg">${escHtml(errorMsg)}</div>
+          ${(line || col) ? `
+          <div class="jt-error-meta">
+            ${line ? `<span class="jt-error-badge">Line ${line}</span>` : ''}
+            ${col  ? `<span class="jt-error-badge">Column ${col}</span>` : ''}
+          </div>` : ''}
+        </div>`;
+    }
+  }
+
+  function parseErrorPosition(msg: string, raw: string): { line: number | null, col: number | null } {
+    const posMatch = msg.match(/position (\d+)/);
+    if (posMatch) {
+      const pos = Number(posMatch[1]);
+      const before = raw.slice(0, pos);
+      const line = (before.match(/\n/g) || []).length + 1;
+      const lastNl = before.lastIndexOf('\n');
+      const col = lastNl === -1 ? pos + 1 : pos - lastNl;
+      return { line, col };
+    }
+    const lcMatch = msg.match(/line (\d+) column (\d+)/i);
+    if (lcMatch) return { line: Number(lcMatch[1]), col: Number(lcMatch[2]) };
+    return { line: null, col: null };
+  }
+
+  // ════════════════════════════════════════════════════════════
+  // 4. MINIFIER
+  // ════════════════════════════════════════════════════════════
+  function runMinifier(): void {
+    const out = document.getElementById('out-minifier') as HTMLTextAreaElement;
+    const stat = document.getElementById('stat-minifier');
+    if (!out || parsedData === null) return;
+    const minified = JSON.stringify(parsedData);
+    out.value = minified;
+    if (stat) {
+      const saved = currentJson.length - minified.length;
+      stat.textContent = `${minified.length} chars · saved ${saved >= 0 ? saved : 0} bytes`;
+    }
+  }
+
+  // ════════════════════════════════════════════════════════════
+  // 5. PRO DUAL-PANE COMPARE (LCS ALIGNED DIFF ENGINE)
+  // ════════════════════════════════════════════════════════════
+  function initCompareWorkspace(): void {
+    if (rawA) rawA.value = currentJson;
+    if (rawB && !rawB.value.trim()) {
+      rawB.value = JSON.stringify(SAMPLE_DIFF_B, null, 2);
+    }
+    renderCompareDiff();
+  }
+
+  // Toggle Edit/View on Pane A
+  btnModeA?.addEventListener('click', () => {
+    isEditingA = !isEditingA;
+    btnModeA.classList.toggle('active', isEditingA);
+    btnModeA.querySelector('span')!.textContent = isEditingA ? 'Diff' : 'Edit';
+    rawA.hidden = !isEditingA;
+    diffViewA.hidden = isEditingA;
+    if (isEditingA) {
+      rawA.focus();
+    } else {
+      renderCompareDiff();
+    }
+  });
+
+  // Toggle Edit/View on Pane B
+  btnModeB?.addEventListener('click', () => {
+    isEditingB = !isEditingB;
+    btnModeB.classList.toggle('active', isEditingB);
+    btnModeB.querySelector('span')!.textContent = isEditingB ? 'Diff' : 'Edit';
+    rawB.hidden = !isEditingB;
+    diffViewB.hidden = isEditingB;
+    if (isEditingB) {
+      rawB.focus();
+    } else {
+      renderCompareDiff();
+    }
+  });
+
+  function renderCompareDiff(): void {
+    const textA = rawA.value;
+    const textB = rawB.value;
+    saveSessionB(textB);
+
+    let linesA: string[] = [];
+    let linesB: string[] = [];
+
+    try {
+      linesA = JSON.stringify(JSON.parse(textA || '{}'), null, 2).split('\n');
+    } catch (_) {
+      linesA = textA ? textA.split('\n') : [];
+    }
+
+    try {
+      linesB = JSON.stringify(JSON.parse(textB || '{}'), null, 2).split('\n');
+    } catch (_) {
+      linesB = textB ? textB.split('\n') : [];
+    }
+
+    // Longest Common Subsequence Diff Alignment
+    const diff = computeLcsDiff(linesA, linesB);
+
+    diffItems = [];
+    currentDiffIdx = -1;
+    diffViewA.innerHTML = '';
+    diffViewB.innerHTML = '';
+
+    let addedCount = 0;
+    let removedCount = 0;
+    let modifiedCount = 0;
+
+    let lineNumA = 1;
+    let lineNumB = 1;
+
+    diff.forEach((item) => {
+      const rowA = document.createElement('div');
+      rowA.className = 'jt-diff-row';
+      const rowB = document.createElement('div');
+      rowB.className = 'jt-diff-row';
+
+      if (item.type === 'equal') {
+        rowA.innerHTML = `<span class="jt-diff-line-num">${lineNumA++}</span><span class="jt-diff-symbol"> </span><span class="jt-diff-code">${escHtml(item.valA || '')}</span>`;
+        rowB.innerHTML = `<span class="jt-diff-line-num">${lineNumB++}</span><span class="jt-diff-symbol"> </span><span class="jt-diff-code">${escHtml(item.valB || '')}</span>`;
+      } else if (item.type === 'delete') {
+        rowA.classList.add('diff-del');
+        rowA.innerHTML = `<span class="jt-diff-line-num">${lineNumA++}</span><span class="jt-diff-symbol">-</span><span class="jt-diff-code">${escHtml(item.valA || '')}</span>`;
+        rowB.classList.add('diff-empty');
+        rowB.innerHTML = `<span class="jt-diff-line-num"> </span><span class="jt-diff-symbol"> </span><span class="jt-diff-code"> </span>`;
+        removedCount++;
+        diffItems.push({ lineA: rowA, lineB: rowB });
+      } else if (item.type === 'add') {
+        rowA.classList.add('diff-empty');
+        rowA.innerHTML = `<span class="jt-diff-line-num"> </span><span class="jt-diff-symbol"> </span><span class="jt-diff-code"> </span>`;
+        rowB.classList.add('diff-add');
+        rowB.innerHTML = `<span class="jt-diff-line-num">${lineNumB++}</span><span class="jt-diff-symbol">+</span><span class="jt-diff-code">${escHtml(item.valB || '')}</span>`;
+        addedCount++;
+        diffItems.push({ lineA: rowA, lineB: rowB });
+      } else if (item.type === 'modify') {
+        rowA.classList.add('diff-del');
+        rowA.innerHTML = `<span class="jt-diff-line-num">${lineNumA++}</span><span class="jt-diff-symbol">~</span><span class="jt-diff-code">${escHtml(item.valA || '')}</span>`;
+        rowB.classList.add('diff-add');
+        rowB.innerHTML = `<span class="jt-diff-line-num">${lineNumB++}</span><span class="jt-diff-symbol">~</span><span class="jt-diff-code">${escHtml(item.valB || '')}</span>`;
+        modifiedCount++;
+        diffItems.push({ lineA: rowA, lineB: rowB });
+      }
+
+      diffViewA.appendChild(rowA);
+      diffViewB.appendChild(rowB);
+    });
+
+    statDiffAdd.textContent = `+${addedCount} added`;
+    statDiffRem.textContent = `-${removedCount} removed`;
+    statDiffMod.textContent = `~${modifiedCount} changed`;
+
+    const total = diffItems.length;
+    if (total > 0) {
+      currentDiffIdx = 0;
+      diffCounter.textContent = `Diff 1 of ${total}`;
+      highlightActiveDiffItem();
+    } else {
+      diffCounter.textContent = '0 differences';
+    }
+  }
+
+  function computeLcsDiff(a: string[], b: string[]): { type: 'equal' | 'add' | 'delete' | 'modify'; valA?: string; valB?: string }[] {
+    const n = a.length;
+    const m = b.length;
+    const matrix: number[][] = Array.from({ length: n + 1 }, () => new Array(m + 1).fill(0));
+
+    for (let i = 0; i < n; i++) {
+      for (let j = 0; j < m; j++) {
+        if (a[i].trim() === b[j].trim()) {
+          matrix[i + 1][j + 1] = matrix[i][j] + 1;
+        } else {
+          matrix[i + 1][j + 1] = Math.max(matrix[i + 1][j], matrix[i][j + 1]);
+        }
+      }
+    }
+
+    const result: { type: 'equal' | 'add' | 'delete' | 'modify'; valA?: string; valB?: string }[] = [];
+    let i = n, j = m;
+
+    while (i > 0 || j > 0) {
+      if (i > 0 && j > 0 && a[i - 1].trim() === b[j - 1].trim()) {
+        result.unshift({ type: 'equal', valA: a[i - 1], valB: b[j - 1] });
+        i--; j--;
+      } else if (j > 0 && (i === 0 || matrix[i][j - 1] >= matrix[i - 1][j])) {
+        result.unshift({ type: 'add', valB: b[j - 1] });
+        j--;
+      } else if (i > 0 && (j === 0 || matrix[i][j - 1] < matrix[i - 1][j])) {
+        result.unshift({ type: 'delete', valA: a[i - 1] });
+        i--;
+      }
+    }
+
+    return result;
+  }
+
+  function highlightActiveDiffItem(): void {
+    document.querySelectorAll('.jt-diff-row.diff-active-focus').forEach(el => el.classList.remove('diff-active-focus'));
+    if (currentDiffIdx >= 0 && currentDiffIdx < diffItems.length) {
+      const match = diffItems[currentDiffIdx];
+      if (match.lineA) match.lineA.classList.add('diff-active-focus');
+      if (match.lineB) match.lineB.classList.add('diff-active-focus');
+
+      if (match.lineA) match.lineA.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      if (match.lineB) match.lineB.scrollIntoView({ block: 'center', behavior: 'smooth' });
+
+      diffCounter.textContent = `Diff ${currentDiffIdx + 1} of ${diffItems.length}`;
+    }
+  }
+
+  btnDiffNext?.addEventListener('click', () => {
+    if (diffItems.length === 0) return;
+    currentDiffIdx = (currentDiffIdx + 1) % diffItems.length;
+    highlightActiveDiffItem();
+  });
+
+  btnDiffPrev?.addEventListener('click', () => {
+    if (diffItems.length === 0) return;
+    currentDiffIdx = (currentDiffIdx - 1 + diffItems.length) % diffItems.length;
+    highlightActiveDiffItem();
+  });
+
+  rawA?.addEventListener('input', () => {
+    currentJson = rawA.value;
+    input.value = rawA.value;
+    processInput(rawA.value);
+    renderCompareDiff();
+  });
+
+  document.getElementById('btn-import-a')?.addEventListener('click', () => fileInputA.click());
+  fileInputA?.addEventListener('change', () => {
+    const file = fileInputA.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      const text = e.target?.result as string;
+      rawA.value = text;
+      input.value = text;
+      processInput(text);
+      renderCompareDiff();
+    };
+    reader.readAsText(file);
+    fileInputA.value = '';
+  });
+
+  document.getElementById('btn-format-a')?.addEventListener('click', () => {
+    try {
+      rawA.value = JSON.stringify(JSON.parse(rawA.value), null, 2);
+      input.value = rawA.value;
+      processInput(rawA.value);
+      renderCompareDiff();
+    } catch (_) {}
+  });
+
+  document.getElementById('btn-clear-a')?.addEventListener('click', () => {
+    rawA.value = '';
+    input.value = '';
+    processInput('');
+    renderCompareDiff();
+  });
+
+  rawB?.addEventListener('input', () => {
+    renderCompareDiff();
+  });
+
+  document.getElementById('btn-import-b')?.addEventListener('click', () => fileInputB.click());
+  fileInputB?.addEventListener('change', () => {
+    const file = fileInputB.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      const text = e.target?.result as string;
+      rawB.value = text;
+      renderCompareDiff();
+    };
+    reader.readAsText(file);
+    fileInputB.value = '';
+  });
+
+  document.getElementById('btn-format-b')?.addEventListener('click', () => {
+    try {
+      rawB.value = JSON.stringify(JSON.parse(rawB.value), null, 2);
+      renderCompareDiff();
+    } catch (_) {}
+  });
+
+  document.getElementById('btn-clear-b')?.addEventListener('click', () => {
+    rawB.value = '';
+    renderCompareDiff();
+  });
+
+  document.getElementById('btn-compare-sample-b')?.addEventListener('click', () => {
+    rawB.value = JSON.stringify(SAMPLE_DIFF_B, null, 2);
+    renderCompareDiff();
+  });
+
+  // ════════════════════════════════════════════════════════════
+  // 6. JSON → CSV
+  // ════════════════════════════════════════════════════════════
+  function runCsv(): void {
+    const out = document.getElementById('out-csv') as HTMLTextAreaElement;
+    const data = parsedData;
+    if (!out) return;
+
+    if (!Array.isArray(data) || data.length === 0) {
+      out.value = '# Note: CSV conversion requires a top-level JSON array of objects.\n# Example: [{"id": 1, "name": "Alice"}, {"id": 2, "name": "Bob"}]';
+      return;
+    }
+
+    const headers: string[] = [];
+    data.forEach(row => {
+      if (typeof row === 'object' && row !== null && !Array.isArray(row)) {
+        Object.keys(row as object).forEach(k => {
+          if (!headers.includes(k)) headers.push(k);
+        });
+      }
+    });
+
+    const csvEscape = (val: unknown): string => {
+      const s = val === null || val === undefined ? '' : typeof val === 'object' ? JSON.stringify(val) : String(val);
+      if (s.includes(',') || s.includes('"') || s.includes('\n')) {
+        return '"' + s.replace(/"/g, '""') + '"';
+      }
+      return s;
+    };
+
+    const rows: string[] = [headers.map(csvEscape).join(',')];
+    data.forEach(row => {
+      if (typeof row === 'object' && row !== null && !Array.isArray(row)) {
+        const r = row as Record<string, unknown>;
+        rows.push(headers.map(h => csvEscape(r[h])).join(','));
+      }
+    });
+
+    out.value = rows.join('\n');
+  }
+
+  // ════════════════════════════════════════════════════════════
+  // 7. JSON → YAML
+  // ════════════════════════════════════════════════════════════
+  function runYaml(): void {
+    const out = document.getElementById('out-yaml') as HTMLTextAreaElement;
+    if (out && parsedData !== null) {
+      out.value = toYaml(parsedData, 0);
+    }
+  }
+
+  function toYaml(val: unknown, depth: number): string {
+    const indent = '  '.repeat(depth);
+    if (val === null)    return 'null';
+    if (typeof val === 'boolean') return String(val);
+    if (typeof val === 'number')  return String(val);
+    if (typeof val === 'string') {
+      if (/[\n:{}[\],#&*?|<>=!%@`'"\\]/.test(val) || val.trim() !== val || val === '') {
+        return `"${val.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\n/g, '\\n')}"`;
+      }
+      return val;
+    }
+    if (Array.isArray(val)) {
+      if (val.length === 0) return '[]';
+      return val.map(item => {
+        const rendered = toYaml(item, depth + 1);
+        if (typeof item === 'object' && item !== null) {
+          return `${indent}- ${rendered.trimStart()}`;
+        }
+        return `${indent}- ${rendered}`;
+      }).join('\n');
+    }
+    if (typeof val === 'object' && val !== null) {
+      const obj = val as Record<string, unknown>;
+      const keys = Object.keys(obj);
+      if (keys.length === 0) return '{}';
+      return keys.map(k => {
+        const v = obj[k];
+        const yamlKey = /[:\#\[\]\{\}&*?|<>=!%@`]/.test(k) ? `"${k}"` : k;
+        if (typeof v === 'object' && v !== null) {
+          const child = toYaml(v, depth + 1);
+          return `${indent}${yamlKey}:\n${child}`;
+        }
+        return `${indent}${yamlKey}: ${toYaml(v, depth + 1)}`;
+      }).join('\n');
+    }
+    return String(val);
+  }
+
+  // ════════════════════════════════════════════════════════════
+  // 8. JSON → XML
+  // ════════════════════════════════════════════════════════════
+  function runXml(): void {
+    const out = document.getElementById('out-xml') as HTMLTextAreaElement;
+    if (out && parsedData !== null) {
+      out.value = `<?xml version="1.0" encoding="UTF-8"?>\n${toXml(parsedData, 'root', 0)}`;
+    }
+  }
+
+  function toXml(val: unknown, tag: string, depth: number): string {
+    const indent = '  '.repeat(depth);
+    const safeTag = tag.replace(/[^a-zA-Z0-9_\-\.]/g, '_');
+
+    if (val === null || val === undefined) {
+      return `${indent}<${safeTag} xsi:nil="true"/>`;
+    }
+    if (typeof val !== 'object') {
+      return `${indent}<${safeTag}>${escXml(String(val))}</${safeTag}>`;
+    }
+    if (Array.isArray(val)) {
+      const itemTag = singularize(safeTag);
+      return val.map(item => toXml(item, itemTag, depth)).join('\n');
+    }
+    const obj = val as Record<string, unknown>;
+    const children = Object.entries(obj).map(([k, v]) => toXml(v, k, depth + 1)).join('\n');
+    return `${indent}<${safeTag}>\n${children}\n${indent}</${safeTag}>`;
+  }
+
+  function singularize(word: string): string {
+    if (word.endsWith('ies')) return word.slice(0, -3) + 'y';
+    if (word.endsWith('s') && !word.endsWith('ss')) return word.slice(0, -1);
+    return `${word}_item`;
+  }
+
+  function escXml(s: string): string {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
+  }
+
+  // ════════════════════════════════════════════════════════════
+  // 9. JSON → TYPESCRIPT
+  // ════════════════════════════════════════════════════════════
+  function runTypeScript(): void {
+    const out = document.getElementById('out-typescript') as HTMLTextAreaElement;
+    if (!out || parsedData === null) return;
+    const interfaces: string[] = [];
+    inferTsType(parsedData, 'RootObject', interfaces);
+    out.value = interfaces.join('\n\n');
+  }
+
+  function inferTsType(val: unknown, name: string, output: string[]): string {
+    if (val === null)    return 'null';
+    if (typeof val === 'string')  return 'string';
+    if (typeof val === 'number')  return 'number';
+    if (typeof val === 'boolean') return 'boolean';
+
+    if (Array.isArray(val)) {
+      if (val.length === 0) return 'unknown[]';
+      const types = [...new Set(val.map(item => inferTsType(item, name + 'Item', output)))];
+      const itemType = types.length === 1 ? types[0] : types.join(' | ');
+      return itemType.includes(' | ') ? `(${itemType})[]` : `${itemType}[]`;
+    }
+
+    if (typeof val === 'object' && val !== null) {
+      const obj = val as Record<string, unknown>;
+      const keys = Object.keys(obj);
+      const lines = keys.map(k => {
+        const childName = toPascalCase(k);
+        const tsType = inferTsType(obj[k], childName, output);
+        const validKey = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(k) ? k : JSON.stringify(k);
+        return `  ${validKey}: ${tsType};`;
+      });
+      output.push(`export interface ${name} {\n${lines.join('\n')}\n}`);
+      return name;
+    }
+
+    return 'unknown';
+  }
+
+  function toPascalCase(s: string): string {
+    return s.replace(/(^|[-_\s])([a-z0-9])/gi, (_, __, c) => c.toUpperCase());
+  }
+
+  // ════════════════════════════════════════════════════════════
+  // 10. JSON → ZOD
+  // ════════════════════════════════════════════════════════════
+  function runZod(): void {
+    const out = document.getElementById('out-zod') as HTMLTextAreaElement;
+    if (!out || parsedData === null) return;
+    const schemas: string[] = [];
+    const rootSchema = inferZodType(parsedData, 'Root', schemas);
+    schemas.push(`export const RootSchema = ${rootSchema};`);
+    out.value = `import { z } from 'zod';\n\n` + schemas.join('\n\n');
+  }
+
+  function inferZodType(val: unknown, name: string, output: string[]): string {
+    if (val === null)    return 'z.null()';
+    if (typeof val === 'string')  return 'z.string()';
+    if (typeof val === 'number')  return 'z.number()';
+    if (typeof val === 'boolean') return 'z.boolean()';
+
+    if (Array.isArray(val)) {
+      if (val.length === 0) return 'z.array(z.unknown())';
+      const types = [...new Set(val.map(item => inferZodType(item, name + 'Item', output)))];
+      const itemType = types.length === 1 ? types[0] : `z.union([${types.join(', ')}])`;
+      return `z.array(${itemType})`;
+    }
+
+    if (typeof val === 'object' && val !== null) {
+      const obj = val as Record<string, unknown>;
+      const keys = Object.keys(obj);
+      const lines = keys.map(k => {
+        const childName = toPascalCase(k);
+        const zodType = inferZodType(obj[k], childName, output);
+        const validKey = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(k) ? k : JSON.stringify(k);
+        return `  ${validKey}: ${zodType},`;
+      });
+      const schemaName = `${name}Schema`;
+      output.push(`export const ${schemaName} = z.object({\n${lines.join('\n')}\n});`);
+      return schemaName;
+    }
+
+    return 'z.unknown()';
+  }
+
+  // ════════════════════════════════════════════════════════════
+  // 11. JSON SCHEMA (DRAFT-07)
+  // ════════════════════════════════════════════════════════════
+  function runSchema(): void {
+    const out = document.getElementById('out-schema') as HTMLTextAreaElement;
+    if (!out || parsedData === null) return;
+    const schema = {
+      $schema: 'http://json-schema.org/draft-07/schema#',
+      ...inferJsonSchema(parsedData)
+    };
+    out.value = JSON.stringify(schema, null, 2);
+  }
+
+  function inferJsonSchema(val: unknown): Record<string, unknown> {
+    if (val === null)    return { type: 'null' };
+    if (typeof val === 'string')  return { type: 'string' };
+    if (typeof val === 'number')  return Number.isInteger(val) ? { type: 'integer' } : { type: 'number' };
+    if (typeof val === 'boolean') return { type: 'boolean' };
+
+    if (Array.isArray(val)) {
+      if (val.length === 0) return { type: 'array' };
+      const itemSchemas = val.map(item => inferJsonSchema(item));
+      const types = [...new Set(itemSchemas.map(s => s['type']))];
+      const items = types.length === 1 ? itemSchemas[0] : { oneOf: itemSchemas };
+      return { type: 'array', items };
+    }
+
+    if (typeof val === 'object' && val !== null) {
+      const obj = val as Record<string, unknown>;
+      const keys = Object.keys(obj);
+      const properties: Record<string, unknown> = {};
+      keys.forEach(k => { properties[k] = inferJsonSchema(obj[k]); });
+      return {
+        type: 'object',
+        properties,
+        required: keys.filter(k => obj[k] !== null && obj[k] !== undefined),
+      };
+    }
+
+    return {};
+  }
+
+  // ════════════════════════════════════════════════════════════
+  // 12. JSON → OPENAPI 3.0
+  // ════════════════════════════════════════════════════════════
+  function runOpenApi(): void {
+    const out = document.getElementById('out-openapi') as HTMLTextAreaElement;
+    if (!out || parsedData === null) return;
+    const openApiSchema = {
+      openapi: "3.0.3",
+      info: {
+        title: "Generated API Schema",
+        version: "1.0.0"
+      },
+      paths: {},
+      components: {
+        schemas: {
+          RootResponse: inferJsonSchema(parsedData)
+        }
+      }
+    };
+    out.value = toYaml(openApiSchema, 0);
+  }
+
+  // ════════════════════════════════════════════════════════════
+  // 13. JSON → GO STRUCTS
+  // ════════════════════════════════════════════════════════════
+  function runGo(): void {
+    const out = document.getElementById('out-go') as HTMLTextAreaElement;
+    if (!out || parsedData === null) return;
+    const structs: string[] = [];
+    inferGoType(parsedData, 'Root', structs);
+    out.value = `package main\n\n` + structs.join('\n\n');
+  }
+
+  function inferGoType(val: unknown, name: string, output: string[]): string {
+    if (val === null) return 'any';
+    if (typeof val === 'string') return 'string';
+    if (typeof val === 'number') return Number.isInteger(val) ? 'int64' : 'float64';
+    if (typeof val === 'boolean') return 'bool';
+
+    if (Array.isArray(val)) {
+      if (val.length === 0) return '[]any';
+      const itemType = inferGoType(val[0], name + 'Item', output);
+      return `[]${itemType}`;
+    }
+
+    if (typeof val === 'object' && val !== null) {
+      const obj = val as Record<string, unknown>;
+      const keys = Object.keys(obj);
+      const lines = keys.map(k => {
+        const fieldName = toPascalCase(k);
+        const goType = inferGoType(obj[k], fieldName, output);
+        return `\t${fieldName} ${goType} \`json:"${k}"\``;
+      });
+      output.push(`type ${name} struct {\n${lines.join('\n')}\n}`);
+      return name;
+    }
+
+    return 'any';
+  }
+
+  // ════════════════════════════════════════════════════════════
+  // 14. JSON → PYTHON PYDANTIC V2
+  // ════════════════════════════════════════════════════════════
+  function runPydantic(): void {
+    const out = document.getElementById('out-pydantic') as HTMLTextAreaElement;
+    if (!out || parsedData === null) return;
+    const models: string[] = [];
+    inferPydanticType(parsedData, 'RootModel', models);
+    out.value = `from typing import List, Optional, Any, Dict\nfrom pydantic import BaseModel, Field\n\n\n` + models.join('\n\n\n');
+  }
+
+  function inferPydanticType(val: unknown, name: string, output: string[]): string {
+    if (val === null) return 'Optional[Any] = None';
+    if (typeof val === 'string') return 'str';
+    if (typeof val === 'number') return Number.isInteger(val) ? 'int' : 'float';
+    if (typeof val === 'boolean') return 'bool';
+
+    if (Array.isArray(val)) {
+      if (val.length === 0) return 'List[Any]';
+      const itemType = inferPydanticType(val[0], name + 'Item', output);
+      return `List[${itemType}]`;
+    }
+
+    if (typeof val === 'object' && val !== null) {
+      const obj = val as Record<string, unknown>;
+      const keys = Object.keys(obj);
+      const lines = keys.map(k => {
+        const fieldName = /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(k) ? k : `field_${k}`;
+        const typeStr = inferPydanticType(obj[k], toPascalCase(k), output);
+        if (fieldName !== k) {
+          return `    ${fieldName}: ${typeStr} = Field(alias="${k}")`;
+        }
+        return `    ${k}: ${typeStr}`;
+      });
+      output.push(`class ${name}(BaseModel):\n${lines.length ? lines.join('\n') : '    pass'}`);
+      return name;
+    }
+
+    return 'Any';
+  }
+
+  // ════════════════════════════════════════════════════════════
+  // 15. JSON → JAVA POJO (JACKSON)
+  // ════════════════════════════════════════════════════════════
+  function runJava(): void {
+    const out = document.getElementById('out-java') as HTMLTextAreaElement;
+    if (!out || parsedData === null) return;
+    const classes: string[] = [];
+    inferJavaType(parsedData, 'Root', classes);
+    out.value = `import com.fasterxml.jackson.annotation.JsonProperty;\nimport java.util.List;\n\n` + classes.join('\n\n');
+  }
+
+  function inferJavaType(val: unknown, name: string, output: string[]): string {
+    if (val === null) return 'Object';
+    if (typeof val === 'string') return 'String';
+    if (typeof val === 'number') return Number.isInteger(val) ? 'Long' : 'Double';
+    if (typeof val === 'boolean') return 'Boolean';
+
+    if (Array.isArray(val)) {
+      if (val.length === 0) return 'List<Object>';
+      const itemType = inferJavaType(val[0], name + 'Item', output);
+      return `List<${itemType}>`;
+    }
+
+    if (typeof val === 'object' && val !== null) {
+      const obj = val as Record<string, unknown>;
+      const keys = Object.keys(obj);
+      const fieldDefs = keys.map(k => {
+        const javaType = inferJavaType(obj[k], toPascalCase(k), output);
+        const varName = toCamelCase(k);
+        return `    @JsonProperty("${k}")\n    private ${javaType} ${varName};`;
+      });
+      const gettersSetters = keys.map(k => {
+        const javaType = inferJavaType(obj[k], toPascalCase(k), []);
+        const varName = toCamelCase(k);
+        const methodName = toPascalCase(k);
+        return `    public ${javaType} get${methodName}() { return this.${varName}; }\n    public void set${methodName}(${javaType} ${varName}) { this.${varName} = ${varName}; }`;
+      });
+      output.push(`public class ${name} {\n${fieldDefs.join('\n\n')}\n\n${gettersSetters.join('\n\n')}\n}`);
+      return name;
+    }
+
+    return 'Object';
+  }
+
+  function toCamelCase(s: string): string {
+    const p = toPascalCase(s);
+    return p.charAt(0).toLowerCase() + p.slice(1);
+  }
+
+  // ════════════════════════════════════════════════════════════
+  // 16. JSON → KOTLIN DATA CLASSES
+  // ════════════════════════════════════════════════════════════
+  function runKotlin(): void {
+    const out = document.getElementById('out-kotlin') as HTMLTextAreaElement;
+    if (!out || parsedData === null) return;
+    const classes: string[] = [];
+    inferKotlinType(parsedData, 'Root', classes);
+    out.value = `import kotlinx.serialization.Serializable\nimport kotlinx.serialization.SerialName\n\n` + classes.join('\n\n');
+  }
+
+  function inferKotlinType(val: unknown, name: string, output: string[]): string {
+    if (val === null) return 'Any?';
+    if (typeof val === 'string') return 'String';
+    if (typeof val === 'number') return Number.isInteger(val) ? 'Long' : 'Double';
+    if (typeof val === 'boolean') return 'Boolean';
+
+    if (Array.isArray(val)) {
+      if (val.length === 0) return 'List<Any>';
+      const itemType = inferKotlinType(val[0], name + 'Item', output);
+      return `List<${itemType}>`;
+    }
+
+    if (typeof val === 'object' && val !== null) {
+      const obj = val as Record<string, unknown>;
+      const keys = Object.keys(obj);
+      const lines = keys.map(k => {
+        const fieldName = toCamelCase(k);
+        const ktType = inferKotlinType(obj[k], toPascalCase(k), output);
+        return `    @SerialName("${k}")\n    val ${fieldName}: ${ktType}`;
+      });
+      output.push(`@Serializable\ndata class ${name}(\n${lines.join(',\n')}\n)`);
+      return name;
+    }
+
+    return 'Any';
+  }
+
+  // ════════════════════════════════════════════════════════════
+  // SHARED UTILITIES & BUTTONS
+  // ════════════════════════════════════════════════════════════
+
+  function escHtml(s: string): string {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // ── Copy helpers ─────────────────────────────────────────────
+  function setupCopy(btnId: string, getContent: () => string): void {
+    const btn = document.getElementById(btnId);
+    if (!btn) return;
+    btn.addEventListener('click', async () => {
+      const text = getContent();
+      if (!text) return;
+      try {
+        await navigator.clipboard.writeText(text);
+        const span = btn.querySelector('span');
+        const orig = span?.textContent ?? 'Copy';
+        if (span) span.textContent = 'Copied!';
+        setTimeout(() => { if (span) span.textContent = orig; }, 1500);
+      } catch (_) {}
+    });
+  }
+
+  setupCopy('btn-copy-formatter',  () => (document.getElementById('out-formatter') as HTMLTextAreaElement)?.value ?? '');
+  setupCopy('btn-copy-minifier',   () => (document.getElementById('out-minifier') as HTMLTextAreaElement)?.value ?? '');
+  setupCopy('btn-copy-csv',        () => (document.getElementById('out-csv') as HTMLTextAreaElement)?.value ?? '');
+  setupCopy('btn-copy-yaml',       () => (document.getElementById('out-yaml') as HTMLTextAreaElement)?.value ?? '');
+  setupCopy('btn-copy-xml',        () => (document.getElementById('out-xml') as HTMLTextAreaElement)?.value ?? '');
+  setupCopy('btn-copy-typescript', () => (document.getElementById('out-typescript') as HTMLTextAreaElement)?.value ?? '');
+  setupCopy('btn-copy-zod',        () => (document.getElementById('out-zod') as HTMLTextAreaElement)?.value ?? '');
+  setupCopy('btn-copy-schema',     () => (document.getElementById('out-schema') as HTMLTextAreaElement)?.value ?? '');
+  setupCopy('btn-copy-openapi',    () => (document.getElementById('out-openapi') as HTMLTextAreaElement)?.value ?? '');
+  setupCopy('btn-copy-go',         () => (document.getElementById('out-go') as HTMLTextAreaElement)?.value ?? '');
+  setupCopy('btn-copy-pydantic',   () => (document.getElementById('out-pydantic') as HTMLTextAreaElement)?.value ?? '');
+  setupCopy('btn-copy-java',       () => (document.getElementById('out-java') as HTMLTextAreaElement)?.value ?? '');
+  setupCopy('btn-copy-kotlin',     () => (document.getElementById('out-kotlin') as HTMLTextAreaElement)?.value ?? '');
+
+  // ── Download helpers ─────────────────────────────────────────
+  function setupDownload(btnId: string, filename: string, getContent: () => string, mime = 'text/plain'): void {
+    const btn = document.getElementById(btnId);
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      const text = getContent();
+      if (!text) return;
+      const blob = new Blob([text], { type: mime });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+  }
+
+  setupDownload('btn-dl-formatter',  'formatted.json',  () => (document.getElementById('out-formatter') as HTMLTextAreaElement)?.value ?? '', 'application/json');
+  setupDownload('btn-dl-minifier',   'minified.json',   () => (document.getElementById('out-minifier') as HTMLTextAreaElement)?.value ?? '', 'application/json');
+  setupDownload('btn-dl-csv',        'data.csv',        () => (document.getElementById('out-csv') as HTMLTextAreaElement)?.value ?? '', 'text/csv');
+  setupDownload('btn-dl-yaml',       'data.yaml',       () => (document.getElementById('out-yaml') as HTMLTextAreaElement)?.value ?? '', 'text/yaml');
+  setupDownload('btn-dl-xml',        'data.xml',        () => (document.getElementById('out-xml') as HTMLTextAreaElement)?.value ?? '', 'application/xml');
+  setupDownload('btn-dl-typescript', 'types.ts',        () => (document.getElementById('out-typescript') as HTMLTextAreaElement)?.value ?? '', 'text/typescript');
+  setupDownload('btn-dl-zod',        'schema.ts',       () => (document.getElementById('out-zod') as HTMLTextAreaElement)?.value ?? '', 'text/typescript');
+  setupDownload('btn-dl-schema',     'schema.json',     () => (document.getElementById('out-schema') as HTMLTextAreaElement)?.value ?? '', 'application/json');
+  setupDownload('btn-dl-openapi',    'openapi.yaml',    () => (document.getElementById('out-openapi') as HTMLTextAreaElement)?.value ?? '', 'text/yaml');
+  setupDownload('btn-dl-go',         'types.go',        () => (document.getElementById('out-go') as HTMLTextAreaElement)?.value ?? '', 'text/plain');
+  setupDownload('btn-dl-pydantic',   'models.py',       () => (document.getElementById('out-pydantic') as HTMLTextAreaElement)?.value ?? '', 'text/plain');
+  setupDownload('btn-dl-java',       'Root.java',       () => (document.getElementById('out-java') as HTMLTextAreaElement)?.value ?? '', 'text/plain');
+  setupDownload('btn-dl-kotlin',     'Root.kt',         () => (document.getElementById('out-kotlin') as HTMLTextAreaElement)?.value ?? '', 'text/plain');
+
+  // ── Sample button ────────────────────────────────────────────
+  document.getElementById('btn-sample')?.addEventListener('click', () => {
+    input.value = JSON.stringify(SAMPLE_JSON, null, 2);
+    processInput(input.value);
+  });
+
+  // ── Clear button ─────────────────────────────────────────────
+  document.getElementById('btn-clear')?.addEventListener('click', () => {
+    input.value = '';
+    processInput('');
+    try { sessionStorage.removeItem('jt-json'); } catch (_) {}
+  });
+
+  // ── File load button ─────────────────────────────────────────
+  document.getElementById('btn-load-file')?.addEventListener('click', () => {
+    fileInput.click();
+  });
+
+  fileInput.addEventListener('change', () => {
+    const file = fileInput.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      const text = e.target?.result as string;
+      input.value = text;
+      processInput(text);
+    };
+    reader.readAsText(file);
+    fileInput.value = '';
+  });
+
+  // ── Drag & drop ──────────────────────────────────────────────
+  dropZone.addEventListener('dragover', e => {
+    e.preventDefault();
+    dropZone.classList.add('dragging');
+  });
+
+  dropZone.addEventListener('dragleave', e => {
+    if (!dropZone.contains(e.relatedTarget as Node)) {
+      dropZone.classList.remove('dragging');
+    }
+  });
+
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('dragging');
+    const file = e.dataTransfer?.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      const text = ev.target?.result as string;
+      input.value = text;
+      processInput(text);
+    };
+    reader.readAsText(file);
+  });
+
+  // ── Init ─────────────────────────────────────────────────────
+  activeTab = getHashTab();
+  switchTab(activeTab);
+  loadFromSession();
+
+  // Handle hash changes (back/forward)
+  window.addEventListener('hashchange', () => {
+    const tab = getHashTab();
+    if (tab !== activeTab) switchTab(tab);
+  });
+</script>

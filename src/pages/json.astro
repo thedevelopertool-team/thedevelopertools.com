@@ -1,0 +1,392 @@
+---
+import Layout from "../layouts/Layout.astro";
+import JsonToolkit from "../components/JsonToolkit.astro";
+
+const jsonLdWebApp = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "JSON Formatter, Validator & Toolkit — Free Online JSON Tools",
+  "url": "https://thedevelopertools.com/json",
+  "description": "Free online JSON toolkit. Format, validate, minify, view, and convert JSON to CSV, YAML, XML, TypeScript, Zod schemas and more. 100% browser-based, private.",
+  "applicationCategory": "DeveloperApplication",
+  "applicationSubCategory": "JSON Tools",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires a modern web browser with JavaScript enabled",
+  "softwareVersion": "1.0",
+  "inLanguage": "en",
+  "publisher": {
+    "@type": "Organization",
+    "name": "The Developer Tools",
+    "url": "https://thedevelopertools.com"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": [
+    "JSON Formatter — beautify JSON with configurable indentation",
+    "JSON Viewer — explore JSON in a true hierarchical collapsible tree",
+    "JSON Search — real-time key and value search with match navigation",
+    "JSON Validator — detect syntax errors with line and column details",
+    "JSON Minifier — remove whitespace and compress JSON",
+    "JSON Compare — visual side-by-side diff between two JSON documents",
+    "JSON to CSV — convert JSON arrays to comma-separated values",
+    "JSON to YAML — convert JSON to YAML format",
+    "JSON to XML — convert JSON to XML markup",
+    "JSON to TypeScript — generate TypeScript interfaces from JSON",
+    "JSON to Zod — generate Zod validation schemas from JSON",
+    "JSON Schema Generator — generate JSON Schema draft-07 from data",
+    "JSON to OpenAPI — generate OpenAPI 3.0 schemas",
+    "JSON to Go — generate Go structs with json tags",
+    "JSON to Pydantic — generate Python Pydantic v2 models",
+    "JSON to Java — generate Java POJO classes with Jackson annotations",
+    "JSON to Kotlin — generate Kotlin data classes with kotlinx.serialization",
+    "100% browser-based — zero network calls, total privacy"
+  ]
+};
+
+const jsonLdBreadcrumbs = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://thedevelopertools.com"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "JSON Tools",
+      "item": "https://thedevelopertools.com/json"
+    }
+  ]
+};
+
+const jsonLdFAQ = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is this JSON formatter free and private?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Every tool in this JSON toolkit runs 100% inside your browser using JavaScript. Your JSON data is never sent to any server, logged, or tracked. Once the page is loaded, the toolkit works entirely offline."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What JSON tools are included in this toolkit?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The toolkit includes: JSON Formatter (beautify), JSON Minifier, JSON Validator (with line/column error details), JSON Viewer (interactive tree), JSON to CSV, JSON to YAML, JSON to XML, JSON to TypeScript interfaces, JSON to Zod schemas, and JSON Schema generator."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need to paste my JSON again when switching between tools?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. The toolkit keeps your JSON in a shared workspace. Paste or load your JSON once and switch between any tool tab — format, validate, convert, or generate code — without re-entering the data."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does the JSON Validator identify errors?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The validator uses the browser's built-in JSON.parse() and extracts the exact character position from the error message, then calculates the line number and column number so you can pinpoint the syntax error immediately."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I load a JSON file instead of pasting?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Click the 'File' button to open a file browser, or drag and drop any .json file directly onto the input area. The file is read locally in your browser using the FileReader API — nothing is uploaded."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does JSON to TypeScript generation work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The TypeScript generator recursively inspects the structure and values of your JSON data to infer types. Objects become TypeScript interfaces, arrays become typed arrays, and primitives map to string, number, boolean, or null. The output is clean, idiomatic TypeScript."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is a JSON Schema and how is it generated?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "JSON Schema is a vocabulary for describing JSON data structures. The generator analyzes your JSON and produces a draft-07 compatible schema with type, properties, items, and required fields, which you can use to validate other JSON documents programmatically."
+      }
+    }
+  ]
+};
+---
+
+<Layout
+  title="JSON Formatter, Validator & Toolkit — Free Online JSON Tools"
+  description="Free online JSON toolkit. Format, validate, minify, view, and convert JSON to CSV, YAML, XML, TypeScript, Zod schemas and more. 100% browser-based, private."
+  canonicalUrl="https://thedevelopertools.com/json"
+  ogTitle="JSON Formatter, Validator & Toolkit — Free Online JSON Tools"
+  ogDescription="Format, validate, minify, view, and convert JSON to CSV, YAML, XML, TypeScript, Zod and more. One workspace, every JSON operation. 100% client-side."
+  ogImageAlt="The Developer Tools — Free Online JSON Toolkit"
+  jsonLd={[jsonLdWebApp, jsonLdBreadcrumbs, jsonLdFAQ]}
+>
+  <main id="main-content" class="jt-page">
+    <div class="jt-page-column">
+
+      <!-- Breadcrumbs -->
+      <nav class="pg-breadcrumbs" aria-label="Breadcrumb">
+        <ol class="pg-breadcrumb-list">
+          <li class="pg-breadcrumb-item"><a href="/" class="pg-breadcrumb-link">Home</a></li>
+          <li class="pg-breadcrumb-separator" aria-hidden="true">/</li>
+          <li class="pg-breadcrumb-item"><span class="pg-breadcrumb-current" aria-current="page">JSON Tools</span></li>
+        </ol>
+      </nav>
+
+      <!-- Page header -->
+      <header class="jt-page-header">
+        <div class="jt-page-header-inner">
+          <span class="eyebrow jt-header-eyebrow">100% CLIENT-SIDE · NO DATA LEAVES YOUR BROWSER</span>
+          <h1 class="jt-page-title">JSON Toolkit</h1>
+          <p class="jt-page-sub">
+            Format, validate, minify, explore, and convert JSON — all in one workspace.
+            Paste your JSON once and switch between any operation instantly.
+          </p>
+        </div>
+      </header>
+
+      <!-- The JSON Toolkit workspace -->
+      <JsonToolkit />
+
+      <!-- SEO Article -->
+      <article class="seo-article" aria-label="JSON Tools Guide">
+        <header class="seo-article-header">
+          <span class="eyebrow">Developer Guide & Documentation</span>
+          <h2 class="seo-article-title">The Complete Online JSON Toolkit — Everything in One Workspace</h2>
+        </header>
+
+        <div class="seo-article-content">
+          <p>
+            Working with JSON is a daily task for nearly every developer. Whether you're debugging an API response, generating TypeScript types from a data contract, or transforming a dataset to CSV for analysis, the right <strong>JSON formatter</strong> and toolkit makes the difference between a frustrating workflow and a smooth one. This free <strong>online JSON toolkit</strong> gives you ten professional-grade tools in a single workspace — paste your JSON once and use any operation without re-entering data. Explore more tools at <a href="/" class="seo-link">The Developer Tools</a>.
+          </p>
+
+          <h3>JSON Formatter — Beautify and Indent JSON Instantly</h3>
+          <p>
+            A raw or minified JSON string is difficult to read and debug. The <strong>JSON formatter</strong> takes any valid JSON and applies configurable indentation (2 spaces, 4 spaces, or tabs), making the structure immediately readable. It runs in your browser the moment you paste — no server round-trips, no waiting.
+          </p>
+
+          <h3>JSON Validator — Find Syntax Errors with Line and Column Numbers</h3>
+          <p>
+            A single misplaced comma, trailing comma, or unmatched bracket breaks JSON parsing entirely. The <strong>JSON validator</strong> uses the browser's native <code>JSON.parse()</code> engine and extracts the exact character position from the error, then maps it to a line and column number so you can fix the issue without hunting through the document.
+          </p>
+
+          <h3>JSON Minifier — Compress JSON for Production APIs</h3>
+          <p>
+            The <strong>JSON minifier</strong> strips all whitespace and produces the smallest valid JSON string. This is useful for embedding JSON in HTTP responses, reducing payload sizes in APIs, and shrinking configuration files. You can see exactly how many bytes are saved compared to the formatted version.
+          </p>
+
+          <h3>JSON Viewer — Explore Nested Data in an Interactive Tree</h3>
+          <p>
+            Complex, deeply nested JSON is hard to parse visually in a text editor. The <strong>JSON viewer</strong> renders your data as an expandable, collapsible tree with type-colored values — strings, numbers, booleans, and null each appear in distinct colors. Click any object or array to expand or collapse it. Use "Expand all" and "Collapse all" for quick navigation.
+          </p>
+
+          <h3>JSON to CSV — Export Tabular Data for Spreadsheets</h3>
+          <p>
+            When your JSON is an array of flat objects, the <strong>JSON to CSV converter</strong> extracts the headers from the first object, writes a properly escaped CSV with all rows, and lets you download a ready-to-open <code>.csv</code> file. This is the fastest way to import JSON API data into Excel, Google Sheets, or a database.
+          </p>
+
+          <h3>JSON to YAML — Convert Configurations for Kubernetes, Docker & More</h3>
+          <p>
+            YAML is the preferred format for configuration files across Kubernetes, Docker Compose, GitHub Actions, and many other DevOps tools. The <strong>JSON to YAML converter</strong> handles all edge cases — string quoting, nested objects, arrays, null values — and produces clean, idiomatic YAML without any library dependencies.
+          </p>
+
+          <h3>JSON to TypeScript — Generate Interfaces from Real Data</h3>
+          <p>
+            Instead of hand-writing TypeScript interfaces for every API response, the <strong>JSON to TypeScript generator</strong> infers the complete type tree from your actual JSON data. Objects become <code>interface</code> declarations, arrays become typed arrays, and primitives map to <code>string</code>, <code>number</code>, <code>boolean</code>, or <code>null</code>. This accelerates type-safe development significantly.
+          </p>
+
+          <h3>JSON to Zod — Generate Runtime Validation Schemas</h3>
+          <p>
+            <a href="https://zod.dev" class="seo-link" rel="nofollow noopener" target="_blank">Zod</a> is the leading TypeScript-first runtime validation library. The <strong>JSON to Zod schema generator</strong> produces a complete Zod schema from your JSON data, ready to paste into your project for validating incoming API data, form inputs, or environment variables at runtime.
+          </p>
+
+          <h3>JSON Schema Generator — Describe Your Data Structure</h3>
+          <p>
+            <strong>JSON Schema</strong> (draft-07) is a standardized vocabulary for describing the shape of JSON data. The schema generator analyzes your JSON and produces a complete schema with <code>type</code>, <code>properties</code>, <code>items</code>, and <code>required</code> arrays. Use it with <code>ajv</code>, Postman, OpenAPI tools, or any JSON Schema validator.
+          </p>
+
+          <h2>Why Load JSON Once? The Connected Workspace Advantage</h2>
+          <p>
+            Most online JSON tools are isolated applications. You format your JSON in one tab, then copy it, open a new tab, paste it again to validate it, then open another tab to convert it. This constant context-switching is a significant productivity drain. This toolkit keeps your JSON in a shared workspace. Paste or load your file once, then switch between Format, Minify, Validate, View, and any conversion — your data is always ready.
+          </p>
+
+          <h3>Privacy First — Your JSON Never Leaves Your Browser</h3>
+          <p>
+            JSON data often contains sensitive information — API keys, user records, internal configuration, database schemas. Sending this to a server (as many online tools do) is a privacy and security risk. Every operation in this toolkit runs entirely in your browser using standard JavaScript. Open your browser's DevTools Network tab — you will see zero outbound requests when you use any tool.
+          </p>
+        </div>
+
+        <p class="pg-csprng-note" role="contentinfo">
+          100% Client-Side Engine · No Server Requests · Pure Browser JavaScript
+        </p>
+      </article>
+
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .jt-page {
+    padding: 24px 0 80px;
+    width: 100%;
+  }
+
+  /* Wide column — wider than password generator to fit 2-col workspace */
+  .jt-page-column {
+    width: 100%;
+    max-width: 1080px;
+    margin-inline: auto;
+    padding-inline: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  /* Breadcrumbs */
+  .pg-breadcrumbs { margin-bottom: 20px; }
+  .pg-breadcrumb-list {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    list-style: none;
+    margin: 0; padding: 0;
+    font-size: 13px;
+    color: var(--c-mute);
+  }
+  .pg-breadcrumb-link { color: var(--c-body); text-decoration: none; transition: color 120ms ease; }
+  .pg-breadcrumb-link:hover { color: var(--c-ink); }
+  .pg-breadcrumb-separator { color: var(--c-faint); }
+  .pg-breadcrumb-current { color: var(--c-ink); font-weight: 500; }
+
+  /* Page header */
+  .jt-page-header {
+    width: 100%;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .jt-page-header-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .jt-header-eyebrow { font-size: 11px; letter-spacing: 0.1em; }
+
+  .jt-page-title {
+    margin: 0;
+    font-size: clamp(28px, 4vw, 36px);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    color: var(--c-ink);
+  }
+
+  .jt-page-sub {
+    margin: 0;
+    font-size: 14px;
+    line-height: 22px;
+    color: var(--c-body);
+    text-align: center;
+    max-width: 540px;
+  }
+
+  /* SEO Article */
+  .seo-article {
+    width: 100%;
+    margin-top: 48px;
+    padding-top: 40px;
+    border-top: 1px solid var(--c-hairline);
+  }
+
+  .seo-article-header { margin-bottom: 24px; }
+
+  .seo-article-title {
+    margin-top: 6px;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+    color: var(--c-ink);
+  }
+
+  .seo-article-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    font-size: 14px;
+    line-height: 24px;
+    color: var(--c-body);
+    text-align: left;
+  }
+
+  .seo-article-content h2 {
+    margin-top: 28px; margin-bottom: 10px;
+    font-size: 18px; font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--c-ink);
+  }
+
+  .seo-article-content h3 {
+    margin-top: 20px; margin-bottom: 6px;
+    font-size: 15px; font-weight: 600;
+    color: var(--c-ink);
+  }
+
+  .seo-article-content p { margin: 0; }
+
+  .seo-article-content strong { color: var(--c-ink); font-weight: 600; }
+
+  .seo-article-content code {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    background-color: var(--c-hairline-soft);
+    padding: 1px 6px;
+    border-radius: 4px;
+    border: 1px solid var(--c-hairline);
+    color: var(--c-ink);
+  }
+
+  .seo-link {
+    color: var(--c-link);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color 120ms ease;
+  }
+
+  .seo-link:hover { color: var(--c-ink); }
+
+  .pg-csprng-note {
+    margin: 28px 0 0;
+    font-size: 11px;
+    color: var(--c-mute);
+    font-family: var(--font-mono);
+    text-align: left;
+  }
+
+  @media (max-width: 640px) {
+    .jt-page { padding: 16px 0 48px; }
+    .jt-page-column { padding-inline: 14px; }
+    .jt-page-sub { max-width: 100%; }
+    .seo-article { margin-top: 36px; padding-top: 28px; }
+    .jt-shortcuts { justify-content: flex-start; }
+  }
+</style>
