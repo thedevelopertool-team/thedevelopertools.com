@@ -1,0 +1,215 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import JsonToolkit from "../../components/JsonToolkit.astro";
+
+const jsonLdWebApp = {
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "@id": "https://thedevelopertools.com/json/validator#webapp",
+  "name": "JSON Validator & Syntax Checker",
+  "url": "https://thedevelopertools.com/json/validator",
+  "description": "Free online JSON validator and linter. Check syntax validity, locate parse errors by line and column, and inspect formatting instantly. 100% private in-browser tool.",
+  "applicationCategory": "DeveloperApplication",
+  "applicationSubCategory": "JSON Utilities",
+  "operatingSystem": "All (Modern Web Browser)",
+  "browserRequirements": "Requires JavaScript enabled",
+  "softwareVersion": "1.2",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "The Developer Tools",
+    "url": "https://thedevelopertools.com"
+  }
+};
+
+const jsonLdBreadcrumbs = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://thedevelopertools.com"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "JSON Tools",
+      "item": "https://thedevelopertools.com/json"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "JSON Validator",
+      "item": "https://thedevelopertools.com/json/validator"
+    }
+  ]
+};
+
+const jsonLdFAQ = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How does the validator find the line number of a JSON error?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The validator uses browser JavaScript parsing to detect errors, extracts the exact character index, and calculates the corresponding line and column number by iterating through line break characters."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are the most common causes of invalid JSON?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The most common syntax errors include trailing commas after the last array item or object property, single quotes instead of double quotes, missing quotes around property keys, and unescaped control characters."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is my data safe when validating online?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. This validator runs entirely in your web browser. Nothing is sent over the internet, logged, or retained on servers."
+      }
+    }
+  ]
+};
+---
+
+<Layout
+  title="JSON Validator & Linter — Check JSON Syntax Online (Free & Private)"
+  description="Validate JSON syntax and pinpoint errors with exact line and column coordinates. Instant browser-based feedback with zero server requests."
+  canonicalUrl="https://thedevelopertools.com/json/validator"
+  ogTitle="JSON Validator & Linter — Free Online Developer Tool"
+  ogDescription="Validate JSON syntax and detect errors with exact line and column coordinates. Runs locally in your browser."
+  ogImageAlt="JSON Validator and Linter Tool"
+  jsonLd={[jsonLdWebApp, jsonLdBreadcrumbs, jsonLdFAQ]}
+>
+  <main id="main-content" class="jt-page">
+    <div class="jt-page-column">
+
+      <!-- Breadcrumbs -->
+      <nav class="pg-breadcrumbs" aria-label="Breadcrumb">
+        <ol class="pg-breadcrumb-list">
+          <li class="pg-breadcrumb-item"><a href="/" class="pg-breadcrumb-link">Home</a></li>
+          <li class="pg-breadcrumb-separator" aria-hidden="true">/</li>
+          <li class="pg-breadcrumb-item"><a href="/json" class="pg-breadcrumb-link">JSON Tools</a></li>
+          <li class="pg-breadcrumb-separator" aria-hidden="true">/</li>
+          <li class="pg-breadcrumb-item"><span class="pg-breadcrumb-current" aria-current="page">JSON Validator</span></li>
+        </ol>
+      </nav>
+
+      <!-- Page header -->
+      <header class="jt-page-header">
+        <div class="jt-page-header-inner">
+          <span class="eyebrow jt-header-eyebrow">CLIENT-SIDE SYNTAX CHECKER · ZERO TELEMETRY</span>
+          <h1 class="jt-page-title">JSON Validator &amp; Linter</h1>
+          <p class="jt-page-sub">
+            Validate JSON syntax in real time. Get instant feedback on invalid characters, missing braces, and exact line and column error coordinates.
+          </p>
+        </div>
+      </header>
+
+      <!-- JSON Toolkit workspace initialized to Validator tab -->
+      <JsonToolkit initialTab="validator" />
+
+      <!-- Technical Documentation Article -->
+      <article class="seo-article" aria-label="JSON Validator Documentation">
+        <header class="seo-article-header">
+          <span class="eyebrow">Technical Reference</span>
+          <h2 class="seo-article-title">JSON Syntax Rules (RFC 8259) and Common Parse Errors</h2>
+        </header>
+
+        <div class="seo-article-content">
+          <p>
+            The JSON specification (RFC 8259) requires strict syntax compliance. Unlike relaxed formats like JavaScript object literals or YAML, JSON parsers fail immediately upon encountering the slightest formatting irregularity. This <strong>JSON validator</strong> analyzes your payload, verifies RFC compliance, and provides the exact line and column location when a syntax error occurs.
+          </p>
+
+          <h3>Top Causes of JSON Parse Failures</h3>
+          <ul>
+            <li><strong>Trailing Commas:</strong> Adding a comma after the final key-value pair in an object or the last element of an array (for example, <code>&#123;"a": 1,&#125;</code>) is invalid in standard JSON.</li>
+            <li><strong>Single Quotes:</strong> RFC 8259 requires double quotation marks (<code>"</code>) for all strings and key names. Using single quotes (<code>'key'</code>) results in an immediate parse error.</li>
+            <li><strong>Unquoted Keys:</strong> While JavaScript allows unquoted object keys (<code>&#123;name: "value"&#125;</code>), JSON mandates double quotes for all property identifiers.</li>
+            <li><strong>Unescaped Control Characters:</strong> Literal newlines, carriage returns, and tabs inside string values must be escaped (<code>\n</code>, <code>\t</code>).</li>
+            <li><strong>Comments:</strong> Standard JSON does not permit single-line (<code>//</code>) or multi-line (<code>/* */</code>) comments.</li>
+          </ul>
+
+          <h3>Error Coordinates: Line and Column Resolution</h3>
+          <p>
+            When a parse failure occurs in a thousand-line payload, a generic "Unexpected token" message is unhelpful. This validator calculates character offsets and displays the exact line number and column position, letting you locate and repair the syntax defect directly in the editor.
+          </p>
+
+          <h3>Related JSON Utilities</h3>
+          <p>
+            After validating your payload, continue processing with related tools:
+          </p>
+          <ul>
+            <li><a href="/json/formatter" class="seo-link">JSON Formatter</a>: Clean and indent valid JSON.</li>
+            <li><a href="/json/minifier" class="seo-link">JSON Minifier</a>: Strip whitespace for network transport.</li>
+            <li><a href="/json/compare" class="seo-link">JSON Compare</a>: Compare two JSON payloads side by side.</li>
+            <li><a href="/json/to-zod" class="seo-link">JSON to Zod</a>: Generate runtime schema validation rules.</li>
+          </ul>
+        </div>
+
+        <p class="pg-csprng-note" role="contentinfo">
+          100% Client-Side Engine · Zero Network Telemetry · Native Browser JavaScript
+        </p>
+      </article>
+
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .jt-page { padding: 24px 0 80px; width: 100%; }
+  .jt-page-column {
+    width: 100%; max-width: 1080px; margin-inline: auto; padding-inline: 20px;
+    display: flex; flex-direction: column; align-items: stretch;
+  }
+  .pg-breadcrumbs { margin-bottom: 20px; }
+  .pg-breadcrumb-list {
+    display: flex; align-items: center; gap: 8px; list-style: none; margin: 0; padding: 0;
+    font-size: 13px; color: var(--c-mute);
+  }
+  .pg-breadcrumb-link { color: var(--c-body); text-decoration: none; transition: color 120ms ease; }
+  .pg-breadcrumb-link:hover { color: var(--c-ink); }
+  .pg-breadcrumb-separator { color: var(--c-faint); }
+  .pg-breadcrumb-current { color: var(--c-ink); font-weight: 500; }
+  .jt-page-header { width: 100%; margin-bottom: 20px; text-align: center; }
+  .jt-page-header-inner { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .jt-header-eyebrow { font-size: 11px; letter-spacing: 0.1em; }
+  .jt-page-title {
+    margin: 0; font-size: clamp(28px, 4vw, 36px); font-weight: 600; line-height: 1.15;
+    letter-spacing: -0.03em; color: var(--c-ink);
+  }
+  .jt-page-sub { margin: 0; font-size: 14px; line-height: 22px; color: var(--c-body); text-align: center; max-width: 540px; }
+  .seo-article { width: 100%; margin-top: 48px; padding-top: 40px; border-top: 1px solid var(--c-hairline); }
+  .seo-article-header { margin-bottom: 24px; }
+  .seo-article-title { margin-top: 6px; font-size: 22px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.3; color: var(--c-ink); }
+  .seo-article-content { display: flex; flex-direction: column; gap: 16px; font-size: 14px; line-height: 24px; color: var(--c-body); text-align: left; }
+  .seo-article-content h2 { margin-top: 28px; margin-bottom: 10px; font-size: 18px; font-weight: 600; color: var(--c-ink); }
+  .seo-article-content h3 { margin-top: 20px; margin-bottom: 6px; font-size: 15px; font-weight: 600; color: var(--c-ink); }
+  .seo-article-content p { margin: 0; }
+  .seo-article-content strong { color: var(--c-ink); font-weight: 600; }
+  .seo-article-content code {
+    font-family: var(--font-mono); font-size: 12px; background-color: var(--c-hairline-soft);
+    padding: 1px 6px; border-radius: 4px; border: 1px solid var(--c-hairline); color: var(--c-ink);
+  }
+  .seo-article-content ul { margin: 0; padding-left: 20px; }
+  .seo-article-content li { margin-bottom: 6px; }
+  .seo-link { color: var(--c-link); text-decoration: underline; text-underline-offset: 2px; }
+  .seo-link:hover { color: var(--c-ink); }
+  .pg-csprng-note { margin: 28px 0 0; font-size: 11px; color: var(--c-mute); font-family: var(--font-mono); }
+  @media (max-width: 640px) {
+    .jt-page { padding: 16px 0 48px; }
+    .jt-page-column { padding-inline: 14px; }
+    .seo-article { margin-top: 36px; padding-top: 28px; }
+  }
+</style>

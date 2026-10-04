@@ -2,9 +2,15 @@
 // JsonToolkit.astro — HTML template only.
 // All CSS is in src/styles/json-toolkit.css (loaded via <style is:global>).
 // All JS/TS is in src/scripts/json-toolkit/index.ts (loaded via <script>).
+
+interface Props {
+  initialTab?: string;
+}
+
+const { initialTab = "formatter" } = Astro.props;
 ---
 
-<div class="jt-root" id="json-toolkit">
+<div class="jt-root" id="json-toolkit" data-initial-tab={initialTab}>
 
   <!-- ═══════════════════════════════════════════════════════
        STANDARD 2-COLUMN WORKSPACE (all tools except Compare)

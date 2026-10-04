@@ -5,14 +5,15 @@ import JsonToolkit from "../components/JsonToolkit.astro";
 const jsonLdWebApp = {
   "@context": "https://schema.org",
   "@type": "WebApplication",
-  "name": "JSON Formatter, Validator & Toolkit — Free Online JSON Tools",
+  "@id": "https://thedevelopertools.com/json#webapp",
+  "name": "JSON Formatter, Validator & Developer Toolkit",
   "url": "https://thedevelopertools.com/json",
-  "description": "Free online JSON toolkit. Format, validate, minify, view, and convert JSON to CSV, YAML, XML, TypeScript, Zod schemas and more. 100% browser-based, private.",
+  "description": "Free, browser-based JSON toolkit. Format, validate, minify, view, and convert JSON to CSV, YAML, XML, TypeScript, Zod, and Pydantic. 100% private and client-side.",
   "applicationCategory": "DeveloperApplication",
-  "applicationSubCategory": "JSON Tools",
-  "operatingSystem": "Any",
-  "browserRequirements": "Requires a modern web browser with JavaScript enabled",
-  "softwareVersion": "1.0",
+  "applicationSubCategory": "JSON Utilities",
+  "operatingSystem": "All (Modern Web Browser)",
+  "browserRequirements": "Requires JavaScript enabled. Works offline after loading.",
+  "softwareVersion": "1.2",
   "inLanguage": "en",
   "publisher": {
     "@type": "Organization",
@@ -25,24 +26,24 @@ const jsonLdWebApp = {
     "priceCurrency": "USD"
   },
   "featureList": [
-    "JSON Formatter — beautify JSON with configurable indentation",
-    "JSON Viewer — explore JSON in a true hierarchical collapsible tree",
-    "JSON Search — real-time key and value search with match navigation",
-    "JSON Validator — detect syntax errors with line and column details",
-    "JSON Minifier — remove whitespace and compress JSON",
-    "JSON Compare — visual side-by-side diff between two JSON documents",
-    "JSON to CSV — convert JSON arrays to comma-separated values",
-    "JSON to YAML — convert JSON to YAML format",
-    "JSON to XML — convert JSON to XML markup",
-    "JSON to TypeScript — generate TypeScript interfaces from JSON",
-    "JSON to Zod — generate Zod validation schemas from JSON",
-    "JSON Schema Generator — generate JSON Schema draft-07 from data",
-    "JSON to OpenAPI — generate OpenAPI 3.0 schemas",
-    "JSON to Go — generate Go structs with json tags",
-    "JSON to Pydantic — generate Python Pydantic v2 models",
-    "JSON to Java — generate Java POJO classes with Jackson annotations",
-    "JSON to Kotlin — generate Kotlin data classes with kotlinx.serialization",
-    "100% browser-based — zero network calls, total privacy"
+    "JSON Formatter with 2-space, 4-space, and tab indentation",
+    "JSON Viewer with hierarchical collapsible tree and type highlighting",
+    "JSON Search with real-time key and value matching",
+    "JSON Validator with line and column error reporting",
+    "JSON Minifier for payload size compression",
+    "JSON Compare side-by-side visual difference viewer",
+    "JSON to CSV converter for spreadsheet imports",
+    "JSON to YAML converter for DevOps configurations",
+    "JSON to XML markup converter",
+    "JSON to TypeScript interface generator",
+    "JSON to Zod runtime validation schema generator",
+    "JSON Schema draft-07 generator",
+    "JSON to OpenAPI 3.0 schema generator",
+    "JSON to Go structs generator",
+    "JSON to Python Pydantic v2 models generator",
+    "JSON to Java Jackson POJO generator",
+    "JSON to Kotlin data classes generator",
+    "100% client-side execution with zero telemetry"
   ]
 };
 
@@ -74,55 +75,31 @@ const jsonLdFAQ = {
       "name": "Is this JSON formatter free and private?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes. Every tool in this JSON toolkit runs 100% inside your browser using JavaScript. Your JSON data is never sent to any server, logged, or tracked. Once the page is loaded, the toolkit works entirely offline."
+        "text": "Yes. Every tool in this suite runs locally in your browser using JavaScript. Data is never sent to a server, logged, or tracked. Once loaded, the page works completely offline."
       }
     },
     {
       "@type": "Question",
-      "name": "What JSON tools are included in this toolkit?",
+      "name": "What operations are included in this JSON toolkit?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "The toolkit includes: JSON Formatter (beautify), JSON Minifier, JSON Validator (with line/column error details), JSON Viewer (interactive tree), JSON to CSV, JSON to YAML, JSON to XML, JSON to TypeScript interfaces, JSON to Zod schemas, and JSON Schema generator."
+        "text": "The toolkit includes a JSON Formatter (beautifier), Minifier, Validator with line and column syntax errors, Tree Viewer, side-by-side Compare, converters for CSV, YAML, and XML, and code generators for TypeScript, Zod, JSON Schema, OpenAPI, Go, Python Pydantic, Java, and Kotlin."
       }
     },
     {
       "@type": "Question",
-      "name": "Do I need to paste my JSON again when switching between tools?",
+      "name": "How does the validator calculate error line numbers?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "No. The toolkit keeps your JSON in a shared workspace. Paste or load your JSON once and switch between any tool tab — format, validate, convert, or generate code — without re-entering the data."
+        "text": "The validator parses the input with the browser native JSON.parse() implementation, extracts the character offset from parse exceptions, and calculates the exact line and column coordinates."
       }
     },
     {
       "@type": "Question",
-      "name": "How does the JSON Validator identify errors?",
+      "name": "Can I load files without pasting?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "The validator uses the browser's built-in JSON.parse() and extracts the exact character position from the error message, then calculates the line number and column number so you can pinpoint the syntax error immediately."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can I load a JSON file instead of pasting?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. Click the 'File' button to open a file browser, or drag and drop any .json file directly onto the input area. The file is read locally in your browser using the FileReader API — nothing is uploaded."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How does JSON to TypeScript generation work?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "The TypeScript generator recursively inspects the structure and values of your JSON data to infer types. Objects become TypeScript interfaces, arrays become typed arrays, and primitives map to string, number, boolean, or null. The output is clean, idiomatic TypeScript."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What is a JSON Schema and how is it generated?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "JSON Schema is a vocabulary for describing JSON data structures. The generator analyzes your JSON and produces a draft-07 compatible schema with type, properties, items, and required fields, which you can use to validate other JSON documents programmatically."
+        "text": "Yes. You can click Import or drag and drop any .json file onto the editor. The file is read locally via the browser FileReader API without network upload."
       }
     }
   ]
@@ -130,11 +107,11 @@ const jsonLdFAQ = {
 ---
 
 <Layout
-  title="JSON Formatter, Validator & Toolkit — Free Online JSON Tools"
-  description="Free online JSON toolkit. Format, validate, minify, view, and convert JSON to CSV, YAML, XML, TypeScript, Zod schemas and more. 100% browser-based, private."
+  title="JSON Formatter, Validator & Toolkit — Fast, Private Online JSON Tools"
+  description="Format, validate, minify, and convert JSON to TypeScript, Zod, CSV, YAML, and Pydantic. Runs 100% in your browser with zero data collection."
   canonicalUrl="https://thedevelopertools.com/json"
   ogTitle="JSON Formatter, Validator & Toolkit — Free Online JSON Tools"
-  ogDescription="Format, validate, minify, view, and convert JSON to CSV, YAML, XML, TypeScript, Zod and more. One workspace, every JSON operation. 100% client-side."
+  ogDescription="Format, validate, minify, view, and convert JSON to TypeScript, Zod, CSV, YAML, and more in a unified workspace. 100% client-side."
   ogImageAlt="The Developer Tools — Free Online JSON Toolkit"
   jsonLd={[jsonLdWebApp, jsonLdBreadcrumbs, jsonLdFAQ]}
 >
@@ -156,8 +133,8 @@ const jsonLdFAQ = {
           <span class="eyebrow jt-header-eyebrow">100% CLIENT-SIDE · NO DATA LEAVES YOUR BROWSER</span>
           <h1 class="jt-page-title">JSON Toolkit</h1>
           <p class="jt-page-sub">
-            Format, validate, minify, explore, and convert JSON — all in one workspace.
-            Paste your JSON once and switch between any operation instantly.
+            Format, validate, minify, explore, and convert JSON in a unified workspace.
+            Paste your data once and switch between operations instantly.
           </p>
         </div>
       </header>
@@ -165,76 +142,76 @@ const jsonLdFAQ = {
       <!-- The JSON Toolkit workspace -->
       <JsonToolkit />
 
-      <!-- SEO Article -->
-      <article class="seo-article" aria-label="JSON Tools Guide">
+      <!-- SEO Article & Reference Documentation -->
+      <article class="seo-article" aria-label="JSON Tools Documentation and Reference">
         <header class="seo-article-header">
-          <span class="eyebrow">Developer Guide & Documentation</span>
-          <h2 class="seo-article-title">The Complete Online JSON Toolkit — Everything in One Workspace</h2>
+          <span class="eyebrow">Technical Reference</span>
+          <h2 class="seo-article-title">Browser-Based JSON Formatting, Validation, and Type Generation</h2>
         </header>
 
         <div class="seo-article-content">
           <p>
-            Working with JSON is a daily task for nearly every developer. Whether you're debugging an API response, generating TypeScript types from a data contract, or transforming a dataset to CSV for analysis, the right <strong>JSON formatter</strong> and toolkit makes the difference between a frustrating workflow and a smooth one. This free <strong>online JSON toolkit</strong> gives you ten professional-grade tools in a single workspace — paste your JSON once and use any operation without re-entering data. Explore more tools at <a href="/" class="seo-link">The Developer Tools</a>.
+            JSON (JavaScript Object Notation, RFC 8259) is the standard data interchange format for web APIs, configuration files, and document stores. This toolkit provides client-side utilities for inspecting, cleaning, formatting, and converting JSON payloads without sending data over the network. You can explore all available tools on <a href="/" class="seo-link">The Developer Tools</a> homepage.
           </p>
 
-          <h3>JSON Formatter — Beautify and Indent JSON Instantly</h3>
+          <h3><a href="/json/formatter" class="seo-link">JSON Formatter and Beautifier</a></h3>
           <p>
-            A raw or minified JSON string is difficult to read and debug. The <strong>JSON formatter</strong> takes any valid JSON and applies configurable indentation (2 spaces, 4 spaces, or tabs), making the structure immediately readable. It runs in your browser the moment you paste — no server round-trips, no waiting.
+            Minified or unformatted API payloads are difficult to inspect during debugging. The <a href="/json/formatter" class="seo-link">JSON formatter</a> parses raw text and re-serializes it with 2-space, 4-space, or tab indentation. It runs immediately in the browser, making large payloads readable without round-trip network delays.
           </p>
 
-          <h3>JSON Validator — Find Syntax Errors with Line and Column Numbers</h3>
+          <h3><a href="/json/validator" class="seo-link">JSON Validator and Syntax Checker</a></h3>
           <p>
-            A single misplaced comma, trailing comma, or unmatched bracket breaks JSON parsing entirely. The <strong>JSON validator</strong> uses the browser's native <code>JSON.parse()</code> engine and extracts the exact character position from the error, then maps it to a line and column number so you can fix the issue without hunting through the document.
+            Syntax issues such as trailing commas, single quotes around keys, unescaped control characters, or missing brackets prevent parsers from reading data. The <a href="/json/validator" class="seo-link">JSON validator</a> identifies parse failures, extracts character positions from parser exceptions, and maps them to exact line and column numbers.
           </p>
 
-          <h3>JSON Minifier — Compress JSON for Production APIs</h3>
+          <h3><a href="/json/minifier" class="seo-link">JSON Minifier and Whitespace Compressor</a></h3>
           <p>
-            The <strong>JSON minifier</strong> strips all whitespace and produces the smallest valid JSON string. This is useful for embedding JSON in HTTP responses, reducing payload sizes in APIs, and shrinking configuration files. You can see exactly how many bytes are saved compared to the formatted version.
+            The <a href="/json/minifier" class="seo-link">JSON minifier</a> strips unnecessary whitespace, newlines, and indentation while preserving string values and escape sequences. This reduces payload size for production HTTP responses, embedded configuration files, and network bandwidth constraints.
           </p>
 
-          <h3>JSON Viewer — Explore Nested Data in an Interactive Tree</h3>
+          <h3><a href="/json/viewer" class="seo-link">Hierarchical JSON Tree Viewer</a></h3>
           <p>
-            Complex, deeply nested JSON is hard to parse visually in a text editor. The <strong>JSON viewer</strong> renders your data as an expandable, collapsible tree with type-colored values — strings, numbers, booleans, and null each appear in distinct colors. Click any object or array to expand or collapse it. Use "Expand all" and "Collapse all" for quick navigation.
+            Deeply nested structures can be hard to follow in a flat text editor. The <a href="/json/viewer" class="seo-link">JSON tree viewer</a> renders objects and arrays as collapsible nodes with color-coded data types (strings, numbers, booleans, arrays, objects, and null). Quick controls allow expanding or collapsing the entire hierarchy at once.
           </p>
 
-          <h3>JSON to CSV — Export Tabular Data for Spreadsheets</h3>
+          <h3><a href="/json/compare" class="seo-link">Side-by-Side JSON Diff and Comparison</a></h3>
           <p>
-            When your JSON is an array of flat objects, the <strong>JSON to CSV converter</strong> extracts the headers from the first object, writes a properly escaped CSV with all rows, and lets you download a ready-to-open <code>.csv</code> file. This is the fastest way to import JSON API data into Excel, Google Sheets, or a database.
+            The <a href="/json/compare" class="seo-link">JSON comparison tool</a> highlights structural and value differences between two JSON documents. It normalizes formatting before diffing so whitespace differences do not obscure actual data changes, flagging added, modified, and removed keys clearly.
           </p>
 
-          <h3>JSON to YAML — Convert Configurations for Kubernetes, Docker & More</h3>
+          <h3>Code and Schema Generators</h3>
           <p>
-            YAML is the preferred format for configuration files across Kubernetes, Docker Compose, GitHub Actions, and many other DevOps tools. The <strong>JSON to YAML converter</strong> handles all edge cases — string quoting, nested objects, arrays, null values — and produces clean, idiomatic YAML without any library dependencies.
+            Translating JSON into application code often involves repetitive boilerplate. The toolkit infers types directly from real JSON payloads:
           </p>
+          <ul>
+            <li><strong><a href="/json/to-typescript" class="seo-link">JSON to TypeScript:</a></strong> Generates nested interfaces with accurate optional and primitive typing.</li>
+            <li><strong><a href="/json/to-zod" class="seo-link">JSON to Zod:</a></strong> Outputs runtime schemas using <code>z.object()</code>, <code>z.array()</code>, and primitive validators.</li>
+            <li><strong><a href="/json/to-json-schema" class="seo-link">JSON Schema (draft-07):</a></strong> Produces schema definitions compatible with validation libraries such as Ajv.</li>
+            <li><strong><a href="/json/to-openapi" class="seo-link">OpenAPI 3.0:</a></strong> Generates reusable schema components for API documentation.</li>
+            <li><strong><a href="/json/to-pydantic" class="seo-link">Python Pydantic:</a></strong> Produces Pydantic v2 <code>BaseModel</code> classes with type hints.</li>
+            <li><strong><a href="/json/to-go" class="seo-link">Go Structs:</a></strong> Generates idiomatic Go structs with <code>`json:"..."`</code> struct tags.</li>
+            <li><strong><a href="/json/to-java" class="seo-link">Java POJO:</a></strong> Generates Java classes with Jackson annotations.</li>
+            <li><strong><a href="/json/to-kotlin" class="seo-link">Kotlin:</a></strong> Produces data classes with kotlinx.serialization annotations.</li>
+          </ul>
 
-          <h3>JSON to TypeScript — Generate Interfaces from Real Data</h3>
+          <h3>Data Converters: CSV, YAML, and XML</h3>
           <p>
-            Instead of hand-writing TypeScript interfaces for every API response, the <strong>JSON to TypeScript generator</strong> infers the complete type tree from your actual JSON data. Objects become <code>interface</code> declarations, arrays become typed arrays, and primitives map to <code>string</code>, <code>number</code>, <code>boolean</code>, or <code>null</code>. This accelerates type-safe development significantly.
+            Convert structured data between common formats:
           </p>
+          <ul>
+            <li><strong><a href="/json/to-csv" class="seo-link">JSON to CSV:</a></strong> Extracts keys from arrays of objects to build header rows and escaped comma-separated data for spreadsheet import.</li>
+            <li><strong><a href="/json/to-yaml" class="seo-link">JSON to YAML:</a></strong> Converts data into clean YAML for Docker Compose, Kubernetes manifests, and CI/CD pipelines.</li>
+            <li><strong><a href="/json/to-xml" class="seo-link">JSON to XML:</a></strong> Converts objects and arrays into structured XML documents.</li>
+          </ul>
 
-          <h3>JSON to Zod — Generate Runtime Validation Schemas</h3>
+          <h3>Client-Side Privacy Architecture</h3>
           <p>
-            <a href="https://zod.dev" class="seo-link" rel="nofollow noopener" target="_blank">Zod</a> is the leading TypeScript-first runtime validation library. The <strong>JSON to Zod schema generator</strong> produces a complete Zod schema from your JSON data, ready to paste into your project for validating incoming API data, form inputs, or environment variables at runtime.
-          </p>
-
-          <h3>JSON Schema Generator — Describe Your Data Structure</h3>
-          <p>
-            <strong>JSON Schema</strong> (draft-07) is a standardized vocabulary for describing the shape of JSON data. The schema generator analyzes your JSON and produces a complete schema with <code>type</code>, <code>properties</code>, <code>items</code>, and <code>required</code> arrays. Use it with <code>ajv</code>, Postman, OpenAPI tools, or any JSON Schema validator.
-          </p>
-
-          <h2>Why Load JSON Once? The Connected Workspace Advantage</h2>
-          <p>
-            Most online JSON tools are isolated applications. You format your JSON in one tab, then copy it, open a new tab, paste it again to validate it, then open another tab to convert it. This constant context-switching is a significant productivity drain. This toolkit keeps your JSON in a shared workspace. Paste or load your file once, then switch between Format, Minify, Validate, View, and any conversion — your data is always ready.
-          </p>
-
-          <h3>Privacy First — Your JSON Never Leaves Your Browser</h3>
-          <p>
-            JSON data often contains sensitive information — API keys, user records, internal configuration, database schemas. Sending this to a server (as many online tools do) is a privacy and security risk. Every operation in this toolkit runs entirely in your browser using standard JavaScript. Open your browser's DevTools Network tab — you will see zero outbound requests when you use any tool.
+            JSON payloads frequently contain proprietary schemas, customer records, environment variables, or API tokens. Every tool in this suite executes locally using browser JavaScript and Web APIs (such as <code>FileReader</code>). Inspecting the browser network panel confirms zero outbound requests during data processing.
           </p>
         </div>
 
         <p class="pg-csprng-note" role="contentinfo">
-          100% Client-Side Engine · No Server Requests · Pure Browser JavaScript
+          100% Client-Side Engine · Zero Network Telemetry · Native Browser JavaScript
         </p>
       </article>
 

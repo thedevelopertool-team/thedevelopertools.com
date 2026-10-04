@@ -29,20 +29,65 @@ export function closeAllDropdowns(): void {
   ddTypesWrap?.classList.remove('open');
 }
 
-// ── Hash routing ──────────────────────────────────────────────
+// ── Hash and route routing ────────────────────────────────────
 const VALID_TABS = [
   'formatter','viewer','validator','minifier','compare',
   'csv','yaml','xml',
   'typescript','zod','schema','openapi','go','pydantic','java','kotlin'
 ];
 
-export function getHashTab(): string {
+export function getInitialTab(): string {
   const h = window.location.hash.replace('#','');
-  return VALID_TABS.includes(h) ? h : 'formatter';
+  if (VALID_TABS.includes(h)) return h;
+  const initial = dom.root?.dataset.initialTab;
+  if (initial && VALID_TABS.includes(initial)) return initial;
+  return 'formatter';
 }
 
 function setHashTab(tab: string): void {
-  history.replaceState(null, '', `#${tab}`);
+  // If current URL is /json or has a hash, update hash
+  const pathname = window.location.pathname.replace(/\/$/, '');
+  if (pathname === '/json' || window.location.hash) {
+    history.replaceState(null, '', `#${tab}`);
+  }
+}
+
+const TAB_URLS: Record<string, string> = {
+  formatter: '/json/formatter',
+  viewer: '/json/viewer',
+  validator: '/json/validator',
+  minifier: '/json/minifier',
+  compare: '/json/compare',
+  csv: '/json/to-csv',
+  yaml: '/json/to-yaml',
+  xml: '/json/to-xml',
+  typescript: '/json/to-typescript',
+  zod: '/json/to-zod',
+  schema: '/json/to-json-schema',
+  openapi: '/json/to-openapi',
+  go: '/json/to-go',
+  pydantic: '/json/to-pydantic',
+  java: '/json/to-java',
+  kotlin: '/json/to-kotlin'
+};
+
+export function onTabClick(tabName: string): void {
+  const targetUrl = TAB_URLS[tabName];
+  const currentPath = window.location.pathname.replace(/\/$/, '');
+
+  // Save current input before navigating
+  if (dom.input) {
+    try { sessionStorage.setItem('jt-json', dom.input.value); } catch (_) {}
+  }
+  if (dom.rawB) {
+    try { sessionStorage.setItem('jt-json-b', dom.rawB.value); } catch (_) {}
+  }
+
+  if (targetUrl && currentPath !== targetUrl) {
+    window.location.href = targetUrl;
+  } else {
+    switchTab(tabName);
+  }
 }
 
 // ── Tab switching ─────────────────────────────────────────────
@@ -162,13 +207,13 @@ export function initUi(): void {
     closeAllDropdowns();
   });
 
-  // Tabs
-  primaryTabs.forEach(tab => tab.addEventListener('click', () => switchTab(tab.dataset.tab!)));
+  // Tabs navigation
+  primaryTabs.forEach(tab => tab.addEventListener('click', () => onTabClick(tab.dataset.tab!)));
   ddItems.forEach(item => item.addEventListener('click', (e: MouseEvent) => {
     e.stopPropagation();
-    switchTab(item.dataset.tab!);
+    onTabClick(item.dataset.tab!);
   }));
-  document.getElementById('btn-exit-compare')?.addEventListener('click', () => switchTab('formatter'));
+  document.getElementById('btn-exit-compare')?.addEventListener('click', () => onTabClick('formatter'));
 
   // Fullscreen
   document.getElementById('btn-fullscreen-main')?.addEventListener('click', toggleFullscreen);
@@ -192,13 +237,13 @@ export function initUi(): void {
     }
   });
 
-  // Hash routing
-  const startTab = getHashTab();
+  // Hash & Route routing
+  const startTab = getInitialTab();
   switchTab(startTab);
   loadFromSession();
 
   window.addEventListener('hashchange', () => {
-    const tab = getHashTab();
+    const tab = getInitialTab();
     if (tab !== activeTab) switchTab(tab);
   });
 }
