@@ -1,0 +1,835 @@
+/* =============================================================
+   JSON TOOLKIT — Global Styles
+   Extracted from JsonToolkit.astro for maintainability.
+   All selectors are prefixed with .jt- to avoid collisions.
+   ============================================================= */
+
+/* ── Root Container ────────────────────────────────────────── */
+.jt-root {
+  display: flex;
+  flex-direction: column;
+  height: 650px;
+  min-height: 520px;
+  max-height: 85vh;
+  background-color: var(--c-canvas-elevated);
+  border: 1px solid var(--c-hairline);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+  position: relative;
+  transition: all 180ms ease;
+}
+
+.jt-root.jt-fullscreen {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 100000 !important;
+  width: 100vw !important;
+  height: 100dvh !important;
+  max-height: 100dvh !important;
+  border-radius: 0 !important;
+  border: none !important;
+}
+
+/* ── Standard 2-Col Workspace ──────────────────────────────── */
+.jt-standard-workspace {
+  display: grid;
+  grid-template-columns: 40% 1px 1fr;
+  grid-template-rows: 1fr;
+  height: 100%;
+  min-height: 0;
+  flex: 1;
+  overflow: hidden;
+}
+
+.jt-divider {
+  background-color: var(--c-hairline);
+  width: 1px;
+  align-self: stretch;
+}
+
+/* ── Left Column (Input) ───────────────────────────────────── */
+.jt-input-col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  background-color: var(--c-canvas);
+}
+
+/* ── Right Column (Output) ─────────────────────────────────── */
+.jt-output-col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  background-color: var(--c-canvas-elevated);
+  position: relative;
+}
+
+/* ── Headers & Toolbars ────────────────────────────────────── */
+.jt-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--c-hairline);
+  gap: 8px;
+  flex-shrink: 0;
+  background-color: var(--c-canvas);
+}
+
+.jt-header-title { display: flex; align-items: center; gap: 6px; }
+.jt-input-actions { display: flex; align-items: center; gap: 5px; }
+
+.jt-btn {
+  font-size: 12px !important;
+  padding: 4px 8px !important;
+  gap: 4px !important;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 6px;
+  user-select: none;
+}
+
+/* ── Drop zone & Input Textarea ────────────────────────────── */
+.jt-drop-zone {
+  position: relative;
+  flex: 1;
+  display: flex;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.jt-textarea {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  resize: none;
+  border: none;
+  outline: none;
+  background-color: var(--c-canvas);
+  color: var(--c-ink);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 20px;
+  padding: 14px;
+  overflow-y: auto;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.jt-textarea::placeholder { color: var(--c-faint); }
+
+.jt-drop-overlay {
+  position: absolute;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background-color: rgba(0,112,243,0.06);
+  border: 2px dashed var(--c-link);
+  border-radius: 4px;
+  color: var(--c-link);
+  font-size: 13px;
+  font-weight: 500;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.jt-drop-zone.dragging .jt-drop-overlay { display: flex; }
+
+/* ── Status row ────────────────────────────────────────────── */
+.jt-status-row {
+  display: flex;
+  align-items: center;
+  padding: 6px 14px;
+  border-top: 1px solid var(--c-hairline);
+  font-size: 12px;
+  font-family: var(--font-mono);
+  flex-shrink: 0;
+  min-height: 32px;
+  background-color: var(--c-canvas);
+}
+
+.jt-status-idle  { display: flex; align-items: center; gap: 6px; color: var(--c-faint); }
+.jt-status-valid { display: flex; align-items: center; gap: 6px; color: var(--c-success); }
+.jt-status-error { display: flex; align-items: center; gap: 6px; color: var(--c-error); }
+
+/* ── Top Workspace Navigation Bar ──────────────────────────── */
+.jt-tabs-header {
+  display: flex;
+  align-items: center;
+  padding: 0 6px 0 4px;
+  border-bottom: 1px solid var(--c-hairline);
+  background-color: var(--c-canvas-elevated);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 200;
+  gap: 4px;
+  overflow: visible;
+  min-height: 38px;
+}
+
+.jt-tabs-group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: visible;
+  scrollbar-width: none;
+  flex: 1;
+  min-width: 0;
+}
+
+.jt-tabs-group::-webkit-scrollbar { display: none; }
+
+.jt-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  border: none;
+  border-radius: 6px 6px 0 0;
+  background: transparent;
+  color: var(--c-mute);
+  cursor: pointer;
+  transition: color 120ms ease, background-color 120ms ease, border-color 120ms ease;
+  white-space: nowrap;
+  margin-bottom: -1px;
+  border-bottom: 2px solid transparent;
+  line-height: 18px;
+  user-select: none;
+}
+
+.jt-tab:hover { color: var(--c-ink); background-color: var(--c-hairline-soft); }
+.jt-tab.active {
+  color: var(--c-ink);
+  border-bottom-color: var(--c-ink);
+  font-weight: 600;
+  background-color: transparent;
+}
+
+.jt-tab:focus-visible { outline: 2px solid var(--c-link); outline-offset: -2px; border-radius: 4px; }
+.jt-tab-sep {
+  display: inline-block;
+  width: 1px;
+  height: 16px;
+  background-color: var(--c-hairline);
+  margin: 0 4px;
+  flex-shrink: 0;
+}
+
+/* ── Dropdown Menus ────────────────────────────────────────── */
+.jt-dropdown { position: relative; display: inline-block; }
+.jt-dropdown-trigger { padding-right: 8px; }
+.jt-chevron { transition: transform 150ms ease; opacity: 0.65; }
+.jt-dropdown.open .jt-chevron { transform: rotate(180deg); }
+.jt-dropdown.open .jt-dropdown-trigger { color: var(--c-ink); background-color: var(--c-hairline-soft); }
+
+.jt-dropdown-menu {
+  position: fixed;
+  min-width: 220px;
+  background-color: var(--c-canvas-elevated);
+  border: 1px solid var(--c-hairline);
+  border-radius: 8px;
+  padding: 5px;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.09), 0 2px 6px rgba(0,0,0,0.04);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.jt-dropdown-menu-wide { min-width: 240px; }
+.dark .jt-dropdown-menu { box-shadow: 0 10px 28px rgba(0,0,0,0.4), 0 2px 6px rgba(0,0,0,0.25); }
+
+.jt-dd-section-title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--c-faint);
+  padding: 6px 8px 2px;
+}
+
+.jt-dropdown-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--c-body);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 100ms ease, color 100ms ease;
+}
+
+.jt-dropdown-item:hover { background-color: var(--c-hairline-soft); color: var(--c-ink); }
+.jt-dropdown-item.active { background-color: var(--c-hairline-soft); color: var(--c-ink); font-weight: 600; }
+.jt-dd-title { font-size: 13px; }
+.jt-dd-badge {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--c-mute);
+  background-color: var(--c-hairline-soft);
+  padding: 1px 5px;
+  border-radius: 4px;
+  border: 1px solid var(--c-hairline);
+}
+
+/* ── Search Toggle Button (compact icon in tabs row) ──────── */
+.jt-search-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 28px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--c-mute);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: color 120ms ease, background-color 120ms ease;
+}
+.jt-search-toggle-btn:hover { color: var(--c-ink); background-color: var(--c-hairline-soft); }
+.jt-search-toggle-btn.active { color: var(--c-ink); background-color: var(--c-hairline-soft); }
+
+/* ── Floating Search Bar (appears below tabs, full-width) ──── */
+.jt-search-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-bottom: 1px solid var(--c-hairline);
+  background-color: var(--c-canvas-elevated);
+  flex-shrink: 0;
+  z-index: 190;
+}
+.jt-search-bar-icon { color: var(--c-mute); flex-shrink: 0; }
+.jt-search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--c-ink);
+  min-width: 0;
+}
+.jt-search-input::placeholder { color: var(--c-faint); }
+.jt-search-clear-btn,
+.jt-search-close-btn {
+  border: none;
+  background: transparent;
+  color: var(--c-mute);
+  cursor: pointer;
+  padding: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+.jt-search-clear-btn:hover,
+.jt-search-close-btn:hover { color: var(--c-ink); background-color: var(--c-hairline); }
+.jt-search-close-btn { margin-left: 2px; }
+
+.jt-search-counter { font-family: var(--font-mono); font-size: 11px; color: var(--c-mute); white-space: nowrap; padding: 0 4px; flex-shrink: 0; }
+.jt-search-nav-btns { display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
+.jt-search-nav-btn {
+  border: none;
+  background: transparent;
+  color: var(--c-mute);
+  cursor: pointer;
+  padding: 3px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.jt-search-nav-btn:hover { color: var(--c-ink); background-color: var(--c-hairline); }
+
+mark.jt-search-match { background-color: #fef08a; color: #854d0e; border-radius: 2px; padding: 0 1px; }
+mark.jt-search-match.active { background-color: #f59e0b; color: #ffffff; }
+.dark mark.jt-search-match { background-color: #713f12; color: #fef08a; }
+.dark mark.jt-search-match.active { background-color: #f59e0b; color: #000000; }
+
+/* ── Panels container ──────────────────────────────────────── */
+.jt-panels {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+.jt-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.jt-panel-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--c-hairline);
+  background-color: var(--c-canvas-elevated);
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  row-gap: 6px;
+}
+
+.jt-panel-toolbar-right { margin-left: auto; display: flex; align-items: center; gap: 6px; }
+.jt-stat { font-size: 11px; font-family: var(--font-mono); color: var(--c-mute); }
+
+.jt-indent-group { display: inline-flex; border: 1px solid var(--c-hairline); border-radius: 6px; overflow: hidden; }
+.jt-indent-btn {
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  border: none;
+  border-right: 1px solid var(--c-hairline);
+  background: var(--c-canvas-elevated);
+  color: var(--c-mute);
+  cursor: pointer;
+  line-height: 18px;
+}
+.jt-indent-btn:last-child { border-right: none; }
+.jt-indent-btn:hover { background: var(--c-hairline-soft); color: var(--c-body); }
+.jt-indent-btn.active { background: var(--c-ink); color: var(--c-canvas); }
+
+.jt-output-textarea {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  resize: none;
+  border: none;
+  outline: none;
+  background-color: var(--c-canvas-elevated);
+  color: var(--c-ink);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 20px;
+  padding: 14px;
+  overflow-y: auto;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.jt-panel-empty {
+  padding: 48px 24px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--c-faint);
+  font-family: var(--font-mono);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   HIERARCHICAL TREE VIEWER
+   ═══════════════════════════════════════════════════════════ */
+.jt-tree-container {
+  flex: 1;
+  height: 100%;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: auto;
+  padding: 12px 16px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 22px;
+  background-color: var(--c-canvas-elevated);
+  user-select: text;
+}
+
+.jt-tree-node { display: flex; flex-direction: column; position: relative; }
+.jt-tree-node:not(.jt-tree-root) { margin-left: 20px; border-left: 1px solid var(--c-hairline); padding-left: 8px; }
+.jt-tree-row { display: inline-flex; align-items: center; gap: 4px; padding: 2px 4px; border-radius: 4px; cursor: default; min-height: 22px; white-space: nowrap; }
+.jt-tree-row.clickable { cursor: pointer; }
+.jt-tree-row:hover { background-color: var(--c-hairline-soft); }
+
+.jt-tree-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  color: var(--c-mute);
+  flex-shrink: 0;
+  user-select: none;
+  border-radius: 3px;
+  transition: transform 140ms ease, color 140ms ease;
+}
+.jt-tree-toggle:hover { color: var(--c-ink); }
+.jt-tree-toggle.open { transform: rotate(90deg); }
+.jt-tree-spacer { display: inline-block; width: 16px; height: 16px; flex-shrink: 0; }
+.jt-tree-key    { color: var(--c-ink); font-weight: 600; }
+.jt-tree-index  { color: var(--c-mute); font-size: 12px; }
+.jt-tree-colon  { color: var(--c-mute); margin-right: 2px; }
+.jt-tree-bracket { color: var(--c-mute); font-weight: 500; }
+.jt-tree-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  color: var(--c-mute);
+  background-color: var(--c-hairline-soft);
+  padding: 0 6px;
+  border-radius: 4px;
+  border: 1px solid var(--c-hairline);
+  margin: 0 4px;
+  height: 18px;
+  line-height: 18px;
+}
+.jt-tree-children { display: flex; flex-direction: column; }
+.jt-tree-children.collapsed { display: none !important; }
+.jt-tree-close-row { display: flex; align-items: center; padding: 1px 4px; margin-left: 20px; color: var(--c-mute); }
+.jt-tree-root > .jt-tree-close-row { margin-left: 0; }
+
+.jt-val-string  { color: #059669; }
+.dark .jt-val-string  { color: #34d399; }
+.jt-val-number  { color: #d97706; }
+.dark .jt-val-number  { color: #fbbf24; }
+.jt-val-boolean { color: #7c3aed; }
+.dark .jt-val-boolean { color: #a78bfa; }
+.jt-val-null    { color: var(--c-mute); font-style: italic; }
+
+/* ═══════════════════════════════════════════════════════════
+   DEDICATED DUAL-PANE COMPARE WORKSPACE
+   ═══════════════════════════════════════════════════════════ */
+.jt-compare-workspace {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  flex: 1;
+  overflow: hidden;
+  background-color: var(--c-canvas-elevated);
+}
+
+.jt-compare-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--c-hairline);
+  background-color: var(--c-canvas-elevated);
+  flex-shrink: 0;
+  gap: 12px;
+}
+
+.jt-compare-top-left { display: flex; align-items: center; gap: 8px; }
+.jt-compare-controls { display: flex; align-items: center; gap: 10px; }
+.jt-diff-stats-group { display: flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 11px; }
+
+.jt-diff-tag { padding: 2px 7px; border-radius: 4px; font-weight: 500; }
+.jt-diff-tag.added    { background-color: #dcfce7; color: #15803d; }
+.dark .jt-diff-tag.added    { background-color: #052e16; color: #4ade80; }
+.jt-diff-tag.removed  { background-color: #fee2e2; color: #b91c1c; }
+.dark .jt-diff-tag.removed  { background-color: #450a0a; color: #f87171; }
+.jt-diff-tag.modified { background-color: #fef3c7; color: #b45309; }
+.dark .jt-diff-tag.modified { background-color: #451a03; color: #fbbf24; }
+
+.jt-diff-nav {
+  display: flex;
+  align-items: center;
+  background-color: var(--c-canvas);
+  border: 1px solid var(--c-hairline);
+  border-radius: 6px;
+  padding: 2px 4px;
+  gap: 4px;
+}
+.jt-diff-counter { font-family: var(--font-mono); font-size: 11px; color: var(--c-mute); padding: 0 4px; white-space: nowrap; }
+.jt-diff-nav-btn {
+  border: none;
+  background: transparent;
+  color: var(--c-mute);
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.jt-diff-nav-btn:hover { color: var(--c-ink); background-color: var(--c-hairline); }
+
+/* ── Dual Split Panes (JSON A | JSON B) ───────────────────── */
+.jt-compare-panes-grid {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  grid-template-rows: 1fr;
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.jt-compare-pane {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  background-color: var(--c-canvas);
+}
+
+.jt-pane-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--c-hairline);
+  background-color: var(--c-canvas);
+  flex-shrink: 0;
+}
+
+.jt-pane-title  { display: flex; align-items: center; gap: 6px; }
+.jt-pane-actions { display: flex; align-items: center; gap: 4px; }
+
+/* ── Compare Pane Split Layout (textarea + diff view stacked) */
+.jt-pane-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Directly-editable textarea (always visible, no Edit button needed) */
+.jt-compare-input {
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  resize: none;
+  border: none;
+  outline: none;
+  background-color: var(--c-canvas);
+  color: var(--c-ink);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 20px;
+  padding: 12px 14px;
+  overflow-y: auto;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.jt-compare-input::placeholder { color: var(--c-faint); }
+
+/* Diff view sits below the editable textarea */
+.jt-pane-diff-sep {
+  height: 1px;
+  background-color: var(--c-hairline);
+  flex-shrink: 0;
+}
+
+.jt-pane-diff-label {
+  display: flex;
+  align-items: center;
+  padding: 3px 12px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--c-faint);
+  background-color: var(--c-canvas-elevated);
+  border-bottom: 1px solid var(--c-hairline);
+  flex-shrink: 0;
+}
+
+/* ── Diff View Output ─────────────────────────────────────── */
+.jt-diff-view-output {
+  flex: 1.2;
+  overflow-y: auto;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 22px;
+  background-color: var(--c-canvas);
+  min-height: 0;
+}
+
+.jt-diff-row {
+  display: flex;
+  align-items: stretch;
+  min-height: 22px;
+  white-space: pre;
+}
+
+.jt-diff-row.diff-add { background-color: rgba(34, 197, 94, 0.12); }
+.dark .jt-diff-row.diff-add { background-color: rgba(34, 197, 94, 0.18); }
+.jt-diff-row.diff-del { background-color: rgba(239, 68, 68, 0.12); }
+.dark .jt-diff-row.diff-del { background-color: rgba(239, 68, 68, 0.18); }
+.jt-diff-row.diff-empty { background-color: var(--c-hairline-soft); opacity: 0.5; }
+.jt-diff-row.diff-active-focus { outline: 2px solid var(--c-ink); outline-offset: -2px; }
+
+.jt-diff-line-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 40px;
+  padding: 0 8px;
+  font-size: 11px;
+  color: var(--c-faint);
+  border-right: 1px solid var(--c-hairline);
+  flex-shrink: 0;
+  user-select: none;
+  background-color: var(--c-canvas-elevated);
+}
+
+.jt-diff-row.diff-add .jt-diff-line-num { background-color: rgba(34, 197, 94, 0.08); color: #16a34a; }
+.jt-diff-row.diff-del .jt-diff-line-num { background-color: rgba(239, 68, 68, 0.08); color: #dc2626; }
+
+.jt-diff-symbol {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--c-mute);
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.jt-diff-row.diff-add .jt-diff-symbol { color: #16a34a; }
+.jt-diff-row.diff-del .jt-diff-symbol { color: #dc2626; }
+
+.jt-diff-code {
+  flex: 1;
+  padding: 0 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 22px;
+  color: var(--c-ink);
+}
+
+.jt-diff-row.diff-empty .jt-diff-code { color: transparent; }
+
+/* ── Validator Output ──────────────────────────────────────── */
+.jt-validator-output { flex: 1; padding: 16px; overflow-y: auto; height: 100%; }
+.jt-valid-card { display: flex; align-items: flex-start; gap: 12px; padding: 16px; background-color: #f0faf5; border: 1px solid #b7e8ce; border-radius: 8px; color: #1a7a4a; }
+.dark .jt-valid-card { background-color: #0d1f16; border-color: #1a6b3c; color: #4ade80; }
+.jt-valid-card-icon { flex-shrink: 0; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; }
+.jt-error-card { display: flex; flex-direction: column; gap: 12px; padding: 16px; background-color: #fff5f5; border: 1px solid #fca5a5; border-radius: 8px; }
+.dark .jt-error-card { background-color: #1f0d0d; border-color: #7f1d1d; }
+.jt-error-card-header { display: flex; align-items: center; gap: 8px; color: var(--c-error); font-weight: 600; font-size: 13px; }
+.jt-error-card-msg { font-family: var(--font-mono); font-size: 12px; color: var(--c-body); background-color: var(--c-hairline-soft); padding: 10px 12px; border-radius: 6px; border: 1px solid var(--c-hairline); white-space: pre-wrap; word-break: break-word; }
+.jt-error-meta { display: flex; gap: 12px; flex-wrap: wrap; }
+.jt-error-badge { display: inline-flex; align-items: center; gap: 4px; font-family: var(--font-mono); font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 9999px; background-color: var(--c-hairline-soft); border: 1px solid var(--c-hairline); color: var(--c-body); }
+
+/* ── Custom Scrollbars ─────────────────────────────────────── */
+.jt-textarea::-webkit-scrollbar,
+.jt-output-textarea::-webkit-scrollbar,
+.jt-tree-container::-webkit-scrollbar,
+.jt-compare-input::-webkit-scrollbar,
+.jt-diff-view-output::-webkit-scrollbar,
+.jt-validator-output::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.jt-textarea::-webkit-scrollbar-track,
+.jt-output-textarea::-webkit-scrollbar-track,
+.jt-tree-container::-webkit-scrollbar-track,
+.jt-compare-input::-webkit-scrollbar-track,
+.jt-diff-view-output::-webkit-scrollbar-track,
+.jt-validator-output::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.jt-textarea::-webkit-scrollbar-thumb,
+.jt-output-textarea::-webkit-scrollbar-thumb,
+.jt-tree-container::-webkit-scrollbar-thumb,
+.jt-compare-input::-webkit-scrollbar-thumb,
+.jt-diff-view-output::-webkit-scrollbar-thumb,
+.jt-validator-output::-webkit-scrollbar-thumb {
+  background: var(--c-hairline);
+  border-radius: 4px;
+}
+
+.jt-textarea::-webkit-scrollbar-thumb:hover,
+.jt-output-textarea::-webkit-scrollbar-thumb:hover,
+.jt-tree-container::-webkit-scrollbar-thumb:hover,
+.jt-compare-input::-webkit-scrollbar-thumb:hover,
+.jt-diff-view-output::-webkit-scrollbar-thumb:hover,
+.jt-validator-output::-webkit-scrollbar-thumb:hover {
+  background: var(--c-mute);
+}
+
+/* ── Mobile Layout ─────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .jt-root {
+    height: auto;
+    max-height: none;
+    min-height: 0;
+    border-radius: 8px;
+  }
+
+  .jt-standard-workspace {
+    grid-template-columns: 1fr;
+    grid-template-rows: 260px 1px 440px;
+  }
+
+  .jt-divider { width: 100%; height: 1px; }
+
+  .jt-tabs-header {
+    padding: 0 6px;
+    min-height: 42px;
+  }
+
+  .jt-tabs-group {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .jt-tabs-group::-webkit-scrollbar { display: none; }
+  .jt-search-input { font-size: 16px; }
+
+  .jt-compare-panes-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1px 1fr;
+  }
+
+  .jt-compare-top-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .jt-compare-controls {
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+}
