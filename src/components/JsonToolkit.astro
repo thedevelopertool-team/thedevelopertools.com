@@ -173,34 +173,40 @@
           </div>
         </div>
 
-        <!-- Live JSON Search Bar -->
-        <div class="jt-search-wrap" role="search">
-          <div class="jt-search-box">
-            <svg class="jt-search-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input
-              id="jt-search-input"
-              type="text"
-              class="jt-search-input"
-              placeholder="Search keys &amp; values (Ctrl+F)"
-              aria-label="Search JSON keys and values"
-              autocomplete="off"
-              spellcheck="false"
-            />
-            <button id="btn-search-clear" class="jt-search-clear-btn" type="button" title="Clear search" aria-label="Clear search" hidden>
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-            </button>
-            <span id="jt-search-count" class="jt-search-counter" hidden>0 / 0</span>
-            <div class="jt-search-nav-btns" id="jt-search-nav-btns" hidden>
-              <button id="btn-search-prev" class="jt-search-nav-btn" type="button" title="Previous match (Shift+Enter)" aria-label="Previous match">
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
-              </button>
-              <button id="btn-search-next" class="jt-search-nav-btn" type="button" title="Next match (Enter)" aria-label="Next match">
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-              </button>
-            </div>
-          </div>
-        </div>
+        <!-- Compact Search Icon Button — never takes tab space -->
+        <button id="btn-search-toggle" class="jt-search-toggle-btn" type="button" title="Search keys &amp; values (Ctrl+F)" aria-label="Open search" aria-expanded="false">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
       </div><!-- /jt-tabs-header -->
+
+      <!-- Floating Search Bar — appears below tabs row when search toggle is clicked -->
+      <div class="jt-search-bar" id="jt-search-bar" role="search" hidden>
+        <svg class="jt-search-bar-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input
+          id="jt-search-input"
+          type="text"
+          class="jt-search-input"
+          placeholder="Search keys &amp; values…"
+          aria-label="Search JSON keys and values"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <span id="jt-search-count" class="jt-search-counter" hidden>0 / 0</span>
+        <div class="jt-search-nav-btns" id="jt-search-nav-btns" hidden>
+          <button id="btn-search-prev" class="jt-search-nav-btn" type="button" title="Previous (Shift+Enter)" aria-label="Previous match">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+          </button>
+          <button id="btn-search-next" class="jt-search-nav-btn" type="button" title="Next (Enter)" aria-label="Next match">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+        </div>
+        <button id="btn-search-clear" class="jt-search-clear-btn" type="button" title="Clear search" aria-label="Clear search" hidden>
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        <button id="btn-search-close" class="jt-search-close-btn" type="button" title="Close search (Esc)" aria-label="Close search">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
 
       <!-- Output Panels -->
       <div class="jt-panels">
@@ -792,26 +798,26 @@
   .jt-tabs-header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 6px 10px 0;
+    padding: 0 6px 0 4px;
     border-bottom: 1px solid var(--c-hairline);
     background-color: var(--c-canvas-elevated);
     flex-shrink: 0;
     position: relative;
     z-index: 200;
-    gap: 8px;
+    gap: 4px;
     overflow: visible;
+    min-height: 38px;
   }
 
   .jt-tabs-group {
     display: flex;
     align-items: center;
-    gap: 3px;
+    gap: 2px;
     flex-wrap: nowrap;
     overflow-x: auto;
     overflow-y: visible;
     scrollbar-width: none;
-    flex-shrink: 1;
+    flex: 1;
     min-width: 0;
   }
 
@@ -919,53 +925,72 @@
     border: 1px solid var(--c-hairline);
   }
 
-  /* ── Live Search Bar ─────────────────────────────────────── */
-  .jt-search-wrap { margin-bottom: 5px; display: flex; align-items: center; flex-shrink: 0; }
-  .jt-search-box {
+  /* ── Search Toggle Button (compact icon in tabs row) ────── */
+  .jt-search-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 28px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--c-mute);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: color 120ms ease, background-color 120ms ease;
+  }
+  .jt-search-toggle-btn:hover { color: var(--c-ink); background-color: var(--c-hairline-soft); }
+  .jt-search-toggle-btn.active { color: var(--c-ink); background-color: var(--c-hairline-soft); }
+
+  /* ── Floating Search Bar (appears below tabs, full-width) ── */
+  .jt-search-bar {
     display: flex;
     align-items: center;
-    background-color: var(--c-canvas);
-    border: 1px solid var(--c-hairline);
-    border-radius: 6px;
-    padding: 2px 8px;
     gap: 6px;
-    height: 28px;
-    transition: border-color 120ms ease;
-    min-width: 120px;
+    padding: 5px 12px;
+    border-bottom: 1px solid var(--c-hairline);
+    background-color: var(--c-canvas-elevated);
+    flex-shrink: 0;
+    z-index: 190;
   }
-  .jt-search-box:focus-within { border-color: var(--c-ink); }
-  .jt-search-icon { color: var(--c-mute); flex-shrink: 0; }
+  .jt-search-bar-icon { color: var(--c-mute); flex-shrink: 0; }
   .jt-search-input {
+    flex: 1;
     border: none;
     outline: none;
     background: transparent;
     font-family: var(--font-sans);
-    font-size: 12px;
+    font-size: 13px;
     color: var(--c-ink);
-    width: 140px;
-    min-width: 60px;
+    min-width: 0;
   }
   .jt-search-input::placeholder { color: var(--c-faint); }
-  .jt-search-clear-btn {
+  .jt-search-clear-btn,
+  .jt-search-close-btn {
     border: none;
     background: transparent;
     color: var(--c-mute);
     cursor: pointer;
-    padding: 2px;
+    padding: 3px;
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 4px;
+    flex-shrink: 0;
   }
-  .jt-search-clear-btn:hover { color: var(--c-ink); }
+  .jt-search-clear-btn:hover,
+  .jt-search-close-btn:hover { color: var(--c-ink); background-color: var(--c-hairline); }
+  .jt-search-close-btn { margin-left: 2px; }
 
-  .jt-search-counter { font-family: var(--font-mono); font-size: 11px; color: var(--c-mute); white-space: nowrap; padding: 0 4px; }
-  .jt-search-nav-btns { display: flex; align-items: center; gap: 2px; }
+  .jt-search-counter { font-family: var(--font-mono); font-size: 11px; color: var(--c-mute); white-space: nowrap; padding: 0 4px; flex-shrink: 0; }
+  .jt-search-nav-btns { display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
   .jt-search-nav-btn {
     border: none;
     background: transparent;
     color: var(--c-mute);
     cursor: pointer;
-    padding: 2px;
+    padding: 3px;
     border-radius: 3px;
     display: flex;
     align-items: center;
@@ -1448,6 +1473,94 @@
   .jt-error-meta { display: flex; gap: 12px; flex-wrap: wrap; }
   .jt-error-badge { display: inline-flex; align-items: center; gap: 4px; font-family: var(--font-mono); font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 9999px; background-color: var(--c-hairline-soft); border: 1px solid var(--c-hairline); color: var(--c-body); }
 
+  /* ── Compare Diff View Output ────────────────────────────── */
+  .jt-diff-view-output {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 22px;
+    background-color: var(--c-canvas);
+    padding: 0;
+  }
+
+  .jt-diff-row {
+    display: flex;
+    align-items: stretch;
+    min-height: 22px;
+    white-space: pre;
+  }
+
+  .jt-diff-row.diff-add { background-color: rgba(34, 197, 94, 0.12); }
+  .dark .jt-diff-row.diff-add { background-color: rgba(34, 197, 94, 0.18); }
+  .jt-diff-row.diff-del { background-color: rgba(239, 68, 68, 0.12); }
+  .dark .jt-diff-row.diff-del { background-color: rgba(239, 68, 68, 0.18); }
+  .jt-diff-row.diff-empty { background-color: var(--c-hairline-soft); opacity: 0.5; }
+  .jt-diff-row.diff-active-focus { outline: 2px solid var(--c-ink); outline-offset: -2px; }
+
+  .jt-diff-line-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    min-width: 40px;
+    padding: 0 8px;
+    font-size: 11px;
+    color: var(--c-faint);
+    border-right: 1px solid var(--c-hairline);
+    flex-shrink: 0;
+    user-select: none;
+    background-color: var(--c-canvas-elevated);
+  }
+
+  .jt-diff-row.diff-add .jt-diff-line-num { background-color: rgba(34, 197, 94, 0.08); color: #16a34a; }
+  .jt-diff-row.diff-del .jt-diff-line-num { background-color: rgba(239, 68, 68, 0.08); color: #dc2626; }
+
+  .jt-diff-symbol {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--c-mute);
+    flex-shrink: 0;
+    user-select: none;
+  }
+
+  .jt-diff-row.diff-add .jt-diff-symbol { color: #16a34a; }
+  .jt-diff-row.diff-del .jt-diff-symbol { color: #dc2626; }
+
+  .jt-diff-code {
+    flex: 1;
+    padding: 0 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 22px;
+    color: var(--c-ink);
+  }
+
+  .jt-diff-row.diff-empty .jt-diff-code { color: transparent; }
+
+  .jt-compare-input {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    resize: none;
+    border: none;
+    outline: none;
+    background-color: var(--c-canvas);
+    color: var(--c-ink);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 20px;
+    padding: 12px 14px;
+    overflow-y: auto;
+    overflow-x: auto;
+    white-space: pre;
+  }
+
   /* ── Mobile Layout ───────────────────────────────────────── */
   @media (max-width: 768px) {
     .jt-root {
@@ -1465,21 +1578,18 @@
     .jt-divider { width: 100%; height: 1px; }
 
     .jt-tabs-header {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 8px;
-      padding: 8px;
+      padding: 0 6px;
+      min-height: 42px;
     }
 
     .jt-tabs-group {
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
-      padding-bottom: 2px;
     }
 
     .jt-tabs-group::-webkit-scrollbar { display: none; }
-    .jt-search-wrap, .jt-search-box, .jt-search-input { width: 100%; }
+    .jt-search-input { font-size: 16px; /* prevent iOS zoom */ }
 
     .jt-compare-panes-grid {
       grid-template-columns: 1fr;
@@ -1744,23 +1854,70 @@
     }
   });
 
-  document.addEventListener('click', () => closeAllDropdowns());
+  // Close dropdowns on outside click, but not if search input is focused
+  document.addEventListener('click', (e) => {
+    const target = e.target as Node;
+    if (searchInput && searchInput.contains(target)) return;
+    closeAllDropdowns();
+  });
+
+  // ── Search Toggle (floating bar) ─────────────────────────────
+  const searchToggleBtn = document.getElementById('btn-search-toggle') as HTMLButtonElement;
+  const searchBar       = document.getElementById('jt-search-bar') as HTMLElement;
+  const searchCloseBtn  = document.getElementById('btn-search-close') as HTMLButtonElement;
+
+  function openSearch(): void {
+    if (!searchBar) return;
+    searchBar.hidden = false;
+    searchBar.removeAttribute('aria-hidden');
+    searchToggleBtn?.classList.add('active');
+    searchToggleBtn?.setAttribute('aria-expanded', 'true');
+    // Focus without stealing, preserving caret position
+    requestAnimationFrame(() => {
+      searchInput?.focus();
+      if (searchInput?.value) searchInput.select();
+    });
+  }
+
+  function closeSearch(): void {
+    if (!searchBar) return;
+    searchBar.hidden = true;
+    searchBar.setAttribute('aria-hidden', 'true');
+    searchToggleBtn?.classList.remove('active');
+    searchToggleBtn?.setAttribute('aria-expanded', 'false');
+    // Clear search highlights when closing
+    if (searchQuery) {
+      searchInput.value = '';
+      executeSearch('');
+    }
+  }
+
+  searchToggleBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (searchBar?.hidden) {
+      openSearch();
+    } else {
+      closeSearch();
+    }
+  });
+
+  searchCloseBtn?.addEventListener('click', () => closeSearch());
+
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
+      if (!searchBar?.hidden) {
+        closeSearch();
+        return;
+      }
       closeAllDropdowns();
       if (rootContainer.classList.contains('jt-fullscreen')) {
         toggleFullscreen();
-      }
-      if (searchQuery) {
-        searchInput.value = '';
-        executeSearch('');
       }
     }
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f') {
       if (activeTab !== 'compare') {
         e.preventDefault();
-        searchInput.focus();
-        searchInput.select();
+        openSearch();
       }
     }
   });
@@ -2427,6 +2584,25 @@
       rawB.value = JSON.stringify(SAMPLE_DIFF_B, null, 2);
     }
     renderCompareDiff();
+    // Default: show diff view (hide input textareas)
+    if (rawA && diffViewA) {
+      rawA.hidden = true;
+      diffViewA.hidden = false;
+    }
+    if (rawB && diffViewB) {
+      rawB.hidden = true;
+      diffViewB.hidden = false;
+    }
+    isEditingA = false;
+    isEditingB = false;
+    if (btnModeA) {
+      btnModeA.querySelector('span')!.textContent = 'Edit';
+      btnModeA.classList.remove('active');
+    }
+    if (btnModeB) {
+      btnModeB.querySelector('span')!.textContent = 'Edit';
+      btnModeB.classList.remove('active');
+    }
   }
 
   // Toggle Edit/View on Pane A
@@ -2434,6 +2610,7 @@
     isEditingA = !isEditingA;
     btnModeA.classList.toggle('active', isEditingA);
     btnModeA.querySelector('span')!.textContent = isEditingA ? 'Diff' : 'Edit';
+    // In edit mode: show textarea, hide diff view
     rawA.hidden = !isEditingA;
     diffViewA.hidden = isEditingA;
     if (isEditingA) {
@@ -2446,7 +2623,7 @@
   // Toggle Edit/View on Pane B
   btnModeB?.addEventListener('click', () => {
     isEditingB = !isEditingB;
-    btnModeB.classList.toggle('active', isEditingB);
+    btnModeB.classList.toggle('active', isEditingB)
     btnModeB.querySelector('span')!.textContent = isEditingB ? 'Diff' : 'Edit';
     rawB.hidden = !isEditingB;
     diffViewB.hidden = isEditingB;
